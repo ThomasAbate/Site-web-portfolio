@@ -590,9 +590,25 @@ a[download].dl-anim svg {
   font-weight: 500;
 }
 
+.sidebar-engine {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ue-logo {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  object-fit: contain;
+  position: relative;
+  top: -1px;
+}
+
 /* Trailer section */
 .project-trailer-wrap {
   padding: 64px 56px;
+  text-align: center;
 }
 
 .section-sublabel {
@@ -606,12 +622,18 @@ a[download].dl-anim svg {
 
 .trailer-box {
   position: relative;
-  max-width: 800px;
+  max-width: 1100px;
   margin: 0 auto;
-  padding-bottom: min(56.25%, 450px);
+  padding-bottom: min(56.25%, 620px);
   height: 0;
   overflow: hidden;
   background: var(--bg-2);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 6px;
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,0.04),
+    0 8px 32px rgba(0,0,0,0.6),
+    0 0 80px rgba(255,255,255,0.03);
 }
 
 .trailer-box iframe {
@@ -624,7 +646,7 @@ a[download].dl-anim svg {
 
 /* Gallery filmstrip */
 .project-gallery-wrap {
-  padding: 0 56px 120px;
+  padding: 0 160px 120px;
 }
 
 .gallery-filmstrip {
@@ -723,7 +745,9 @@ a[download].dl-anim svg {
   display: none;
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.94);
+  background: rgba(0,0,0,0.82);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
   z-index: 500;
   justify-content: center;
   align-items: center;
@@ -738,6 +762,7 @@ a[download].dl-anim svg {
   max-height: 88vh;
   object-fit: contain;
   cursor: default;
+  transition: opacity 0.2s ease;
 }
 
 .lightbox-close {
@@ -750,14 +775,88 @@ a[download].dl-anim svg {
   cursor: pointer;
   opacity: 0.6;
   line-height: 1;
-  transition: opacity var(--ease);
+  transition: opacity 0.2s ease, transform 0.2s ease;
 }
 
-.lightbox-close:hover { opacity: 1; }
+.lightbox-close:hover { opacity: 1; transform: scale(1.15) rotate(90deg); }
+.lightbox-close:active { opacity: 1; transform: scale(0.88) rotate(90deg); }
+
+.lightbox-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.15);
+  color: var(--text);
+  font-size: 22px;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  cursor: pointer;
+  opacity: 0.55;
+  transition: opacity 0.2s ease, background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, transform 0.12s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+
+.lightbox-arrow:hover {
+  opacity: 1;
+  background: rgba(255,255,255,0.16);
+  border-color: rgba(255,255,255,0.45);
+  box-shadow: 0 0 0 4px rgba(255,255,255,0.07);
+}
+
+.lightbox-arrow:active {
+  transform: translateY(-50%) scale(0.88);
+  background: rgba(255,255,255,0.08);
+  box-shadow: none;
+}
+
+.lb-prev { left: 24px; }
+.lb-next { right: 24px; }
+
+.lightbox-caption {
+  position: absolute;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.55);
+  pointer-events: none;
+  white-space: nowrap;
+}
 
 /* ─── About Page ────────────────────────────────────────────────────────────── */
 .about-hero {
   padding: calc(var(--nav-h) + 96px) 56px 80px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 48px;
+}
+
+.about-hero-text {
+  flex: 1;
+}
+
+.about-hero-photo {
+  flex-shrink: 0;
+}
+
+.about-hero-photo img {
+  width: 220px;
+  height: 220px;
+  object-fit: cover;
+  object-position: center top;
+  border-radius: 50%;
+  border: 1px solid rgba(255,255,255,0.1);
+  filter: grayscale(15%);
+  display: block;
 }
 
 .about-grid {
@@ -820,6 +919,8 @@ a[download].dl-anim svg {
   letter-spacing: 0.04em;
   color: var(--text);
   transition: background var(--ease), border-color var(--ease);
+  position: relative;
+  overflow: hidden;
 }
 
 .skill-pill:hover {
@@ -827,13 +928,60 @@ a[download].dl-anim svg {
   border-color: rgba(255,255,255,0.2);
 }
 
+.skill-pill--fr::before,
+.skill-pill--en::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 0.35s ease;
+  background-size: cover;
+  background-position: center;
+  z-index: -1;
+}
+
+.skill-pill--fr:hover::before { opacity: 0.28; }
+.skill-pill--en:hover::before { opacity: 0.28; }
+
+/* Drapeau français — tricolore vertical */
+.skill-pill--fr::before {
+  background: linear-gradient(to right,
+    #002395 33.33%,
+    #ffffff 33.33%, #ffffff 66.66%,
+    #ED2939 66.66%);
+}
+
+/* Drapeau anglais — Union Jack SVG */
+.skill-pill--en::before {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 30'%3E%3Crect width='60' height='30' fill='%23012169'/%3E%3Cpath d='M0,0 L60,30 M60,0 L0,30' stroke='%23fff' stroke-width='6'/%3E%3Cpath d='M0,0 L60,30 M60,0 L0,30' stroke='%23C8102E' stroke-width='4'/%3E%3Cpath d='M30,0 V30 M0,15 H60' stroke='%23fff' stroke-width='10'/%3E%3Cpath d='M30,0 V30 M0,15 H60' stroke='%23C8102E' stroke-width='6'/%3E%3C/svg%3E");
+  background-size: cover;
+}
+
+.skill-pill--fr span,
+.skill-pill--en span,
+.skill-pill--fr,
+.skill-pill--en {
+  isolation: isolate;
+}
+
+.skill-pill--fr > *,
+.skill-pill--en > * { position: relative; z-index: 1; }
+
 /* Education */
 .edu-item {
   padding: 16px 0;
-  border-top: 1px solid var(--border);
 }
 
-.edu-item:last-child { border-bottom: 1px solid var(--border); }
+.edu-item::after {
+  content: '';
+  display: block;
+  width: 40px;
+  height: 1px;
+  background: var(--border);
+  margin-top: 14px;
+}
+
+.edu-item:last-child::after { display: none; }
 
 .edu-school {
   font-size: 14px;
@@ -1150,7 +1298,8 @@ footer {
   .project-gallery-wrap { padding: 0 24px 80px; }
   .back-link { padding: 0 24px; }
 
-  .about-hero { padding: calc(var(--nav-h) + 56px) 24px 48px; }
+  .about-hero { padding: calc(var(--nav-h) + 56px) 24px 48px; flex-direction: column-reverse; align-items: flex-start; }
+  .about-hero-photo img { width: 160px; height: 160px; }
   .about-grid { padding: 0 24px 56px; }
   .contact-section { padding: 72px 24px 80px; }
   .contact-grid { flex-direction: column; gap: 28px; }

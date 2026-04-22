@@ -255,7 +255,7 @@ function renderProject() {
         slide.innerHTML = `
           <img src="${galleryImageUrl(img.slug)}" alt="${img.title}" loading="${i < VISIBLE ? 'eager' : 'lazy'}">
           <div class="gallery-slide-caption">${img.title}</div>`;
-        slide.addEventListener('click', () => openLightbox(lightboxImageUrl(img.slug), img.title));
+        slide.addEventListener('click', () => openLightbox(imgs, i));
         track.appendChild(slide);
       });
 
@@ -321,28 +321,86 @@ function renderProject() {
 }
 
 /* ─── Lightbox ───────────────────────────────────────────────────────────── */
-function openLightbox(src, alt) {
+let _lbImgs = [];
+let _lbIdx  = 0;
+
+function openLightbox(imgs, idx) {
+  _lbImgs = Array.isArray(imgs) ? imgs : [{ slug: imgs, title: idx || '' }];
+  _lbIdx  = Array.isArray(imgs) ? idx : 0;
+
   let lb = document.getElementById('lightbox');
   if (!lb) {
     lb = document.createElement('div');
     lb.id = 'lightbox';
     lb.className = 'lightbox';
-    lb.innerHTML = `<button class="lightbox-close" id="lbClose">&times;</button><img id="lbImg" src="" alt="">`;
+    lb.innerHTML = `
+      <button class="lightbox-close" id="lbClose">&times;</button>
+      <button class="lightbox-arrow lb-prev" id="lbPrev">&#8592;</button>
+      <img id="lbImg" src="" alt="">
+      <button class="lightbox-arrow lb-next" id="lbNext">&#8594;</button>
+      <div class="lightbox-caption" id="lbCaption"></div>`;
     document.body.appendChild(lb);
     lb.addEventListener('click', e => { if (e.target === lb) closeLightbox(); });
     document.getElementById('lbClose').addEventListener('click', closeLightbox);
-    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
+    document.getElementById('lbPrev').addEventListener('click', e => { e.stopPropagation(); _lbMove(-1); });
+    document.getElementById('lbNext').addEventListener('click', e => { e.stopPropagation(); _lbMove(1); });
+    document.addEventListener('keydown', e => {
+      if (!document.getElementById('lightbox')?.classList.contains('open')) return;
+      if (e.key === 'Escape')      closeLightbox();
+      if (e.key === 'ArrowLeft')   _lbMove(-1);
+      if (e.key === 'ArrowRight')  _lbMove(1);
+    });
   }
-  document.getElementById('lbImg').src = src;
-  document.getElementById('lbImg').alt = alt || '';
+  _lbRender();
   lb.classList.add('open');
   document.body.style.overflow = 'hidden';
+
+  const trailerFrame = document.getElementById('trailerFrame');
+  if (trailerFrame?.src) trailerFrame.contentWindow?.postMessage(
+    JSON.stringify({ event: 'command', func: 'pauseVideo', args: '' }), '*'
+  );
+}
+
+function _lbMove(dir) {
+  _lbIdx = (_lbIdx + dir + _lbImgs.length) % _lbImgs.length;
+  _lbRender();
+}
+
+function _lbRender() {
+  const item   = _lbImgs[_lbIdx];
+  const img    = document.getElementById('lbImg');
+  const caption = document.getElementById('lbCaption');
+  const lb     = document.getElementById('lightbox');
+  const isOpen = lb && lb.classList.contains('open');
+
+  const show = _lbImgs.length > 1;
+  document.getElementById('lbPrev').style.display = show ? '' : 'none';
+  document.getElementById('lbNext').style.display = show ? '' : 'none';
+
+  if (isOpen) {
+    img.style.opacity = '0';
+    setTimeout(() => {
+      img.src = lightboxImageUrl(item.slug);
+      img.alt = item.title || '';
+      if (caption) caption.textContent = item.title || '';
+      img.style.opacity = '1';
+    }, 200);
+  } else {
+    img.src = lightboxImageUrl(item.slug);
+    img.alt = item.title || '';
+    if (caption) caption.textContent = item.title || '';
+  }
 }
 
 function closeLightbox() {
   const lb = document.getElementById('lightbox');
   if (lb) lb.classList.remove('open');
   document.body.style.overflow = '';
+
+  const trailerFrame = document.getElementById('trailerFrame');
+  if (trailerFrame?.src) trailerFrame.contentWindow?.postMessage(
+    JSON.stringify({ event: 'command', func: 'playVideo', args: '' }), '*'
+  );
 }
 
 /* ─── Utility ────────────────────────────────────────────────────────────── */

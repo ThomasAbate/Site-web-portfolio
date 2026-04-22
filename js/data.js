@@ -169,10 +169,10 @@ const PROJECTS = [
     mainImageSlug: 'picture/night-city/main.png',
     trailerID:     't_TlF8FDUsU',
     gallery: [
-      { slug: 'picture/night-city/gallery-gameplay-sprint-1.jpg',        title: 'Gameplay – Sprint 1' },
-      { slug: 'picture/night-city/gallery-gameplay-sprint-2.jpg',        title: 'Gameplay – Sprint 2' },
-      { slug: 'picture/night-city/gallery-blueprint-jump-1.jpg',         title: 'Jump Mechanics Blueprint – Part 1' },
-      { slug: 'picture/night-city/gallery-blueprint-jump-2.jpg',         title: 'Jump Mechanics Blueprint – Part 2' },
+      { slug: 'picture/night-city/gallery-run-1.jpg',          title: 'Gameplay – Run 1' },
+      { slug: 'picture/night-city/gallery-run-2.jpg',          title: 'Gameplay – Run 2' },
+      { slug: 'picture/night-city/gallery-BP-Jump-input-1.jpg', title: 'Jump Mechanics Blueprint – Part 1' },
+      { slug: 'picture/night-city/gallery-BP-Jump-input-2.jpg', title: 'Jump Mechanics Blueprint – Part 2' },
     ],
     featured: false,
     homeFeatured: false,
@@ -262,10 +262,10 @@ const PROJECTS = [
     mainImageSlug: 'picture/heart-of-darkness/main.png',
     trailerID:     '-CHgOl1frsc',
     gallery: [
-      { slug: 'picture/heart-of-darkness/gallery-bones-render.png',       title: 'Bones Render' },
-      { slug: 'picture/heart-of-darkness/gallery-end-tree-outside.png',   title: 'End Tree – Outside' },
-      { slug: 'picture/heart-of-darkness/gallery-tutorial-level.png',     title: 'Tutorial Level Render' },
-      { slug: 'picture/heart-of-darkness/gallery-end-tree-inside.png',    title: 'End Tree – Inside' },
+      { slug: 'picture/heart-of-darkness/Gallery_Bones_Render.png',          title: 'Bones Render' },
+      { slug: 'picture/heart-of-darkness/Gallery_EndTreeOutside_Render.png', title: 'End Tree – Outside' },
+      { slug: 'picture/heart-of-darkness/Gallery_Tuto_Render.png',           title: 'Tutorial Level Render' },
+      { slug: 'picture/heart-of-darkness/Gallery_EndTreeInside_Render.png',  title: 'End Tree – Inside' },
     ],
     featured: false,
     homeFeatured: false,
@@ -349,7 +349,8 @@ function getProjectById(id) {
 }
 
 function getProjectsByCategory(cat) {
-  if (!cat || cat === 'all') return PROJECTS;
+  if (!cat || cat === 'all')
+    return [...PROJECTS].sort((a, b) => Number(b.year) - Number(a.year));
   return PROJECTS.filter(p => p.category === cat);
 }
 
