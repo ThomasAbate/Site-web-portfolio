@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Works — Thomas Abate</title>
+  <meta name="description" content="All projects by Thomas Abate — Game Jam, Personal, and School projects in Unreal Engine.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- ── Navigation ─────────────────────────────────────────────────────── -->
+  <nav>
+    <a class="nav-logo" href="index.html">Thomas Abate</a>
+    <ul class="nav-links" id="navList">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="works.html">Work</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="about.html#cv">CV</a></li>
+    </ul>
+    <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <!-- ── Page Header ────────────────────────────────────────────────────── -->
+  <header class="works-header">
+    <div class="section-tag">Portfolio</div>
+    <h1 class="section-heading" style="margin-bottom:48px" id="worksPageTitle">All <span>Projects</span></h1>
+
+    <!-- Filter tabs -->
+    <div class="filter-bar">
+      <button class="filter-btn active" data-cat="all">All</button>
+      <button class="filter-btn" data-cat="personal">Personal</button>
+      <button class="filter-btn" data-cat="school">School</button>
+      <button class="filter-btn" data-cat="gamejam">Game Jam</button>
+    </div>
+  </header>
+
+  <!-- ── Projects Grid ──────────────────────────────────────────────────── -->
+  <main class="works-grid" id="worksGrid">
+    <!-- Populated by app.js -->
+  </main>
+
+  <!-- ── Footer ─────────────────────────────────────────────────────────── -->
+  <footer>
+    <span class="footer-name">Thomas Abate</span>
+    <div class="footer-links">
+      <a href="works.html">Work</a>
+      <a href="about.html">About</a>
+      <a href="mailto:thomasabatepro@gmail.com">Contact</a>
+      <a href="https://www.linkedin.com/in/thomas-abate" target="_blank" rel="noopener">LinkedIn</a>
+    </div>
+  </footer>
+
+  <script src="js/data.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

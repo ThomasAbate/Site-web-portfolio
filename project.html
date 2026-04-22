@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Project — Thomas Abate</title>
+  <meta name="description" content="Project case study — Thomas Abate portfolio.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- ── Navigation ─────────────────────────────────────────────────────── -->
+  <nav>
+    <a class="nav-logo" href="index.html">Thomas Abate</a>
+    <ul class="nav-links" id="navList">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="works.html">Work</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="about.html#cv">CV</a></li>
+    </ul>
+    <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <!-- ── Back link ──────────────────────────────────────────────────────── -->
+  <a class="back-link" href="works.html">
+    <svg width="14" height="10" viewBox="0 0 14 10" fill="none">
+      <path d="M13 5H1M6 1L2 5l4 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    All Projects
+  </a>
+
+  <!-- ── Banner ─────────────────────────────────────────────────────────── -->
+  <div class="project-banner" id="projectBanner">
+    <img src="" alt="">
+    <div class="project-banner-gradient"></div>
+    <div class="project-banner-content">
+      <div class="project-tag" id="projectTag"></div>
+      <h1 class="project-title" id="projectTitle"></h1>
+      <p class="project-subtitle" id="projectSubtitle"></p>
+    </div>
+  </div>
+
+  <!-- ── Body: description + sidebar ───────────────────────────────────── -->
+  <div class="project-body">
+    <!-- Main description -->
+    <div class="project-description">
+      <p class="project-intro" id="projectIntro"></p>
+      <ul class="project-bullets" id="projectBullets">
+        <!-- Populated by app.js -->
+      </ul>
+    </div>
+
+    <!-- Sidebar meta -->
+    <aside class="project-sidebar">
+      <div class="sidebar-block">
+        <div class="sidebar-label">Category</div>
+        <div class="sidebar-value" id="sideCategory"></div>
+      </div>
+      <div class="sidebar-block">
+        <div class="sidebar-label">Year</div>
+        <div class="sidebar-value" id="sideYear"></div>
+      </div>
+      <div class="sidebar-block">
+        <div class="sidebar-label">Engine</div>
+        <div class="sidebar-value">Unreal Engine 5</div>
+      </div>
+    </aside>
+  </div>
+
+  <!-- ── Trailer ────────────────────────────────────────────────────────── -->
+  <div class="project-trailer-wrap" id="trailerSection">
+    <div class="section-sublabel">Gameplay Trailer</div>
+    <div class="trailer-box">
+      <iframe id="trailerFrame" src="" title="Project trailer" allowfullscreen
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture">
+      </iframe>
+    </div>
+  </div>
+
+  <!-- ── Gallery ────────────────────────────────────────────────────────── -->
+  <div class="project-gallery-wrap" id="gallerySection">
+    <div class="section-sublabel">Gallery</div>
+    <div class="gallery-grid" id="galleryGrid">
+      <!-- Populated by app.js -->
+    </div>
+  </div>
+
+  <!-- ── Project navigation ───────────────────────────────────────────── -->
+  <div class="divider" style="margin:0 56px"></div>
+  <div style="padding:64px 56px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px">
+    <a class="btn-outline" id="prevProject" href="works.html">
+      <svg width="14" height="10" viewBox="0 0 14 10" fill="none">
+        <path d="M13 5H1M6 1L2 5l4 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      Previous Project
+    </a>
+    <a class="btn-outline" id="nextProject" href="works.html">
+      Next Project
+      <svg width="14" height="10" viewBox="0 0 14 10" fill="none">
+        <path d="M1 5h12M8 1l4 4-4 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </a>
+  </div>
+
+  <!-- ── Footer ─────────────────────────────────────────────────────────── -->
+  <footer>
+    <span class="footer-name">Thomas Abate</span>
+    <div class="footer-links">
+      <a href="works.html">Work</a>
+      <a href="about.html">About</a>
+      <a href="mailto:thomasabatepro@gmail.com">Contact</a>
+      <a href="https://www.linkedin.com/in/thomas-abate" target="_blank" rel="noopener">LinkedIn</a>
+    </div>
+  </footer>
+
+  <script src="js/data.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

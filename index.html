@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Thomas Abate — Technical Game / Level Designer</title>
+  <meta name="description" content="Portfolio of Thomas Abate — Technical Game & Level Designer specialising in Unreal Engine prototyping, 3C design, and systemic gameplay systems.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- ── Navigation ─────────────────────────────────────────────────────── -->
+  <nav>
+    <a class="nav-logo" href="index.html">Thomas Abate</a>
+    <ul class="nav-links" id="navList">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="works.html">Work</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="about.html#cv">CV</a></li>
+    </ul>
+    <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <!-- ── Hero ───────────────────────────────────────────────────────────── -->
+  <section class="hero">
+    <div class="hero-anim-bg"></div>
+
+    <div class="hero-eyebrow">Portfolio / Game Design</div>
+    <h1 class="hero-name">Thomas<br>Abate</h1>
+    <div class="hero-divider"></div>
+    <p class="hero-title">Technical Game / Level Designer</p>
+  </section>
+
+  <!-- ── Demo Reel ──────────────────────────────────────────────────────────── -->
+  <section class="reel-section" id="reel">
+    <div class="reel-top">
+      <h2 class="reel-heading reveal">Demo Reel</h2>
+    </div>
+    <div class="reel-player-wrap reveal">
+      <div class="reel-frame">
+        <iframe
+          id="reelIframe"
+          data-src="https://www.youtube.com/embed/e88P-_075KE?rel=0&modestbranding=1&color=white&autoplay=1&mute=1&loop=1&playlist=e88P-_075KE"
+          title="Thomas Abate — Demo Reel"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          allowfullscreen>
+        </iframe>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ── Featured Works ─────────────────────────────────────────────────── -->
+  <section class="section-wrap">
+    <div class="section-tag">Selected Works</div>
+    <h2 class="section-heading">Last <span>Works</span></h2>
+    <div class="featured-grid" id="featuredGrid">
+      <!-- Populated by app.js -->
+    </div>
+    <div style="margin-top:48px">
+      <a class="btn-outline" href="works.html">
+        View All Projects
+        <svg width="14" height="10" viewBox="0 0 14 10" fill="none">
+          <path d="M1 5h12M8 1l4 4-4 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </a>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ── About Snippet ──────────────────────────────────────────────────── -->
+  <section class="section-wrap">
+    <div class="section-tag">About</div>
+    <h2 class="section-heading reveal">Designing with <span>intent.</span></h2>
+    <div style="max-width:680px">
+      <p class="reveal" style="font-size:17px;line-height:1.85;color:var(--muted);margin-bottom:32px">
+        I'm a <strong style="color:var(--text)">Technical Game / Level Designer</strong> specialising in rapid prototyping and polished gameplay systems inside <strong style="color:var(--text)">Unreal Engine</strong>. I believe the heart of the craft lies in the experience lived by the player. Every mechanic, feedback loop, and level flow exists to serve that moment.
+      </p>
+      <a class="btn-outline reveal" href="about.html">
+        More About Me
+        <svg width="14" height="10" viewBox="0 0 14 10" fill="none">
+          <path d="M1 5h12M8 1l4 4-4 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </a>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ── Contact Strip ──────────────────────────────────────────────────── -->
+  <section class="section-wrap" style="padding-top:80px;padding-bottom:80px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:32px">
+    <div>
+      <div class="section-tag">Let's Connect</div>
+      <h2 class="section-heading reveal" style="margin-bottom:0">Get in touch.</h2>
+    </div>
+    <div style="display:flex;gap:20px;flex-wrap:wrap">
+      <a class="btn-outline reveal" href="mailto:thomasabatepro@gmail.com">
+        Email
+        <svg width="14" height="10" viewBox="0 0 14 10" fill="none">
+          <path d="M1 5h12M8 1l4 4-4 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </a>
+      <a class="btn-outline reveal" href="https://www.linkedin.com/in/thomas-abate" target="_blank" rel="noopener">
+        LinkedIn
+        <svg width="14" height="10" viewBox="0 0 14 10" fill="none">
+          <path d="M1 5h12M8 1l4 4-4 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </a>
+    </div>
+  </section>
+
+  <!-- ── Footer ─────────────────────────────────────────────────────────── -->
+  <footer>
+    <span class="footer-name">Thomas Abate</span>
+    <div class="footer-links">
+      <a href="works.html">Work</a>
+      <a href="about.html">About</a>
+      <a href="mailto:thomasabatepro@gmail.com">Contact</a>
+      <a href="https://www.linkedin.com/in/thomas-abate" target="_blank" rel="noopener">LinkedIn</a>
+    </div>
+  </footer>
+
+  <script src="js/data.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
