@@ -58,6 +58,28 @@
   }
 })();
 
+/* ─── Hero background video: fade in + seamless loop ────────────────────── */
+(function initHeroBgVideo() {
+  const video = document.getElementById('heroBgVideo');
+  if (!video) return;
+  const bg = video.closest('.hero-video-bg');
+
+  /* Reveal once first frame is decoded */
+  function reveal() { bg.classList.add('ready'); }
+  if (video.readyState >= 3) {
+    reveal();
+  } else {
+    video.addEventListener('canplay', reveal, { once: true });
+  }
+
+  /* Seamless loop: restart 0.3s before natural end to avoid the end→start flash */
+  video.addEventListener('timeupdate', function () {
+    if (this.duration && this.currentTime >= this.duration - 0.3) {
+      this.currentTime = 0;
+    }
+  });
+})();
+
 /* ─── Scroll-reveal ──────────────────────────────────────────────────────── */
 (function initReveal() {
   const io = new IntersectionObserver(

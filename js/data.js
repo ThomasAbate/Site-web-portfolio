@@ -104,6 +104,7 @@ const PROJECTS = [
     gallery:       [],
     featured: true,
     homeFeatured: true,
+    homeFeaturedOrder: 2,
   },
   {
     id:            'tikivolcano',
@@ -137,6 +138,7 @@ const PROJECTS = [
     ],
     featured: true,
     homeFeatured: true,
+    homeFeaturedOrder: 3,
   },
   {
     id:            'night-city',
@@ -231,6 +233,7 @@ const PROJECTS = [
     ],
     featured: false,
     homeFeatured: true,
+    homeFeaturedOrder: 1,
   },
   {
     id:            'heart-of-darkness',
@@ -349,7 +352,8 @@ function getProjectsByCategory(cat) {
 }
 
 function getHomeFeatured() {
-  return PROJECTS.filter(p => p.homeFeatured);
+  return PROJECTS.filter(p => p.homeFeatured)
+                 .sort((a, b) => (a.homeFeaturedOrder || 99) - (b.homeFeaturedOrder || 99));
 }
 
 function cardImageUrl(slug)     { return slug || null; }

@@ -1127,15 +1127,19 @@ footer {
   inset: 0;
   z-index: 1;
   overflow: hidden;
+  opacity: 0;
+  transition: opacity 1s ease;
+}
+
+.hero-video-bg.ready {
+  opacity: 1;
 }
 
 .hero-video-bg video {
   position: absolute;
-  top: 50%;
-  left: 50%;
+  inset: 0;
   width: 100%;
   height: 100%;
-  transform: translate(-50%, -50%);
   object-fit: cover;
   pointer-events: none;
 }
@@ -1145,11 +1149,11 @@ footer {
   position: absolute;
   inset: 0;
   z-index: 2;
-  /* Dark gradient: subtle at top, heavier near text, fades to bg */
+  /* Gradient: transparent at top, darkens only near the text zone, fades to bg */
   background:
     linear-gradient(to bottom,
-      rgba(0,0,0,0.25) 0%,
-      rgba(0,0,0,0.50) 55%,
+      rgba(0,0,0,0.05) 0%,
+      rgba(0,0,0,0.25) 55%,
       var(--bg) 100%);
   /* No pointer-events:none — this div absorbs all mouse events so YouTube
      never detects a hover over the iframe and never shows controls */
@@ -1164,6 +1168,7 @@ footer {
   background: rgba(0, 0, 0, 0.38);
   backdrop-filter: blur(6px);
   -webkit-backdrop-filter: blur(6px);
+  border-radius: 12px;
 }
 
 /* Hero content stays above the animated bg — exclude absolute-positioned children */
