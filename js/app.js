@@ -520,7 +520,10 @@ function initLazyVideo(iframe, src, target) {
 /* ─── Demo Reel ──────────────────────────────────────────────────────────── */
 function initReel() {
   const iframe  = document.getElementById('reelIframe');
-  if (!iframe) return;
+  const section = document.getElementById('reel');
+  if (!iframe || !section) return;
+
+  initLazyVideo(iframe, iframe.dataset.src, section);
 
   const overlay = document.getElementById('reelOverlay');
   const frame   = iframe.closest('.reel-frame');
@@ -532,10 +535,6 @@ function initReel() {
   const ytCmd = (func) => iframe.contentWindow?.postMessage(
     JSON.stringify({ event: 'command', func, args: '' }), '*'
   );
-
-  /* ── Play on hover, pause on leave ── */
-  frame.addEventListener('mouseenter', () => ytCmd('playVideo'));
-  frame.addEventListener('mouseleave', () => ytCmd('pauseVideo'));
 
   /* ── Modal ── */
   const modal = document.createElement('div');
