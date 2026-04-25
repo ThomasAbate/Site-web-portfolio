@@ -1049,15 +1049,24 @@ a[download].dl-anim svg {
 .contact-item {
   display: flex;
   flex-direction: column;
+  align-items: center;
   gap: 5px;
 }
 
 .contact-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
   font-size: 10px;
   font-weight: 600;
   letter-spacing: 0.2em;
   text-transform: uppercase;
   color: var(--muted);
+}
+
+.contact-label svg {
+  flex-shrink: 0;
+  opacity: 0.7;
 }
 
 .contact-val {
@@ -1311,6 +1320,133 @@ footer {
   width: 100%;
   height: 100%;
   border: none;
+}
+
+.reel-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 2;
+}
+
+.reel-center-btn {
+  position: relative;
+  width: 112px;
+  height: 112px;
+}
+
+.reel-btn-backdrop {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+.reel-icon-play,
+.reel-icon-pause {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  transition: opacity 0.3s ease, transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Default (no hover): pause icon visible, play icon hidden */
+.reel-icon-pause {
+  opacity: 0.8;
+  transform: scale(1);
+  filter: drop-shadow(0 4px 20px rgba(0,0,0,0.75));
+}
+
+.reel-icon-play {
+  opacity: 0;
+  transform: scale(0.7);
+}
+
+/* Hover: play icon in, pause icon out */
+.reel-frame:hover .reel-icon-pause {
+  opacity: 0;
+  transform: scale(0.7);
+}
+
+.reel-frame:hover .reel-icon-play {
+  opacity: 1;
+  transform: scale(1);
+  filter: drop-shadow(0 0 32px rgba(255,255,255,0.55)) drop-shadow(0 4px 24px rgba(0,0,0,0.8));
+}
+
+.reel-play-ring {
+  stroke-dasharray: 239;
+  stroke-dashoffset: 239;
+  transform-origin: center;
+  transform: rotate(-90deg);
+  transition: stroke-dashoffset 0.55s ease;
+}
+
+.reel-frame:hover .reel-play-ring {
+  stroke-dashoffset: 0;
+}
+
+/* ─── Reel Modal ─────────────────────────────────────────────────────────── */
+.reel-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 9000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.35s ease, background 0.35s ease;
+}
+
+.reel-modal.is-open {
+  opacity: 1;
+  pointer-events: all;
+  background: rgba(0, 0, 0, 0.88);
+}
+
+.reel-modal-inner {
+  width: min(95vw, calc(90vh * 16 / 9));
+  aspect-ratio: 16 / 9;
+  transform: scale(0.82);
+  transition: transform 0.42s cubic-bezier(0.34, 1.4, 0.64, 1);
+  border: 1px solid rgba(255,255,255,0.08);
+}
+
+.reel-modal.is-open .reel-modal-inner {
+  transform: scale(1);
+}
+
+.reel-modal-inner iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+  display: block;
+}
+
+.reel-modal-close {
+  position: absolute;
+  top: 20px;
+  right: 24px;
+  background: none;
+  border: none;
+  color: rgba(255,255,255,0.7);
+  font-size: 36px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 4px 8px;
+  transition: color 0.2s, transform 0.2s;
+}
+
+.reel-modal-close:hover {
+  color: #fff;
+  transform: rotate(90deg) scale(1.1);
 }
 
 /* ─── Works title transition ────────────────────────────────────────────────── */

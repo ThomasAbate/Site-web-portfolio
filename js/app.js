@@ -31,15 +31,29 @@
   /* On about.html: switch between About / CV on scroll */
   const cvSection = document.getElementById('cv');
   if (cvSection && page === 'about.html') {
-    const io = new IntersectionObserver(entries => {
-      if (entries[0].isIntersecting) {
+    function updateNavOnScroll() {
+      const cvTop = cvSection.getBoundingClientRect().top;
+      if (cvTop <= window.innerHeight * 0.45) {
         setActive('about.html#cv');
       } else {
         setActive('about.html');
       }
-    }, { threshold: 0.2 });
-    io.observe(cvSection);
+    }
+    window.addEventListener('scroll', updateNavOnScroll, { passive: true });
+    updateNavOnScroll();
   }
+
+  /* Clic sur un lien de la même page sans hash → scroll to top */
+  links.forEach(a => {
+    a.addEventListener('click', e => {
+      const href = a.getAttribute('href');
+      if (href === page) {
+        e.preventDefault();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        history.pushState(null, '', href);
+      }
+    });
+  });
 
   if (toggle && navList) {
     toggle.addEventListener('click', () => {
@@ -501,9 +515,59 @@ function initLazyVideo(iframe, src, target) {
 /* ─── Demo Reel ──────────────────────────────────────────────────────────── */
 function initReel() {
   const iframe  = document.getElementById('reelIframe');
-  const section = document.getElementById('reel');
-  if (!iframe || !section) return;
-  initLazyVideo(iframe, iframe.dataset.src, section);
+  if (!iframe) return;
+
+  const overlay = document.getElementById('reelOverlay');
+  const frame   = iframe.closest('.reel-frame');
+  if (!overlay || !frame) return;
+
+  const VIDEO_SRC = 'https://www.youtube.com/embed/e88P-_075KE?rel=0&modestbranding=1&color=white&autoplay=1';
+
+  /* ── YouTube postMessage helper ── */
+  const ytCmd = (func) => iframe.contentWindow?.postMessage(
+    JSON.stringify({ event: 'command', func, args: '' }), '*'
+  );
+
+  /* ── Play on hover, pause on leave ── */
+  frame.addEventListener('mouseenter', () => ytCmd('playVideo'));
+  frame.addEventListener('mouseleave', () => ytCmd('pauseVideo'));
+
+  /* ── Modal ── */
+  const modal = document.createElement('div');
+  modal.className = 'reel-modal';
+  modal.id = 'reelModal';
+  modal.innerHTML = `
+    <div class="reel-modal-inner">
+      <iframe
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowfullscreen>
+      </iframe>
+    </div>
+    <button class="reel-modal-close" aria-label="Close">&times;</button>
+  `;
+  document.body.appendChild(modal);
+
+  const modalIframe = modal.querySelector('iframe');
+  const closeBtn    = modal.querySelector('.reel-modal-close');
+
+  function openModal() {
+    ytCmd('pauseVideo');
+    modalIframe.src = VIDEO_SRC;
+    modal.classList.add('is-open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeModal() {
+    modal.classList.remove('is-open');
+    document.body.style.overflow = '';
+    setTimeout(() => { modalIframe.src = ''; }, 380);
+  }
+
+  overlay.addEventListener('click', openModal);
+  overlay.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') openModal(); });
+  closeBtn.addEventListener('click', closeModal);
+  modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
 }
 
 /* ─── CV download button animation ──────────────────────────────────────── */
