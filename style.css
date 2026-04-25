@@ -927,6 +927,7 @@ a[download].dl-anim svg {
   width: 320px;
   height: 320px;
   object-fit: cover;
+  transform: scaleX(-1);
   object-position: center top;
   border-radius: 50%;
   border: 1px solid rgba(255,255,255,0.1);

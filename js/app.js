@@ -587,6 +587,7 @@ function initDownloadBtns() {
   });
 }
 
+
 /* ─── Init ───────────────────────────────────────────────────────────────── */
 document.addEventListener('DOMContentLoaded', () => {
   initAnimBg();
