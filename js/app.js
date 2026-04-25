@@ -43,9 +43,14 @@
     updateNavOnScroll();
   }
 
-  /* Clic sur un lien de la même page sans hash → scroll to top */
+  /* Animation clic + scroll to top si même page */
   links.forEach(a => {
     a.addEventListener('click', e => {
+      a.classList.remove('nav-clicked');
+      void a.offsetWidth;
+      a.classList.add('nav-clicked');
+      a.addEventListener('animationend', () => a.classList.remove('nav-clicked'), { once: true });
+
       const href = a.getAttribute('href');
       if (href === page) {
         e.preventDefault();
