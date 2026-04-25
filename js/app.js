@@ -4,17 +4,42 @@
 
 /* ─── Nav: active link & mobile toggle ───────────────────────────────────── */
 (function initNav() {
-  const page     = location.pathname.split('/').pop() || 'index.html';
-  const links    = document.querySelectorAll('.nav-links a');
-  const toggle   = document.getElementById('navToggle');
-  const navList  = document.getElementById('navList');
+  const page    = location.pathname.split('/').pop() || 'index.html';
+  const hash    = location.hash;
+  const links   = document.querySelectorAll('.nav-links a');
+  const toggle  = document.getElementById('navToggle');
+  const navList = document.getElementById('navList');
 
-  links.forEach(a => {
-    const href = a.getAttribute('href');
-    if (href === page || (page === '' && href === 'index.html')) {
-      a.classList.add('active');
-    }
-  });
+  function setActive(href) {
+    links.forEach(a => a.classList.toggle('active', a.getAttribute('href') === href));
+  }
+
+  /* Initial active state: prefer hash match first */
+  const fullMatch = page + hash;
+  const hasHashLink = [...links].some(a => a.getAttribute('href') === fullMatch);
+  if (hasHashLink) {
+    setActive(fullMatch);
+  } else {
+    links.forEach(a => {
+      const href = a.getAttribute('href');
+      if (href === page || (page === '' && href === 'index.html')) {
+        a.classList.add('active');
+      }
+    });
+  }
+
+  /* On about.html: switch between About / CV on scroll */
+  const cvSection = document.getElementById('cv');
+  if (cvSection && page === 'about.html') {
+    const io = new IntersectionObserver(entries => {
+      if (entries[0].isIntersecting) {
+        setActive('about.html#cv');
+      } else {
+        setActive('about.html');
+      }
+    }, { threshold: 0.2 });
+    io.observe(cvSection);
+  }
 
   if (toggle && navList) {
     toggle.addEventListener('click', () => {
@@ -23,7 +48,6 @@
       document.body.style.overflow = open ? 'hidden' : '';
     });
 
-    /* Close on link click */
     navList.querySelectorAll('a').forEach(a => {
       a.addEventListener('click', () => {
         navList.classList.remove('open');

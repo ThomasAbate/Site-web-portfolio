@@ -535,9 +535,9 @@ a[download].dl-anim svg {
 .project-description { padding-right: 80px; }
 
 .project-intro {
-  font-size: 16px;
+  font-size: 17px;
   line-height: 1.8;
-  color: var(--muted);
+  color: rgba(255,255,255,0.75);
   margin-bottom: 48px;
 }
 
@@ -554,16 +554,17 @@ a[download].dl-anim svg {
 }
 
 .bullet-title {
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 700;
-  margin-bottom: 5px;
-  letter-spacing: -0.005em;
+  margin-bottom: 6px;
+  letter-spacing: -0.01em;
+  color: var(--text);
 }
 
 .bullet-text {
-  font-size: 13.5px;
-  color: var(--muted);
-  line-height: 1.65;
+  font-size: 14.5px;
+  color: rgba(255,255,255,0.55);
+  line-height: 1.7;
 }
 
 /* Project sidebar */
@@ -582,12 +583,16 @@ a[download].dl-anim svg {
   letter-spacing: 0.2em;
   text-transform: uppercase;
   color: var(--muted);
-  margin-bottom: 8px;
+  margin-bottom: 3px;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-color: rgba(255,255,255,0.2);
 }
 
 .sidebar-value {
   font-size: 14px;
   font-weight: 500;
+  color: var(--muted);
 }
 
 .sidebar-engine {
@@ -833,11 +838,15 @@ a[download].dl-anim svg {
 
 /* ─── About Page ────────────────────────────────────────────────────────────── */
 .about-hero {
-  padding: calc(var(--nav-h) + 96px) 56px 80px;
+  padding: calc(var(--nav-h) + 56px) 56px 48px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 48px;
+}
+
+.about-hero .section-heading {
+  margin-bottom: 0;
 }
 
 .about-hero-text {
@@ -849,8 +858,8 @@ a[download].dl-anim svg {
 }
 
 .about-hero-photo img {
-  width: 220px;
-  height: 220px;
+  width: 320px;
+  height: 320px;
   object-fit: cover;
   object-position: center top;
   border-radius: 50%;
@@ -1112,10 +1121,58 @@ footer {
   100% { opacity: 1;   transform: scale(1.04) translate(10px,  15px); }
 }
 
-/* Hero content stays above the animated bg — exclude absolute-positioned children */
-.hero > *:not(.hero-anim-bg):not(.hero-scroll) {
-  position: relative;
+/* ── Hero video background ── */
+.hero-video-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  overflow: hidden;
+}
+
+.hero-video-bg iframe {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  /* Cover trick: 16:9 ratio, always fill the container */
+  width: 177.78vh;
+  height: 56.25vw;
+  min-width: 100%;
+  min-height: 100%;
+  transform: translate(-50%, -50%);
+  border: none;
+  pointer-events: none;
+}
+
+
+.hero-video-overlay {
+  position: absolute;
+  inset: 0;
   z-index: 2;
+  /* Dark gradient: subtle at top, heavier near text, fades to bg */
+  background:
+    linear-gradient(to bottom,
+      rgba(0,0,0,0.25) 0%,
+      rgba(0,0,0,0.50) 55%,
+      var(--bg) 100%);
+  /* No pointer-events:none — this div absorbs all mouse events so YouTube
+     never detects a hover over the iframe and never shows controls */
+}
+
+/* Dark glass box behind the hero text */
+.hero-content-box {
+  display: flex;
+  flex-direction: column;
+  align-self: flex-start;
+  padding: 28px 36px 32px;
+  background: rgba(0, 0, 0, 0.38);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+/* Hero content stays above the animated bg — exclude absolute-positioned children */
+.hero > *:not(.hero-anim-bg):not(.hero-video-bg):not(.hero-video-overlay):not(.hero-scroll) {
+  position: relative;
+  z-index: 3;
 }
 
 
@@ -1279,6 +1336,8 @@ footer {
 
   .hero { padding: calc(var(--nav-h) + 20px) 24px 72px; }
   .hero-scroll { display: none; }
+  .hero-video-bg,
+  .hero-video-overlay { display: none; }
   .reel-section { padding: 48px 24px; gap: 24px; min-height: auto; }
   .reel-frame { max-width: 100%; padding-bottom: 56.25%; }
 
