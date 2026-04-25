@@ -251,24 +251,33 @@ nav {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 24px;
+  overflow: visible;
+  padding: 12px;
+  margin: -12px;
 }
 
 /* ─── Project Card ──────────────────────────────────────────────────────────── */
 .card {
   display: block;
   background: var(--bg-2);
-  overflow: hidden;
-  transition: background var(--ease);
+  transform: scale(1);
+  transition: background 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
   cursor: pointer;
+  position: relative;
+  z-index: 1;
 }
 
 .card:hover {
   background: var(--bg-3);
+  transform: scale(1.06);
+  box-shadow: 0 20px 48px rgba(0,0,0,0.5);
+  z-index: 10;
 }
 
 .card-img {
   aspect-ratio: 16 / 10;
   overflow: hidden;
+  /* overflow stays on the image container, not the card, so the card can scale freely */
   background: var(--bg-3);
   position: relative;
 }
@@ -451,20 +460,36 @@ a[download].dl-anim svg {
   border-bottom: 2px solid transparent;
   margin-bottom: -1px;
   cursor: pointer;
-  transition: color var(--ease), border-color var(--ease);
+  transition: color 0.25s ease, border-color 0.25s ease,
+              background 0.25s ease, font-size 0.25s ease,
+              letter-spacing 0.25s ease, transform 0.15s ease;
 }
 
-.filter-btn:hover { color: var(--text); background: rgba(255,255,255,0.04); }
+.filter-btn:hover {
+  color: var(--text);
+  background: rgba(255,255,255,0.05);
+  font-size: 12px;
+  letter-spacing: 0.2em;
+}
+
 .filter-btn.active {
   color: var(--text);
   border-bottom-color: var(--text);
+  font-size: 12px;
+  letter-spacing: 0.2em;
+  background: rgba(255,255,255,0.06);
+}
+
+.filter-btn.clicked {
+  transform: scale(0.92);
 }
 
 .works-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 24px;
-  padding: 0 56px 120px;
+  padding: 12px 56px 120px;
+  overflow: visible;
 }
 
 .card-hidden { display: none; }
@@ -590,7 +615,7 @@ a[download].dl-anim svg {
 }
 
 .sidebar-value {
-  font-size: 14px;
+  font-size: 17px;
   font-weight: 500;
   color: var(--muted);
 }
@@ -1142,6 +1167,8 @@ footer {
   height: 100%;
   object-fit: cover;
   pointer-events: none;
+  filter: blur(2px);
+  transform: scale(1.02);
 }
 
 

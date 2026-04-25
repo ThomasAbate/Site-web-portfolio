@@ -179,6 +179,8 @@ function renderWorks() {
     btn.addEventListener('click', () => {
       btns.forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
+      btn.classList.add('clicked');
+      setTimeout(() => btn.classList.remove('clicked'), 150);
       const cat = btn.dataset.cat;
       render(cat);
       if (pageTitle) {

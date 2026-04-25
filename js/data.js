@@ -345,10 +345,15 @@ function getProjectById(id) {
   return PROJECTS.find(p => p.id === id) || null;
 }
 
+const CATEGORY_ORDER = { personal: 1, school: 2, gamejam: 3 };
+
 function getProjectsByCategory(cat) {
-  if (!cat || cat === 'all')
-    return [...PROJECTS].sort((a, b) => Number(b.year) - Number(a.year));
-  return PROJECTS.filter(p => p.category === cat);
+  const list = (!cat || cat === 'all') ? [...PROJECTS] : PROJECTS.filter(p => p.category === cat);
+  return list.sort((a, b) => {
+    const catDiff = (CATEGORY_ORDER[a.category] || 9) - (CATEGORY_ORDER[b.category] || 9);
+    if (catDiff !== 0) return catDiff;
+    return Number(b.year) - Number(a.year);
+  });
 }
 
 function getHomeFeatured() {
