@@ -21,8 +21,30 @@
 
   <!-- Feuille de style principale du site -->
   <link rel="stylesheet" href="style.css?v=3">
+
+  <!-- Supprime le loader du DOM une fois son animation terminée (3.3s) -->
+  <script>
+    window.addEventListener('load', function () {
+      var l = document.getElementById('loader');
+      if (l) setTimeout(function () { l.remove(); }, 3300);
+    });
+  </script>
 </head>
 <body>
+
+  <!-- ════════════════════════════════════════════════════════════════════════
+       LOADING SCREEN — Affiché au premier chargement de la page d'accueil
+       Disparaît automatiquement après ~3 secondes via animation CSS + JS
+       ════════════════════════════════════════════════════════════════════════ -->
+  <div id="loader" aria-hidden="true">
+    <div class="loader-inner">
+      <p class="loader-welcome">Welcome</p>
+      <h1 class="loader-name">Thomas<span class="loader-name-accent">Abate</span></h1>
+      <div class="loader-bar-wrap">
+        <div class="loader-bar"></div>
+      </div>
+    </div>
+  </div>
 
   <!-- Overlay de transition de page — doit être le premier élément du body
        pour bloquer le rendu dès le premier frame (évite le flicker) -->
