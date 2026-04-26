@@ -527,16 +527,17 @@ nav {
               transform 0.25s ease, box-shadow 0.25s ease;
 }
 
-.btn-outline:hover {
-  background-position: left bottom; /* La couleur pleine glisse en vue */
-  color: var(--bg);                 /* Texte sombre sur fond clair */
+.btn-outline:hover,
+.btn-outline.visible:hover {
+  background-position: left bottom;
+  color: var(--bg);
   border-color: var(--text);
-  transform: translateY(-2px);
+  transform: scale(1.05);
   box-shadow: 0 8px 24px rgba(0,0,0,0.35);
 }
 
 .btn-outline svg { transition: transform 0.3s ease; }
-.btn-outline:hover svg { transform: translateX(6px); } /* Flèche glisse à droite */
+.btn-outline:hover svg { transform: scale(1.25); }
 
 
 /* ============================================================
@@ -1057,6 +1058,14 @@ a[download].dl-anim svg {
   border-top: 1px solid var(--border);
   display: flex; flex-direction: column;
   align-items: center; text-align: center;
+}
+
+.contact-btns {
+  display: flex;
+  gap: 30px;
+  margin-top: -30px;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
 .contact-grid {
