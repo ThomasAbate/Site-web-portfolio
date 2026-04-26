@@ -523,20 +523,43 @@ function initReel() {
   const section = document.getElementById('reel');
   if (!iframe || !section) return;
 
-  initLazyVideo(iframe, iframe.dataset.src, section);
-
   const overlay = document.getElementById('reelOverlay');
   const frame   = iframe.closest('.reel-frame');
   if (!overlay || !frame) return;
 
-  const VIDEO_SRC = 'https://www.youtube.com/embed/e88P-_075KE?rel=0&modestbranding=1&color=white&autoplay=1';
+  /* Précharge l'iframe (sans autoplay) dès que la section entre dans le viewport */
+  const INLINE_SRC = iframe.dataset.src
+    .replace('autoplay=1', 'autoplay=0')
+    + '&enablejsapi=1';
+  const MODAL_SRC = 'https://www.youtube.com/embed/e88P-_075KE?rel=0&modestbranding=1&color=white&autoplay=1';
 
-  /* ── YouTube postMessage helper ── */
   const ytCmd = (func) => iframe.contentWindow?.postMessage(
     JSON.stringify({ event: 'command', func, args: '' }), '*'
   );
 
-  /* ── Modal ── */
+  let loaded = false;
+  const loadObserver = new IntersectionObserver(entries => {
+    if (entries[0].intersectionRatio > 0 && !loaded) {
+      iframe.src = INLINE_SRC;
+      loaded = true;
+      loadObserver.disconnect();
+    }
+  }, { threshold: [0] });
+  loadObserver.observe(section);
+
+  /* Hover → joue ; sortie → pause */
+  frame.addEventListener('mouseenter', () => {
+    ytCmd('playVideo');
+    setTimeout(() => ytCmd('playVideo'), 500); /* retry si l'API n'était pas prête */
+    frame.classList.add('is-playing');
+  });
+
+  frame.addEventListener('mouseleave', () => {
+    ytCmd('pauseVideo');
+    frame.classList.remove('is-playing');
+  });
+
+  /* ── Modal plein écran au clic ── */
   const modal = document.createElement('div');
   modal.className = 'reel-modal';
   modal.id = 'reelModal';
@@ -555,8 +578,7 @@ function initReel() {
   const closeBtn    = modal.querySelector('.reel-modal-close');
 
   function openModal() {
-    ytCmd('pauseVideo');
-    modalIframe.src = VIDEO_SRC;
+    modalIframe.src = MODAL_SRC;
     modal.classList.add('is-open');
     document.body.style.overflow = 'hidden';
   }

@@ -1,375 +1,473 @@
-/* ─── Reset & Base ─────────────────────────────────────────────────────────── */
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+/* ============================================================
+   style.css — Portfolio de Thomas Abate
+   ============================================================
+   COMMENT LIRE CE FICHIER :
+   - Les variables globales (couleurs, tailles...) sont tout en haut dans :root
+   - Chaque section est séparée par un commentaire ── NOM ──
+   - Les valeurs que tu peux facilement changer sont signalées avec ← MODIFIABLE
+   - Les techniques un peu complexes sont expliquées en détail
+   ============================================================ */
 
-:root {
-  --bg:        #0f0f0f;
-  --bg-2:      #181818;
-  --bg-3:      #212121;
-  --text:      #f0f0f0;
-  --muted:     #777;
-  --border:    rgba(255,255,255,0.08);
-  --nav-h:     64px;
-  --ease:      0.3s ease;
-  --font:      'Inter', sans-serif;
+
+/* ============================================================
+   RESET — Remise à zéro des styles par défaut du navigateur
+   ============================================================
+   Chaque navigateur (Chrome, Firefox, Safari...) applique ses propres
+   marges et paddings par défaut sur les éléments HTML. On les supprime
+   ici pour partir d'une base propre et cohérente sur tous les navigateurs.
+   ============================================================ */
+*, *::before, *::after {
+  box-sizing: border-box; /* La taille d'un élément inclut border + padding, pas seulement le contenu */
+  margin: 0;              /* Supprime les marges par défaut */
+  padding: 0;             /* Supprime les paddings par défaut */
 }
 
-html { scroll-behavior: smooth; }
+
+/* ============================================================
+   VARIABLES GLOBALES — La palette et les réglages du site
+   ============================================================
+   Tout ce qui est défini ici dans :root est utilisable partout dans le CSS
+   avec la syntaxe var(--nom-de-la-variable).
+
+   POUR CHANGER LES COULEURS DU SITE, modifie uniquement cette section.
+   Toutes les autres règles utiliseront automatiquement les nouvelles valeurs.
+   ============================================================ */
+:root {
+  /* --- Couleurs de fond ---
+     --bg    : couleur principale des pages (brun-noir chaud)        ← MODIFIABLE
+     --bg-2  : fond des cartes de projet (un ton plus clair)         ← MODIFIABLE
+     --bg-3  : fond des cartes au survol (encore un peu plus clair)  ← MODIFIABLE
+     Astuce : pour un fond plus sombre, diminue les valeurs RGB.
+              Pour plus clair, augmente-les. */
+  --bg:     #0E0C08;
+  --bg-2:   #181410;
+  --bg-3:   #221C14;
+
+  /* --- Couleurs du texte ---
+     --text  : couleur principale du texte (crème chaud, pas blanc pur) ← MODIFIABLE
+               Évite #ffffff (blanc pur) qui fatigue les yeux.
+     --muted : texte secondaire (labels, descriptions, textes discrets)
+               C'est la même couleur que --text mais à 44% d'opacité.
+               0.44 = 44% de transparence. Augmente pour le rendre plus visible. ← MODIFIABLE */
+  --text:   #EDE5D5;
+  --muted:  rgba(237, 229, 213, 0.44);
+
+  /* --- Couleur des bordures ---
+     Même teinte que le texte mais très transparent (8% d'opacité).
+     Utilisé pour les lignes séparatrices discrètes.              ← MODIFIABLE */
+  --border: rgba(237, 229, 213, 0.08);
+
+  /* --- Hauteur de la barre de navigation (fixe en haut de l'écran) ← MODIFIABLE --- */
+  --nav-h: 64px;
+
+  /* --- Durée et courbe des transitions (animations au hover) ---
+     0.3s = durée de 0.3 secondes. Augmente pour des animations plus lentes. ← MODIFIABLE
+     "ease" = démarre doucement, accélère, puis ralentit à la fin. */
+  --ease: 0.3s ease;
+
+  /* --- Police d'écriture du site ← MODIFIABLE ---
+     'Inter' est chargée via Google Fonts dans le HTML.
+     Pour en changer, modifie le lien Google Fonts dans index.html ET cette valeur. */
+  --font: 'Inter', sans-serif;
+}
+
+
+/* ============================================================
+   BASE — Styles appliqués à toute la page
+   ============================================================ */
+html {
+  /* scroll-behavior: smooth = quand on clique sur un lien ancre (#section),
+     la page défile en douceur plutôt que de sauter brusquement. */
+  scroll-behavior: smooth;
+}
 
 body {
-  background: var(--bg);
-  color: var(--text);
-  font-family: var(--font);
-  font-size: 15px;
-  line-height: 1.65;
+  background:  var(--bg);       /* Fond de la page */
+  color:       var(--text);     /* Couleur du texte par défaut */
+  font-family: var(--font);     /* Police utilisée sur tout le site */
+  font-size:   15px;            /* Taille de base du texte ← MODIFIABLE */
+  line-height: 1.65;            /* Interligne (1.65 × la taille de police) ← MODIFIABLE */
+  /* antialiased = rend le texte plus lisse et lisible sur les écrans */
   -webkit-font-smoothing: antialiased;
 }
 
+/* Les liens n'ont pas de soulignement et héritent la couleur du parent */
 a { color: inherit; text-decoration: none; }
+
+/* Les images ne dépassent jamais leur conteneur */
 img { display: block; max-width: 100%; }
 
-/* ─── Navigation ───────────────────────────────────────────────────────────── */
+
+/* ============================================================
+   NAVIGATION — La barre fixe en haut de l'écran
+   ============================================================ */
 nav {
-  position: fixed;
-  top: 0; left: 0; right: 0;
-  height: var(--nav-h);
+  position: fixed;              /* Reste collée en haut même quand on scrolle */
+  top: 0; left: 0; right: 0;   /* S'étend sur toute la largeur de l'écran */
+  height: var(--nav-h);         /* Hauteur définie dans les variables (64px) */
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 56px;
-  background: rgba(15,15,15,0.85);
+  align-items: center;          /* Centre les éléments verticalement */
+  justify-content: space-between; /* Logo à gauche, liens à droite */
+  padding: 0 56px;              /* Espace intérieur gauche/droite ← MODIFIABLE */
+
+  /* Fond semi-transparent avec flou derrière (effet "verre givré")
+     rgba(14, 12, 8, 0.88) = même couleur que --bg mais à 88% d'opacité
+     backdrop-filter: blur = flou ce qui est derrière la nav */
+  background: rgba(14, 12, 8, 0.88);
   backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border-bottom: 1px solid var(--border);
-  z-index: 200;
-  transition: background var(--ease);
+  -webkit-backdrop-filter: blur(16px); /* Version Safari */
+
+  border-bottom: 1px solid var(--border); /* Fine ligne séparatrice en bas */
+  z-index: 200;                 /* La nav se superpose au-dessus de tout le reste */
+  transition: background var(--ease); /* Transition douce si le fond change */
 }
 
+/* --- Logo "Thomas Abate" dans la nav --- */
 .nav-logo {
-  font-size: 13px;
-  font-weight: 700;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
+  font-size:      13px;
+  font-weight:    700;           /* Gras */
+  letter-spacing: 0.18em;       /* Espacement entre les lettres ← MODIFIABLE */
+  text-transform: uppercase;    /* Tout en majuscules */
 }
 
+/* --- Liste des liens de navigation (Home, Work, About, CV) --- */
 .nav-links {
   display: flex;
-  gap: 44px;
-  list-style: none;
+  gap: 44px;          /* Espace entre chaque lien ← MODIFIABLE */
+  list-style: none;   /* Supprime les puces de liste */
 }
 
+/* --- Style de chaque lien de navigation --- */
 .nav-links a {
-  font-size: 11px;
-  font-weight: 500;
+  font-size:      11px;
+  font-weight:    500;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--muted);
-  position: relative;
-  padding-bottom: 4px;
+  color: var(--muted);          /* Couleur atténuée par défaut */
+  position: relative;           /* Nécessaire pour positionner le ::after (soulignement) */
+  padding-bottom: 4px;          /* Espace pour le soulignement animé en-dessous */
   transition: color 0.22s ease, transform 0.22s ease, text-shadow 0.22s ease;
-  display: inline-block;
+  display: inline-block;        /* Permet d'appliquer transform (translateY) */
 }
 
+/* --- Soulignement animé sous chaque lien ---
+   Technique : on crée un pseudo-élément invisible (scaleX 0 = width 0)
+   qui s'étire à la largeur du lien au survol (scaleX 1 = 100%). */
 .nav-links a::after {
-  content: '';
+  content: '';                  /* Obligatoire pour que ::after existe */
   position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: 1px;
+  bottom: 0; left: 0;
+  width: 100%; height: 1px;     /* Fine ligne de 1px ← MODIFIABLE */
   background: var(--text);
-  transform: scaleX(0);
-  transform-origin: left center;
-  transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+  transform: scaleX(0);         /* Invisible par défaut (largeur = 0) */
+  transform-origin: left center; /* L'animation part de la gauche */
+  transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1); /* Animation fluide */
 }
 
+/* --- Effets au survol d'un lien --- */
 .nav-links a:hover {
-  color: var(--text);
-  transform: translateY(-2px);
-  text-shadow: 0 0 18px rgba(255,255,255,0.25);
+  color: var(--text);                           /* Texte pleine couleur */
+  transform: translateY(-2px);                  /* Monte légèrement de 2px ← MODIFIABLE */
+  text-shadow: 0 0 18px rgba(255,255,255,0.25); /* Lueur blanche subtile */
 }
 
-.nav-links a:hover::after {
-  transform: scaleX(1);
-}
+/* Soulignement visible au survol */
+.nav-links a:hover::after { transform: scaleX(1); }
 
-.nav-links a.active {
-  color: var(--text);
-}
+/* --- Lien de la page active (classe ajoutée par JavaScript) --- */
+.nav-links a.active { color: var(--text); }
+.nav-links a.active::after { transform: scaleX(1); }
 
-.nav-links a.active::after {
-  transform: scaleX(1);
-}
-
+/* --- Au clic : légère compression du lien --- */
 .nav-links a:active {
   transform: scale(0.88) translateY(0px);
-  transition: transform 0.08s ease;
+  transition: transform 0.08s ease; /* Réaction très rapide au clic */
 }
 
+/* --- Animation de rebond au clic (ajoutée par JavaScript) ---
+   @keyframes définit les étapes d'une animation :
+   0% = début, 30% = à 30% du temps, etc. */
 @keyframes navClickBounce {
-  0%   { transform: scale(1)    translateY(0px); }
-  30%  { transform: scale(0.86) translateY(1px); }
-  65%  { transform: scale(1.06) translateY(-3px); }
-  100% { transform: scale(1)    translateY(0px); }
+  0%   { transform: scale(1)    translateY(0px);  } /* Position normale */
+  30%  { transform: scale(0.86) translateY(1px);  } /* Compression */
+  65%  { transform: scale(1.06) translateY(-3px); } /* Rebond vers le haut */
+  100% { transform: scale(1)    translateY(0px);  } /* Retour normal */
 }
 
 .nav-links a.nav-clicked {
   animation: navClickBounce 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-/* Mobile hamburger */
+/* ============================================================
+   HAMBURGER MOBILE — Bouton ≡ visible uniquement sur téléphone
+   (Caché par défaut, affiché dans @media au bas du fichier)
+   ============================================================ */
 .nav-toggle {
-  display: none;
+  display: none;                /* Caché sur desktop */
   flex-direction: column;
   justify-content: center;
-  gap: 5px;
+  gap: 5px;                     /* Espace entre les 3 barres ← MODIFIABLE */
   cursor: pointer;
-  width: 32px;
-  height: 32px;
-  background: none;
-  border: none;
-  padding: 4px;
+  width: 32px; height: 32px;
+  background: none; border: none; padding: 4px;
 }
 
+/* Les 3 barres du hamburger */
 .nav-toggle span {
   display: block;
-  width: 20px;
-  height: 1.5px;
+  width: 20px; height: 1.5px;  /* Largeur et épaisseur des barres ← MODIFIABLE */
   background: var(--text);
   transition: var(--ease);
 }
 
+/* Animation ≡ → ✕ quand le menu est ouvert :
+   - Barre 1 : tourne de 45° vers le bas
+   - Barre 2 : disparaît
+   - Barre 3 : tourne de -45° vers le haut */
 .nav-toggle.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
 .nav-toggle.open span:nth-child(2) { opacity: 0; }
 .nav-toggle.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
 
-/* ─── Hero ─────────────────────────────────────────────────────────────────── */
+
+/* ============================================================
+   HERO — La grande section d'accueil (première chose visible)
+   ============================================================ */
 .hero {
-  position: relative;
-  overflow: hidden;
-  min-height: 100svh;
+  position: relative;     /* Nécessaire pour positionner les enfants absolus (fond vidéo, blob...) */
+  overflow: hidden;       /* Cache tout ce qui dépasse de la section */
+  min-height: 100svh;     /* Hauteur minimale = 100% de l'écran visible
+                             svh = "small viewport height", plus fiable que vh sur mobile */
   display: flex;
   flex-direction: column;
-  justify-content: flex-end;
-  padding: calc(var(--nav-h) + 40px) 8vw 100px;
+  justify-content: flex-end; /* Le contenu texte est poussé en bas de la section */
+  /* Haut : nav-h + 40px pour ne pas être sous la nav | Côtés : 8% de la largeur | Bas : 100px */
+  padding: calc(var(--nav-h) + 40px) 8vw 100px; /* ← MODIFIABLE */
 }
 
+/* --- Petit texte au-dessus du nom ("Portfolio / Game Design") --- */
 .hero-eyebrow {
-  font-size: 11px;
-  font-weight: 500;
+  font-size:      11px;
+  font-weight:    500;
   letter-spacing: 0.26em;
   text-transform: uppercase;
-  color: rgba(255,255,255,0.55);
+  color: rgba(237, 229, 213, 0.55); /* Crème à 55% d'opacité ← MODIFIABLE */
   margin-bottom: 18px;
-  opacity: 0;
+  opacity: 0; /* Commence invisible, l'animation le fait apparaître */
+  /* fadeUp : monte de 20px en 0.8s, démarre après 0.2s de délai */
   animation: fadeUp 0.8s 0.2s ease forwards;
 }
 
+/* --- Grand titre "Thomas Abate" --- */
 .hero-name {
-  font-size: clamp(56px, 8.5vw, 110px);
-  font-weight: 800;
-  letter-spacing: -0.03em;
-  line-height: 0.92;
-  margin-bottom: 24px;
+  /* clamp(min, préféré, max) = s'adapte à la largeur de l'écran
+     min 56px | idéal 8.5% de la largeur d'écran | max 110px */
+  font-size: clamp(56px, 8.5vw, 110px); /* ← MODIFIABLE */
+  font-weight:    800;
+  letter-spacing: -0.03em; /* Légèrement resserré pour un titre impactant ← MODIFIABLE */
+  line-height:    0.92;     /* Interligne serré pour les gros titres ← MODIFIABLE */
+  margin-bottom:  24px;
   opacity: 0;
-  animation: fadeUp 0.8s 0.35s ease forwards;
-  text-shadow: 0 4px 40px rgba(0,0,0,0.6);
+  animation: fadeUp 0.8s 0.35s ease forwards; /* Délai 0.35s (après le eyebrow) */
+  text-shadow: 0 4px 40px rgba(0,0,0,0.6);    /* Ombre pour lisibilité sur la vidéo */
 }
 
+/* --- Sous-titre "Technical Game / Level Designer" --- */
 .hero-title {
-  font-size: clamp(12px, 1.4vw, 16px);
-  font-weight: 500;
+  font-size: clamp(12px, 1.4vw, 16px); /* ← MODIFIABLE */
+  font-weight:    500;
   letter-spacing: 0.22em;
   text-transform: uppercase;
-  color: rgba(255,255,255,0.6);
+  color: rgba(237, 229, 213, 0.6); /* Légèrement transparent ← MODIFIABLE */
   margin-bottom: 0;
   opacity: 0;
-  animation: fadeUp 0.8s 0.5s ease forwards;
+  animation: fadeUp 0.8s 0.5s ease forwards; /* Délai 0.5s */
   text-shadow: 0 2px 20px rgba(0,0,0,0.5);
 }
 
-/* Ligne séparatrice entre le nom et le titre */
+/* --- Petite ligne horizontale entre le nom et le titre --- */
 .hero-divider {
-  width: 48px;
-  height: 2px;
-  background: rgba(255,255,255,0.35);
+  width: 48px; height: 2px;                  /* Dimensions ← MODIFIABLE */
+  background: rgba(237, 229, 213, 0.35);     /* Couleur ← MODIFIABLE */
   margin: 20px 0;
   opacity: 0;
   animation: fadeUp 0.8s 0.48s ease forwards;
 }
 
+/* --- Bouton d'action principal dans le hero (si utilisé) ---
+   Technique du remplissage glissant :
+   Le dégradé est en double largeur (200%), positionné à droite (partie transparente visible).
+   Au survol, il glisse à gauche (partie opaque visible) → effet de remplissage. */
 .hero-cta {
   display: inline-flex;
   align-items: center;
   gap: 14px;
-  padding: 15px 36px;
+  padding: 15px 36px; /* ← MODIFIABLE */
   border: 1px solid rgba(255,255,255,0.25);
-  font-size: 11px;
-  font-weight: 600;
+  font-size:      11px;
+  font-weight:    600;
   letter-spacing: 0.18em;
   text-transform: uppercase;
   background: linear-gradient(to right, var(--text) 50%, transparent 50%);
   background-size: 200% 100%;
-  background-position: right bottom;
+  background-position: right bottom; /* Transparent visible par défaut */
   transition: background-position 0.4s cubic-bezier(0.4, 0, 0.2, 1),
-              border-color var(--ease),
-              color var(--ease),
-              transform 0.25s ease,
-              box-shadow 0.25s ease;
+              border-color var(--ease), color var(--ease),
+              transform 0.25s ease, box-shadow 0.25s ease;
   opacity: 0;
   animation: fadeUp 0.8s 0.65s ease forwards;
 }
 
 .hero-cta:hover {
-  background-position: left bottom;
-  color: var(--bg);
+  background-position: left bottom; /* Glisse vers la couleur pleine */
+  color: var(--bg);                 /* Texte devient sombre sur fond clair */
   border-color: var(--text);
   transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.35);
 }
 
 .hero-cta svg { transition: transform 0.3s ease; }
-.hero-cta:hover svg { transform: translateX(6px); }
+.hero-cta:hover svg { transform: translateX(6px); } /* Flèche glisse à droite */
 
+/* --- Texte "Scroll" vertical à droite (desktop uniquement) --- */
 .hero-scroll {
-  position: absolute !important;
-  bottom: 40px;
-  right: 56px;
-  font-size: 10px;
-  font-weight: 500;
+  position: absolute !important; /* Se place par rapport au .hero */
+  bottom: 40px; right: 56px;    /* ← MODIFIABLE */
+  font-size:      10px;
+  font-weight:    500;
   letter-spacing: 0.2em;
   text-transform: uppercase;
   color: var(--muted);
-  writing-mode: vertical-rl;
+  writing-mode: vertical-rl;   /* Texte écrit verticalement de haut en bas */
   display: flex;
   align-items: center;
   gap: 12px;
   opacity: 0;
-  animation: fadeUp 1s 1s ease forwards;
+  animation: fadeUp 1s 1s ease forwards; /* Apparaît en dernier (délai 1s) */
 }
 
+/* Ligne verticale au-dessus du texte "Scroll" */
 .hero-scroll::before {
   content: '';
   display: block;
-  width: 1px;
-  height: 48px;
+  width: 1px; height: 48px; /* ← MODIFIABLE */
   background: var(--border);
 }
 
-/* ─── Shared Section Styles ────────────────────────────────────────────────── */
-.section-wrap {
-  padding: 112px 56px;
-}
 
+/* ============================================================
+   SECTIONS — Styles partagés par toutes les sections de contenu
+   ============================================================ */
+
+/* Espace intérieur standard d'une section ← MODIFIABLE */
+.section-wrap { padding: 112px 56px; }
+
+/* Petit label au-dessus des titres ("Selected Works", "About"...) */
 .section-tag {
-  font-size: 10px;
-  font-weight: 600;
+  font-size:      10px;
+  font-weight:    600;
   letter-spacing: 0.22em;
   text-transform: uppercase;
   color: var(--muted);
   margin-bottom: 14px;
 }
 
+/* Titre principal d'une section */
 .section-heading {
-  font-size: clamp(26px, 4vw, 44px);
-  font-weight: 700;
+  font-size: clamp(26px, 4vw, 44px); /* Adaptatif selon la taille d'écran ← MODIFIABLE */
+  font-weight:    700;
   letter-spacing: -0.025em;
-  line-height: 1.1;
-  margin-bottom: 64px;
+  line-height:    1.1;
+  margin-bottom:  64px; /* Espace sous le titre avant le contenu ← MODIFIABLE */
 }
 
-.section-heading span {
-  color: var(--muted);
-}
+/* Le <span> dans un titre est affiché en version atténuée (ex: "Last Works") */
+.section-heading span { color: var(--muted); }
 
+/* Ligne de séparation horizontale entre les sections */
 .divider {
   height: 1px;
   background: var(--border);
-  margin: 0 56px;
+  margin: 0 56px; /* Rentrée des bords, alignée avec le contenu ← MODIFIABLE */
 }
 
-/* ─── Featured Grid ─────────────────────────────────────────────────────────── */
+
+/* ============================================================
+   GRILLE DES PROJETS (page d'accueil — 3 colonnes)
+   ============================================================ */
 .featured-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 24px;
-  overflow: visible;
-  padding: 12px;
-  margin: -12px;
+  grid-template-columns: repeat(3, 1fr); /* 3 colonnes égales ← change 3 pour 2 ou 4 */
+  gap: 24px;    /* Espace entre les cartes ← MODIFIABLE */
+  overflow: visible; /* Autorise les ombres à dépasser la grille */
+  /* padding + margin négatif = empêche les ombres d'être coupées au bord */
+  padding: 12px; margin: -12px;
 }
 
-/* ─── Project Card ──────────────────────────────────────────────────────────── */
+
+/* ============================================================
+   CARTE DE PROJET
+   ============================================================ */
 .card {
   display: block;
   background: var(--bg-2);
-  transform: translateY(0px);
+  transform: translateY(0px); /* Position de départ pour l'animation hover */
+  /* cubic-bezier(0.34, 1.2, 0.64, 1) = animation avec léger rebond au survol */
   transition: background 0.3s ease, transform 0.35s cubic-bezier(0.34, 1.2, 0.64, 1), box-shadow 0.3s ease;
   cursor: pointer;
   position: relative;
-  z-index: 1;
+  z-index: 1; /* z-index de base pour que l'ombre soit au-dessus des autres cartes au hover */
 }
 
+/* Effet au survol : la carte se lève et prend une ombre */
 .card:hover {
   background: var(--bg-3);
-  transform: translateY(-8px);
-  box-shadow: 0 24px 52px rgba(0,0,0,0.55);
-  z-index: 10;
+  transform: translateY(-8px); /* Monte de 8px ← MODIFIABLE (augmente pour plus d'effet) */
+  box-shadow: 0 24px 52px rgba(0,0,0,0.55); /* Ombre portée ← MODIFIABLE */
+  z-index: 10; /* Passe au-dessus des autres cartes pour que l'ombre soit visible */
 }
 
+/* Conteneur de l'image de la carte */
 .card-img {
-  aspect-ratio: 16 / 10;
-  overflow: hidden;
-  /* overflow stays on the image container, not the card, so the card can scale freely */
+  aspect-ratio: 16 / 10; /* Format 16:10 (légèrement différent du 16:9) ← MODIFIABLE */
+  overflow: hidden;       /* Cache le débordement de l'image au zoom hover */
   background: var(--bg-3);
   position: relative;
 }
 
 .card-img img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+  width: 100%; height: 100%;
+  object-fit: cover; /* L'image remplit le cadre sans se déformer (recadrage centré) */
   transition: transform 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
-.card:hover .card-img img {
-  transform: scale(1.05);
-}
+/* L'image zoome doucement au survol de la carte */
+.card:hover .card-img img { transform: scale(1.05); } /* ← MODIFIABLE */
 
+/* Placeholder si pas d'image pour le projet */
 .card-img-placeholder {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  width: 100%; height: 100%;
+  display: flex; align-items: center; justify-content: center;
   background: var(--bg-3);
 }
-
 .card-img-placeholder span {
-  font-size: 11px;
-  font-weight: 500;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
+  font-size: 11px; font-weight: 500;
+  letter-spacing: 0.15em; text-transform: uppercase;
   color: var(--muted);
 }
 
-.card-body {
-  padding: 22px 24px 26px;
-}
+/* Corps de la carte (texte sous l'image) */
+.card-body { padding: 22px 24px 26px; } /* ← MODIFIABLE */
 
 .card-tag {
-  font-size: 10px;
-  font-weight: 600;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--muted);
-  margin-bottom: 6px;
+  font-size: 10px; font-weight: 600;
+  letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--muted); margin-bottom: 6px;
 }
 
 .card-name {
-  font-size: 17px;
-  font-weight: 700;
+  font-size: 17px; font-weight: 700;
   letter-spacing: -0.01em;
-  margin-bottom: 6px;
-  line-height: 1.2;
+  margin-bottom: 6px; line-height: 1.2;
 }
 
 .card-desc {
@@ -379,977 +477,840 @@ nav {
   margin-bottom: 16px;
 }
 
+/* Lien "View Project →" */
 .card-link {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 10px;
-  font-weight: 600;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
+  display: inline-flex; align-items: center;
+  gap: 8px; /* Espace entre le texte et la flèche */
+  font-size: 10px; font-weight: 600;
+  letter-spacing: 0.16em; text-transform: uppercase;
   color: var(--text);
   transition: gap var(--ease);
 }
-
-.card:hover .card-link {
-  gap: 14px;
-}
-
+/* La flèche s'éloigne du texte au survol */
+.card:hover .card-link { gap: 14px; } /* ← MODIFIABLE */
 .card-link svg { flex-shrink: 0; }
 
-/* ─── View All Button ───────────────────────────────────────────────────────── */
+
+/* ============================================================
+   BOUTON "VIEW ALL PROJECTS" — Conteneur centré
+   ============================================================ */
 .view-all-wrap {
   padding: 80px 56px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  display: flex; align-items: center; justify-content: center;
 }
 
+/* ============================================================
+   BOUTON CONTOUR — Utilisé sur tout le site (btn-outline)
+   ============================================================
+   Même technique de remplissage glissant que hero-cta.
+   Le gradient double-largeur glisse à gauche au hover. */
 .btn-outline {
-  display: inline-flex;
-  align-items: center;
+  display: inline-flex; align-items: center;
   gap: 12px;
-  padding: 14px 40px;
+  padding: 14px 40px;       /* Haut/bas 14px, gauche/droite 40px ← MODIFIABLE */
   border: 1px solid rgba(255,255,255,0.2);
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
+  font-size: 11px; font-weight: 600;
+  letter-spacing: 0.18em; text-transform: uppercase;
   background: linear-gradient(to right, var(--text) 50%, transparent 50%);
   background-size: 200% 100%;
-  background-position: right bottom;
+  background-position: right bottom; /* Transparent visible par défaut */
   transition: background-position 0.4s cubic-bezier(0.4, 0, 0.2, 1),
-              border-color var(--ease),
-              color var(--ease),
-              transform 0.25s ease,
-              box-shadow 0.25s ease;
+              border-color var(--ease), color var(--ease),
+              transform 0.25s ease, box-shadow 0.25s ease;
 }
 
 .btn-outline:hover {
-  background-position: left bottom;
-  color: var(--bg);
+  background-position: left bottom; /* La couleur pleine glisse en vue */
+  color: var(--bg);                 /* Texte sombre sur fond clair */
   border-color: var(--text);
   transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.35);
 }
 
-.btn-outline svg {
-  transition: transform 0.3s ease;
-}
+.btn-outline svg { transition: transform 0.3s ease; }
+.btn-outline:hover svg { transform: translateX(6px); } /* Flèche glisse à droite */
 
-.btn-outline:hover svg {
-  transform: translateX(6px);
-}
 
-/* CV download button click animation */
+/* ============================================================
+   ANIMATIONS DU BOUTON DE TÉLÉCHARGEMENT DU CV
+   ============================================================
+   Ces animations se déclenchent via JavaScript quand on clique.
+   dlPress  : compression/rebond du bouton
+   dlRipple : cercle qui s'étend (effet "onde")
+   dlArrow  : la flèche descend puis remonte */
 @keyframes dlPress {
-  0%   { transform: scale(1); }
-  18%  { transform: scale(0.92); }
-  55%  { transform: scale(1.04); }
-  100% { transform: scale(1); }
+  0%   { transform: scale(1);    }
+  18%  { transform: scale(0.92); } /* Compression */
+  55%  { transform: scale(1.04); } /* Rebond */
+  100% { transform: scale(1);    }
 }
+
 @keyframes dlRipple {
-  0%   { box-shadow: 0 0 0 0 rgba(255,255,255,0.45), 0 8px 24px rgba(0,0,0,0.35); }
-  100% { box-shadow: 0 0 0 22px rgba(255,255,255,0), 0 8px 24px rgba(0,0,0,0); }
+  0%   { box-shadow: 0 0 0 0px  rgba(255,255,255,0.45), 0 8px 24px rgba(0,0,0,0.35); }
+  100% { box-shadow: 0 0 0 22px rgba(255,255,255,0),    0 8px 24px rgba(0,0,0,0); }
 }
+
 @keyframes dlFlash {
   0%         { background-position: right bottom; color: var(--text); border-color: rgba(255,255,255,0.2); }
   18%, 65%   { background-position: left bottom;  color: var(--bg);   border-color: var(--text); }
   100%       { background-position: right bottom; color: var(--text); border-color: rgba(255,255,255,0.2); }
 }
+
 @keyframes dlArrow {
-  0%   { transform: translateY(0);   opacity: 1; }
-  28%  { transform: translateY(9px); opacity: 0.15; }
-  58%  { transform: translateY(-4px); opacity: 1; }
+  0%   { transform: translateY(0);     opacity: 1;    }
+  28%  { transform: translateY(9px);   opacity: 0.15; } /* Descend et s'efface */
+  58%  { transform: translateY(-4px);  opacity: 1;    } /* Remonte */
   78%  { transform: translateY(2px); }
   100% { transform: translateY(0); }
 }
+
+/* JavaScript ajoute la classe .dl-anim au clic sur le bouton CV */
 a[download].dl-anim {
   animation: dlPress  0.55s cubic-bezier(0.4, 0, 0.2, 1) forwards,
              dlRipple 0.7s  ease                          forwards;
 }
-a[download].btn-outline:hover svg {
-  transform: translateY(3px);
-}
-
+/* Sur un bouton download, la flèche SVG pointe vers le bas (téléchargement) */
+a[download].btn-outline:hover svg { transform: translateY(3px); }
 a[download].dl-anim svg {
   animation: dlArrow 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
-  transition: none;
+  transition: none; /* Désactive la transition pendant l'animation pour ne pas les mélanger */
 }
 
-/* ─── Works Page ────────────────────────────────────────────────────────────── */
-.works-header {
-  padding: calc(var(--nav-h) + 80px) 56px 0;
-}
 
+/* ============================================================
+   PAGE WORKS — En-tête et filtres de catégorie
+   ============================================================ */
+/* Espace sous la nav fixe + marge supplémentaire */
+.works-header { padding: calc(var(--nav-h) + 80px) 56px 0; }
+
+/* Barre de filtres (All / Personal / Game Jam / School) */
 .filter-bar {
   display: flex;
   gap: 0;
-  border-bottom: 1px solid var(--border);
+  border-bottom: 1px solid var(--border); /* Ligne séparatrice en bas */
   margin-bottom: 56px;
 }
 
 .filter-btn {
-  padding: 14px 28px;
-  font-size: 10px;
-  font-weight: 600;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
+  padding: 14px 28px; /* ← MODIFIABLE */
+  font-size: 10px; font-weight: 600;
+  letter-spacing: 0.18em; text-transform: uppercase;
   color: var(--muted);
-  background: none;
-  border: none;
-  border-bottom: 2px solid transparent;
-  margin-bottom: -1px;
+  background: none; border: none;
+  border-bottom: 2px solid transparent; /* Soulignement invisible par défaut */
+  margin-bottom: -1px; /* Compense le border-bottom du .filter-bar pour qu'ils se superposent */
   cursor: pointer;
   transition: color 0.25s ease, border-color 0.25s ease,
               background 0.25s ease, font-size 0.25s ease,
               letter-spacing 0.25s ease, transform 0.15s ease;
 }
 
+/* Survol : légère mise en valeur et légère augmentation de la taille */
 .filter-btn:hover {
   color: var(--text);
   background: rgba(255,255,255,0.05);
-  font-size: 12px;
-  letter-spacing: 0.2em;
+  font-size: 12px; letter-spacing: 0.2em;
 }
 
+/* Bouton actif (catégorie sélectionnée) */
 .filter-btn.active {
   color: var(--text);
-  border-bottom-color: var(--text);
-  font-size: 12px;
-  letter-spacing: 0.2em;
+  border-bottom-color: var(--text); /* Soulignement visible */
+  font-size: 12px; letter-spacing: 0.2em;
   background: rgba(255,255,255,0.06);
 }
 
-.filter-btn.clicked {
-  transform: scale(0.92);
-}
+/* Micro-animation au clic (JavaScript ajoute/enlève cette classe) */
+.filter-btn.clicked { transform: scale(0.92); }
 
+/* Grille des projets sur la page Works (3 colonnes, même que featured-grid) */
 .works-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(3, 1fr); /* ← change 3 pour modifier le nombre de colonnes */
   gap: 24px;
   padding: 12px 56px 120px;
   overflow: visible;
 }
 
+/* Classe appliquée par JavaScript pour cacher les cartes filtrées */
 .card-hidden { display: none; }
 
-/* ─── Project Detail ────────────────────────────────────────────────────────── */
+
+/* ============================================================
+   PAGE PROJET — Détail d'un projet individuel
+   ============================================================ */
+
+/* Bannière image en haut de la page projet */
 .project-banner {
-  margin-top: var(--nav-h);
+  margin-top: var(--nav-h);   /* Commence juste sous la nav */
   position: relative;
-  height: 52vh;
-  min-height: 320px;
+  height: 52vh; min-height: 320px; /* Hauteur de la bannière ← MODIFIABLE */
   overflow: hidden;
   background: var(--bg-2);
 }
 
+/* Image de la bannière (un peu transparente pour ne pas dominer) */
 .project-banner img {
-  width: 100%;
-  height: 100%;
+  width: 100%; height: 100%;
   object-fit: cover;
-  opacity: 0.45;
+  opacity: 0.45; /* ← MODIFIABLE (1 = image pleine, 0 = invisible) */
 }
 
+/* Fondu du bas de la bannière vers la couleur de fond de la page */
 .project-banner-gradient {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(to bottom, transparent 30%, var(--bg) 100%);
+  position: absolute; inset: 0;
+  /* transparent en haut → couleur de fond en bas, transition à partir de 30% */
+  background: linear-gradient(to bottom, transparent 30%, var(--bg) 100%); /* ← MODIFIABLE */
 }
 
+/* Texte du projet positionné en bas de la bannière */
 .project-banner-content {
   position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
+  bottom: 0; left: 0; right: 0;
   padding: 0 56px 56px;
 }
 
 .project-tag {
-  font-size: 10px;
-  font-weight: 600;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  color: var(--muted);
-  margin-bottom: 10px;
+  font-size: 10px; font-weight: 600;
+  letter-spacing: 0.22em; text-transform: uppercase;
+  color: var(--muted); margin-bottom: 10px;
 }
 
 .project-title {
-  font-size: clamp(30px, 5vw, 64px);
+  font-size: clamp(30px, 5vw, 64px); /* ← MODIFIABLE */
   font-weight: 800;
-  letter-spacing: -0.025em;
-  line-height: 1.05;
+  letter-spacing: -0.025em; line-height: 1.05;
   margin-bottom: 10px;
 }
 
-.project-subtitle {
-  font-size: 15px;
-  color: var(--muted);
-  font-weight: 400;
-}
+.project-subtitle { font-size: 15px; color: var(--muted); font-weight: 400; }
 
-/* Project body */
+/* Corps du projet : deux colonnes (description à gauche, sidebar à droite) */
 .project-body {
   display: grid;
-  grid-template-columns: 1fr 340px;
+  grid-template-columns: 1fr 340px; /* Colonne principale + sidebar de 340px ← MODIFIABLE */
   gap: 0;
   padding: 64px 56px 0;
-  max-width: 1400px;
+  max-width: 1400px; /* Largeur maximale pour éviter des lignes trop longues ← MODIFIABLE */
 }
 
-.project-description { padding-right: 80px; }
+/* Espace à droite de la description pour la séparer de la sidebar */
+.project-description { padding-right: 80px; } /* ← MODIFIABLE */
 
+/* Texte d'introduction du projet */
 .project-intro {
-  font-size: 17px;
-  line-height: 1.8;
-  color: rgba(255,255,255,0.75);
+  font-size: 17px; line-height: 1.8;
+  color: rgba(237, 229, 213, 0.75); /* Légèrement transparent ← MODIFIABLE */
   margin-bottom: 48px;
 }
 
+/* Liste des points clés du projet (bullets) */
 .project-bullets {
   list-style: none;
-  display: flex;
-  flex-direction: column;
-  gap: 28px;
+  display: flex; flex-direction: column;
+  gap: 28px; /* Espace entre chaque bullet ← MODIFIABLE */
 }
 
 .bullet-item {
   padding-left: 20px;
-  border-left: 2px solid var(--border);
+  border-left: 2px solid var(--border); /* Ligne verticale à gauche de chaque point ← MODIFIABLE */
 }
 
-.bullet-title {
-  font-size: 16px;
-  font-weight: 700;
-  margin-bottom: 6px;
-  letter-spacing: -0.01em;
-  color: var(--text);
-}
+.bullet-title { font-size: 16px; font-weight: 700; margin-bottom: 6px; letter-spacing: -0.01em; color: var(--text); }
+.bullet-text  { font-size: 14.5px; color: rgba(237, 229, 213, 0.55); line-height: 1.7; }
 
-.bullet-text {
-  font-size: 14.5px;
-  color: rgba(255,255,255,0.55);
-  line-height: 1.7;
-}
-
-/* Project sidebar */
+/* Colonne de droite (infos rapides : catégorie, année, moteur...) */
 .project-sidebar {
-  border-left: 1px solid var(--border);
+  border-left: 1px solid var(--border); /* Séparation avec la description ← MODIFIABLE */
   padding-left: 40px;
 }
 
-.sidebar-block {
-  margin-bottom: 40px;
-}
+.sidebar-block { margin-bottom: 40px; }
 
+/* Label d'une info dans la sidebar (ex: "MOTEUR", "ANNÉE") */
 .sidebar-label {
-  font-size: 10px;
-  font-weight: 600;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--muted);
-  margin-bottom: 3px;
+  font-size: 10px; font-weight: 600;
+  letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--muted); margin-bottom: 3px;
   text-decoration: underline;
   text-underline-offset: 3px;
-  text-decoration-color: rgba(255,255,255,0.2);
+  text-decoration-color: rgba(255,255,255,0.2); /* Soulignement très discret */
 }
 
-.sidebar-value {
-  font-size: 17px;
-  font-weight: 500;
-  color: var(--muted);
-}
+.sidebar-value { font-size: 17px; font-weight: 500; color: var(--muted); }
 
-.sidebar-engine {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
+/* Logo du moteur de jeu (Unreal Engine) */
+.sidebar-engine { display: flex; align-items: center; gap: 8px; }
+.ue-logo { width: 18px; height: 18px; flex-shrink: 0; object-fit: contain; position: relative; top: -1px; }
 
-.ue-logo {
-  width: 18px;
-  height: 18px;
-  flex-shrink: 0;
-  object-fit: contain;
-  position: relative;
-  top: -1px;
-}
-
-/* Trailer section */
-.project-trailer-wrap {
-  padding: 64px 56px;
-  text-align: center;
-}
+/* Section trailer (video YouTube) d'un projet */
+.project-trailer-wrap { padding: 64px 56px; text-align: center; }
 
 .section-sublabel {
-  font-size: 10px;
-  font-weight: 600;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  color: var(--muted);
-  margin-bottom: 20px;
+  font-size: 10px; font-weight: 600;
+  letter-spacing: 0.22em; text-transform: uppercase;
+  color: var(--muted); margin-bottom: 20px;
 }
 
+/* Boîte vidéo responsive pour le trailer ---
+   Technique du padding-bottom pour maintenir le ratio 16:9 :
+   On met height: 0 et padding-bottom: 56.25% (= 9/16 × 100).
+   L'iframe est ensuite placée en position absolue à l'intérieur. */
 .trailer-box {
   position: relative;
-  max-width: 1100px;
+  max-width: 1100px; /* ← MODIFIABLE */
   margin: 0 auto;
-  padding-bottom: min(56.25%, 620px);
-  height: 0;
-  overflow: hidden;
+  padding-bottom: min(56.25%, 620px); /* 56.25% = ratio 16:9 | max 620px de hauteur */
+  height: 0; overflow: hidden;
   background: var(--bg-2);
   border: 1px solid rgba(255,255,255,0.1);
   border-radius: 6px;
   box-shadow:
-    0 0 0 1px rgba(255,255,255,0.04),
-    0 8px 32px rgba(0,0,0,0.6),
-    0 0 80px rgba(255,255,255,0.03);
+    0 0 0 1px rgba(255,255,255,0.04),   /* Lueur subtile tout autour */
+    0 8px 32px rgba(0,0,0,0.6),          /* Ombre portée principale */
+    0 0 80px rgba(255,255,255,0.03);     /* Halo très diffus */
 }
 
 .trailer-box iframe {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
+  position: absolute; inset: 0; /* Couvre toute la .trailer-box */
+  width: 100%; height: 100%;
   border: none;
 }
 
-/* Gallery filmstrip */
-.project-gallery-wrap {
-  padding: 0 160px 120px;
-}
 
-.gallery-filmstrip {
-  position: relative;
-  overflow: hidden;
-}
+/* ============================================================
+   GALERIE FILMSTRIP — Carrousel d'images sur la page projet
+   ============================================================ */
+.project-gallery-wrap { padding: 0 160px 120px; } /* ← MODIFIABLE */
 
+.gallery-filmstrip { position: relative; overflow: hidden; }
+
+/* Conteneur des slides qui se déplace via transform: translateX (JavaScript) */
 .gallery-track {
   display: flex;
-  gap: 12px;
-  transition: transform 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+  gap: 12px; /* Espace entre les images ← MODIFIABLE */
+  transition: transform 0.45s cubic-bezier(0.4, 0, 0.2, 1); /* Animation du défilement */
 }
 
+/* Chaque image du carrousel */
 .gallery-slide {
-  flex: 0 0 calc((100% - 24px) / 3);
-  aspect-ratio: 4 / 3;
+  /* Chaque slide prend 1/3 de la largeur disponible (3 slides visibles à la fois)
+     (100% - 2 gaps) / 3 = largeur d'un slide.
+     Si tu veux 2 slides visibles : (100% - 1 gap) / 2 */
+  flex: 0 0 calc((100% - 24px) / 3); /* ← MODIFIABLE */
+  aspect-ratio: 4 / 3; /* Format des images ← MODIFIABLE */
   overflow: hidden;
   position: relative;
   cursor: zoom-in;
   background: var(--bg-2);
-  flex-shrink: 0;
+  flex-shrink: 0; /* Empêche les slides de se rétrécir */
 }
 
 .gallery-slide img {
-  width: 100%;
-  height: 100%;
+  width: 100%; height: 100%;
   object-fit: cover;
   transition: transform 0.5s ease;
 }
-.gallery-slide:hover img { transform: scale(1.04); }
+/* Légère zoom au survol */
+.gallery-slide:hover img { transform: scale(1.04); } /* ← MODIFIABLE */
 
+/* Légende qui apparaît en bas de l'image au survol */
 .gallery-slide-caption {
-  position: absolute;
-  bottom: 0; left: 0; right: 0;
+  position: absolute; bottom: 0; left: 0; right: 0;
   padding: 10px 14px;
-  background: linear-gradient(transparent, rgba(0,0,0,0.65));
-  font-size: 10px;
-  letter-spacing: 0.08em;
+  background: linear-gradient(transparent, rgba(0,0,0,0.65)); /* Fondu sombre en bas */
+  font-size: 10px; letter-spacing: 0.08em;
   color: rgba(255,255,255,0.65);
-  opacity: 0;
+  opacity: 0; /* Invisible par défaut */
   transition: opacity 0.2s;
 }
 .gallery-slide:hover .gallery-slide-caption { opacity: 1; }
 
+/* Boutons ← et → du carrousel */
 .gallery-arrow {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 44px;
-  height: 44px;
+  position: absolute; top: 50%; transform: translateY(-50%);
+  width: 44px; height: 44px;
   background: rgba(0,0,0,0.6);
   border: 1px solid rgba(255,255,255,0.18);
-  border-radius: 50%;
-  color: #fff;
-  font-size: 18px;
+  border-radius: 50%; /* Rond */
+  color: #fff; font-size: 18px;
   cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 3;
+  display: flex; align-items: center; justify-content: center;
+  z-index: 3; /* Au-dessus des images */
   transition: background 0.2s, opacity 0.2s;
   backdrop-filter: blur(4px);
 }
-.gallery-arrow:hover { background: rgba(0,0,0,0.9); }
-.gallery-arrow.prev { left: 14px; }
-.gallery-arrow.next { right: 14px; }
-.gallery-arrow:disabled { opacity: 0.2; pointer-events: none; }
+.gallery-arrow:hover  { background: rgba(0,0,0,0.9); }
+.gallery-arrow.prev   { left: 14px; }   /* Bouton gauche */
+.gallery-arrow.next   { right: 14px; }  /* Bouton droit */
+.gallery-arrow:disabled { opacity: 0.2; pointer-events: none; } /* Grisé si plus de slides */
 
+/* Compteur "1 — 3 / 8" sous le carrousel */
 .gallery-counter {
-  text-align: center;
-  padding-top: 14px;
-  font-size: 10px;
-  letter-spacing: 0.14em;
+  text-align: center; padding-top: 14px;
+  font-size: 10px; letter-spacing: 0.14em;
   color: rgba(255,255,255,0.22);
 }
 
-/* Back link */
+/* Lien "← Back to Works" en haut de la page projet */
 .back-link {
-  display: inline-flex;
-  align-items: center;
+  display: inline-flex; align-items: center;
   gap: 10px;
   padding: 0 56px;
   margin-top: calc(var(--nav-h) + 32px);
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
+  font-size: 11px; font-weight: 600;
+  letter-spacing: 0.15em; text-transform: uppercase;
   color: var(--muted);
   transition: color var(--ease), gap var(--ease);
 }
+.back-link:hover { color: var(--text); gap: 16px; } /* La flèche s'éloigne au survol */
 
-.back-link:hover { color: var(--text); gap: 16px; }
 
-/* ─── Lightbox ──────────────────────────────────────────────────────────────── */
+/* ============================================================
+   LIGHTBOX — Visionneuse d'image en plein écran (page projet)
+   ============================================================
+   Ouvre quand on clique sur une image de la galerie.
+   Display: none par défaut, display: flex quand .open est ajouté. */
 .lightbox {
   display: none;
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.82);
-  backdrop-filter: blur(18px);
+  position: fixed; inset: 0; /* Couvre tout l'écran */
+  background: rgba(0,0,0,0.82); /* Fond sombre semi-transparent ← MODIFIABLE */
+  backdrop-filter: blur(18px);  /* Flou derrière */
   -webkit-backdrop-filter: blur(18px);
-  z-index: 500;
-  justify-content: center;
-  align-items: center;
+  z-index: 500; /* Au-dessus de tout, sauf le modal du reel (9000) */
+  justify-content: center; align-items: center;
   padding: 32px;
-  cursor: zoom-out;
+  cursor: zoom-out; /* Curseur loupe pour indiquer qu'on peut fermer */
 }
 
-.lightbox.open { display: flex; }
+.lightbox.open { display: flex; } /* JavaScript ajoute .open pour afficher */
 
 .lightbox img {
-  max-width: 90vw;
-  max-height: 88vh;
-  object-fit: contain;
+  max-width: 90vw; max-height: 88vh; /* Ne dépasse pas 90% de l'écran */
+  object-fit: contain; /* L'image entière est visible sans être coupée */
   cursor: default;
   transition: opacity 0.2s ease;
 }
 
+/* Bouton × pour fermer */
 .lightbox-close {
-  position: absolute;
-  top: 20px; right: 24px;
-  background: none;
-  border: none;
-  color: var(--text);
-  font-size: 28px;
-  cursor: pointer;
-  opacity: 0.6;
-  line-height: 1;
+  position: absolute; top: 20px; right: 24px;
+  background: none; border: none;
+  color: var(--text); font-size: 28px;
+  cursor: pointer; opacity: 0.6; line-height: 1;
   transition: opacity 0.2s ease, transform 0.2s ease;
 }
-
-.lightbox-close:hover { opacity: 1; transform: scale(1.15) rotate(90deg); }
+.lightbox-close:hover  { opacity: 1; transform: scale(1.15) rotate(90deg); }
 .lightbox-close:active { opacity: 1; transform: scale(0.88) rotate(90deg); }
 
+/* Flèches ← → pour naviguer entre les images */
 .lightbox-arrow {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
+  position: absolute; top: 50%; transform: translateY(-50%);
   background: rgba(255,255,255,0.08);
   border: 1px solid rgba(255,255,255,0.15);
-  color: var(--text);
-  font-size: 22px;
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  cursor: pointer;
-  opacity: 0.55;
+  color: var(--text); font-size: 22px;
+  width: 48px; height: 48px; border-radius: 50%;
+  cursor: pointer; opacity: 0.55;
   transition: opacity 0.2s ease, background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, transform 0.12s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  line-height: 1;
+  display: flex; align-items: center; justify-content: center; line-height: 1;
 }
-
 .lightbox-arrow:hover {
-  opacity: 1;
-  background: rgba(255,255,255,0.16);
+  opacity: 1; background: rgba(255,255,255,0.16);
   border-color: rgba(255,255,255,0.45);
   box-shadow: 0 0 0 4px rgba(255,255,255,0.07);
 }
-
-.lightbox-arrow:active {
-  transform: translateY(-50%) scale(0.88);
-  background: rgba(255,255,255,0.08);
-  box-shadow: none;
-}
-
+.lightbox-arrow:active { transform: translateY(-50%) scale(0.88); background: rgba(255,255,255,0.08); box-shadow: none; }
 .lb-prev { left: 24px; }
 .lb-next { right: 24px; }
 
+/* Légende de l'image affichée en bas */
 .lightbox-caption {
-  position: absolute;
-  bottom: 28px;
-  left: 50%;
-  transform: translateX(-50%);
-  font-size: 12px;
-  font-weight: 500;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
+  position: absolute; bottom: 28px; left: 50%; transform: translateX(-50%);
+  font-size: 12px; font-weight: 500;
+  letter-spacing: 0.12em; text-transform: uppercase;
   color: rgba(255,255,255,0.55);
-  pointer-events: none;
-  white-space: nowrap;
+  pointer-events: none; white-space: nowrap;
 }
 
-/* ─── About Page ────────────────────────────────────────────────────────────── */
+
+/* ============================================================
+   PAGE ABOUT — Présentation personnelle
+   ============================================================ */
 .about-hero {
   padding: calc(var(--nav-h) + 56px) 56px 48px;
-  display: flex;
-  align-items: center;
+  display: flex; align-items: center;
   justify-content: space-between;
   gap: 48px;
 }
+.about-hero .section-heading { margin-bottom: 0; }
+.about-hero-text  { flex: 1; }         /* Prend l'espace restant */
+.about-hero-photo { flex-shrink: 0; }  /* Ne rétrécit pas */
 
-.about-hero .section-heading {
-  margin-bottom: 0;
-}
-
-.about-hero-text {
-  flex: 1;
-}
-
-.about-hero-photo {
-  flex-shrink: 0;
-}
-
+/* Photo de profil ronde */
 .about-hero-photo img {
-  width: 320px;
-  height: 320px;
+  width: 320px; height: 320px;         /* ← MODIFIABLE */
   object-fit: cover;
-  transform: scaleX(-1);
-  object-position: center top;
-  border-radius: 50%;
+  transform: scaleX(-1);               /* Miroir horizontal (photo inversée) */
+  object-position: center top;          /* Cadre en haut (pour les visages) */
+  border-radius: 50%;                   /* Rend la photo ronde */
   border: 1px solid rgba(255,255,255,0.1);
-  filter: grayscale(15%);
+  filter: grayscale(15%);              /* Légèrement désaturé ← MODIFIABLE (0% = couleurs, 100% = N&B) */
   display: block;
 }
 
+/* Grille bio (texte) + side (compétences/formation) */
 .about-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 80px;
-  align-items: start;
+  grid-template-columns: 1fr 1fr; /* Deux colonnes égales ← MODIFIABLE */
+  gap: 80px; align-items: start;
   padding: 0 56px 80px;
 }
 
-.about-bio {
-  font-size: 16px;
-  line-height: 1.85;
-  color: var(--muted);
-}
-
+/* Texte biographique */
+.about-bio { font-size: 16px; line-height: 1.85; color: var(--muted); }
 .about-bio p { margin-bottom: 20px; }
+.about-bio strong { color: var(--text); font-weight: 600; } /* Mots en gras = couleur principale */
+.about-bio em { font-style: italic; }
 
-.about-bio strong {
-  color: var(--text);
-  font-weight: 600;
-}
-
-.about-bio em {
-  font-style: italic;
-}
-
-.about-side {}
-
-.side-block {
-  margin-bottom: 48px;
-}
-
+/* Blocs de la colonne de droite (compétences, formation...) */
+.side-block { margin-bottom: 48px; }
 .side-block:not(:last-child) {
   padding-bottom: 48px;
-  border-bottom: 1px solid var(--border);
+  border-bottom: 1px solid var(--border); /* Ligne entre chaque bloc */
 }
 
 .side-label {
-  font-size: 10px;
-  font-weight: 600;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  color: var(--muted);
-  margin-bottom: 20px;
+  font-size: 10px; font-weight: 600;
+  letter-spacing: 0.22em; text-transform: uppercase;
+  color: var(--muted); margin-bottom: 20px;
 }
 
-/* Skills */
-.skills-wrap {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
+/* Conteneur des "pills" de compétences */
+.skills-wrap { display: flex; flex-wrap: wrap; gap: 8px; }
 
+/* Chaque compétence individuelle */
 .skill-pill {
-  padding: 6px 16px;
+  padding: 6px 16px;          /* ← MODIFIABLE */
   border: 1px solid var(--border);
-  font-size: 11.5px;
-  font-weight: 500;
+  font-size: 11.5px; font-weight: 500;
   letter-spacing: 0.04em;
   color: var(--text);
   transition: background var(--ease), border-color var(--ease);
-  position: relative;
-  overflow: hidden;
+  position: relative; overflow: hidden; /* Pour le drapeau en ::before */
 }
-
 .skill-pill:hover {
   background: var(--bg-2);
   border-color: rgba(255,255,255,0.2);
 }
 
-.skill-pill--fr::before,
-.skill-pill--en::before {
+/* Drapeaux en arrière-plan au survol des pills de langue ---
+   ::before crée un pseudo-élément invisible par défaut (opacity 0)
+   qui devient légèrement visible au survol (opacity 0.28). */
+.skill-pill--fr::before, .skill-pill--en::before {
   content: '';
-  position: absolute;
-  inset: 0;
+  position: absolute; inset: 0;
   opacity: 0;
   transition: opacity 0.35s ease;
-  background-size: cover;
-  background-position: center;
-  z-index: -1;
+  background-size: cover; background-position: center;
+  z-index: -1; /* Derrière le texte */
 }
-
-.skill-pill--fr:hover::before { opacity: 0.28; }
+.skill-pill--fr:hover::before { opacity: 0.28; } /* ← MODIFIABLE (0 = pas de drapeau, 1 = opaque) */
 .skill-pill--en:hover::before { opacity: 0.28; }
 
-/* Drapeau français — tricolore vertical */
+/* Drapeau français (tricolore en dégradé CSS) */
 .skill-pill--fr::before {
-  background: linear-gradient(to right,
-    #002395 33.33%,
-    #ffffff 33.33%, #ffffff 66.66%,
-    #ED2939 66.66%);
+  background: linear-gradient(to right, #002395 33.33%, #ffffff 33.33%, #ffffff 66.66%, #ED2939 66.66%);
 }
 
-/* Drapeau anglais — Union Jack SVG */
+/* Drapeau anglais (Union Jack en SVG encodé en base64 — ne pas modifier) */
 .skill-pill--en::before {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 30'%3E%3Crect width='60' height='30' fill='%23012169'/%3E%3Cpath d='M0,0 L60,30 M60,0 L0,30' stroke='%23fff' stroke-width='6'/%3E%3Cpath d='M0,0 L60,30 M60,0 L0,30' stroke='%23C8102E' stroke-width='4'/%3E%3Cpath d='M30,0 V30 M0,15 H60' stroke='%23fff' stroke-width='10'/%3E%3Cpath d='M30,0 V30 M0,15 H60' stroke='%23C8102E' stroke-width='6'/%3E%3C/svg%3E");
   background-size: cover;
 }
+/* isolation + z-index = garantit que le texte reste lisible par-dessus le drapeau */
+.skill-pill--fr span, .skill-pill--en span,
+.skill-pill--fr, .skill-pill--en { isolation: isolate; }
+.skill-pill--fr > *, .skill-pill--en > * { position: relative; z-index: 1; }
 
-.skill-pill--fr span,
-.skill-pill--en span,
-.skill-pill--fr,
-.skill-pill--en {
-  isolation: isolate;
-}
-
-.skill-pill--fr > *,
-.skill-pill--en > * { position: relative; z-index: 1; }
-
-/* Education */
-.edu-item {
-  padding: 16px 0;
-}
-
+/* Éléments de formation */
+.edu-item { padding: 16px 0; }
 .edu-item::after {
-  content: '';
-  display: block;
-  width: 40px;
-  height: 1px;
-  background: var(--border);
-  margin-top: 14px;
+  content: ''; display: block;
+  width: 40px; height: 1px;
+  background: var(--border); margin-top: 14px;
 }
+.edu-item:last-child::after { display: none; } /* Pas de ligne après le dernier */
+.edu-school { font-size: 14px; font-weight: 700; margin-bottom: 3px; }
+.edu-degree { font-size: 12.5px; color: var(--muted); }
 
-.edu-item:last-child::after { display: none; }
-
-.edu-school {
-  font-size: 14px;
-  font-weight: 700;
-  margin-bottom: 3px;
-}
-
-.edu-degree {
-  font-size: 12.5px;
-  color: var(--muted);
-}
-
-/* Contact */
+/* Section contact au bas de la page About */
 .contact-section {
   padding: 96px 56px 112px;
   border-top: 1px solid var(--border);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
+  display: flex; flex-direction: column;
+  align-items: center; text-align: center;
 }
 
 .contact-grid {
-  display: flex;
-  gap: 56px;
-  margin-top: 48px;
-  flex-wrap: wrap;
+  display: flex; gap: 56px;
+  margin-top: 48px; flex-wrap: wrap;
   justify-content: center;
 }
 
-.contact-item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 5px;
-}
-
-.contact-label {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 10px;
-  font-weight: 600;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--muted);
-}
-
-.contact-label svg {
-  flex-shrink: 0;
-  opacity: 0.7;
-}
-
-.contact-val {
-  font-size: 15px;
-  font-weight: 500;
-  transition: color var(--ease);
-}
-
+.contact-item   { display: flex; flex-direction: column; align-items: center; gap: 5px; }
+.contact-label  { display: flex; align-items: center; gap: 6px; font-size: 10px; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); }
+.contact-label svg { flex-shrink: 0; opacity: 0.7; }
+.contact-val    { font-size: 15px; font-weight: 500; transition: color var(--ease); }
 .contact-item a:hover .contact-val { color: var(--muted); }
 
-/* ─── Footer ────────────────────────────────────────────────────────────────── */
+
+/* ============================================================
+   FOOTER — Pied de page
+   ============================================================ */
 footer {
   border-top: 1px solid var(--border);
   padding: 28px 56px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+  display: flex; align-items: center; justify-content: space-between;
 }
 
 .footer-name {
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
+  font-size: 11px; font-weight: 600;
+  letter-spacing: 0.16em; text-transform: uppercase;
   color: var(--muted);
 }
 
-.footer-links {
-  display: flex;
-  gap: 36px;
-}
-
+.footer-links { display: flex; gap: 36px; }
 .footer-links a {
-  font-size: 10px;
-  font-weight: 500;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--muted);
-  transition: color var(--ease);
+  font-size: 10px; font-weight: 500;
+  letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--muted); transition: color var(--ease);
 }
-
 .footer-links a:hover { color: var(--text); }
 
-/* ─── Animations ────────────────────────────────────────────────────────────── */
+
+/* ============================================================
+   ANIMATIONS GLOBALES
+   ============================================================ */
+
+/* fadeUp : apparition depuis le bas vers le haut
+   Utilisé sur les éléments du hero (eyebrow, nom, titre...) */
 @keyframes fadeUp {
-  from { opacity: 0; transform: translateY(20px); }
-  to   { opacity: 1; transform: translateY(0);    }
+  from { opacity: 0; transform: translateY(20px); } /* Départ : invisible + décalé en bas */
+  to   { opacity: 1; transform: translateY(0);    } /* Arrivée : visible + position normale */
 }
 
+/* Classe .reveal : les éléments partent invisibles et apparaissent
+   quand ils entrent dans le champ de vision (géré par JavaScript avec IntersectionObserver) */
 .reveal {
   opacity: 0;
-  transform: translateY(24px);
-  transition: opacity 0.6s ease, transform 0.6s ease;
+  transform: translateY(24px); /* Décalé de 24px vers le bas ← MODIFIABLE */
+  transition: opacity 0.6s ease, transform 0.6s ease; /* Durée de l'apparition ← MODIFIABLE */
 }
-
 .reveal.visible {
+  /* JavaScript ajoute .visible quand l'élément est à l'écran */
   opacity: 1;
   transform: translateY(0);
 }
 
 
-/* ─── Hero Animated Background ─────────────────────────────────────────────── */
-
+/* ============================================================
+   HERO — FOND ANIMÉ (lueur orange atmosphérique)
+   ============================================================
+   radial-gradient : dégradé qui part d'un point central et s'estompe.
+   "ellipse 62% 90% at -10% 55%" = ellipse positionnée à -10% depuis la gauche,
+   à 55% du haut — donc déborde sur la gauche et crée un halo venant du bord.
+   Les couleurs rgba(R, G, B, Opacité) vont de l'orange vif au transparent.  */
 .hero-anim-bg {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
+  position: absolute; inset: 0;
+  z-index: 0; /* Derrière tout le contenu du hero */
   background:
-    radial-gradient(ellipse 90% 60% at 80% 20%, rgba(40, 70, 220, 0.22) 0%, transparent 55%),
-    radial-gradient(ellipse 70% 50% at 15% 75%, rgba(90, 20, 200, 0.18) 0%, transparent 55%),
-    radial-gradient(ellipse 50% 40% at 50% 50%, rgba(20, 50, 180, 0.10) 0%, transparent 60%);
-  animation: heroBgShift 14s ease-in-out infinite alternate;
+    radial-gradient(ellipse 62% 90% at -10% 55%,
+      rgba(190, 78, 22, 0.52)  0%,   /* Orange vif ← MODIFIABLE */
+      rgba(215, 105, 32, 0.22) 36%,  /* Orange atténué */
+      rgba(235, 145, 65, 0.07) 55%,  /* Très léger */
+      transparent 68%);              /* Fondu total */
+  animation: heroBgShift 20s ease-in-out infinite alternate; /* ← MODIFIABLE : 20s = vitesse */
 }
 
+/* Fondu vers le bas (le halo disparaît vers la couleur de fond) */
 .hero-anim-bg::after {
   content: '';
-  position: absolute;
-  inset: 0;
+  position: absolute; inset: 0;
   background: linear-gradient(to bottom, transparent 50%, var(--bg) 100%);
 }
 
+/* Animation du halo : respire lentement en se déplaçant légèrement */
 @keyframes heroBgShift {
-  0%   { opacity: 0.7; transform: scale(1)    translate(0px,   0px); }
-  33%  { opacity: 1;   transform: scale(1.06) translate(20px, -30px); }
-  66%  { opacity: 0.8; transform: scale(0.96) translate(-25px, 20px); }
-  100% { opacity: 1;   transform: scale(1.04) translate(10px,  15px); }
+  0%   { opacity: 0.92; transform: scale(1)    translate(0px,   0px);  }
+  33%  { opacity: 1;    transform: scale(1.04) translate(12px, -18px); } /* Légèrement agrandi et décalé */
+  66%  { opacity: 0.86; transform: scale(0.97) translate(-10px, 12px); }
+  100% { opacity: 1;    transform: scale(1.03) translate(6px,   8px);  }
 }
 
-/* ── Hero video background ── */
+
+/* ============================================================
+   HERO — VIDÉO DE FOND (jouée en boucle derrière le texte)
+   ============================================================ */
 .hero-video-bg {
-  position: absolute;
-  inset: 0;
-  z-index: 1;
+  position: absolute; inset: 0;
+  z-index: 1;       /* Au-dessus du halo orange (z-index 0) */
   overflow: hidden;
-  opacity: 0;
-  transition: opacity 1s ease;
+  opacity: 0;        /* Invisible au chargement */
+  transition: opacity 1s ease; /* Fondu d'apparition de 1s */
 }
 
-.hero-video-bg.ready {
-  opacity: 1;
-}
+/* JavaScript ajoute .ready quand la vidéo est prête à jouer → fondu vers opacity 1 */
+.hero-video-bg.ready { opacity: 1; }
 
 .hero-video-bg video {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  pointer-events: none;
-  filter: blur(2px);
-  transform: scale(1.02);
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  object-fit: cover;         /* Remplit sans déformer */
+  pointer-events: none;      /* La vidéo ne capte pas les clics de la souris */
+  filter: blur(2px);         /* Légèrement floutée ← MODIFIABLE (0 = nette, 10 = très flou) */
+  transform: scale(1.02);    /* Légèrement agrandie pour masquer les bords du blur */
 }
 
-
+/* Calque sombre au-dessus de la vidéo pour assombrir et fondre vers le bas ---
+   Sert aussi à bloquer les interactions avec YouTube (empêche l'apparition
+   des contrôles YouTube si la vidéo vient d'un iframe). */
 .hero-video-overlay {
-  position: absolute;
-  inset: 0;
+  position: absolute; inset: 0;
   z-index: 2;
-  /* Gradient: transparent at top, darkens only near the text zone, fades to bg */
-  background:
-    linear-gradient(to bottom,
-      rgba(0,0,0,0.05) 0%,
-      rgba(0,0,0,0.25) 55%,
-      var(--bg) 100%);
-  /* No pointer-events:none — this div absorbs all mouse events so YouTube
-     never detects a hover over the iframe and never shows controls */
+  /* Transparent en haut (vidéo visible) → sombre au milieu → couleur de fond en bas */
+  background: linear-gradient(to bottom,
+    rgba(0,0,0,0.05)  0%,   /* Presque transparent en haut ← MODIFIABLE */
+    rgba(0,0,0,0.25)  55%,  /* Légèrement sombre au centre ← MODIFIABLE */
+    var(--bg)         100%  /* Fondu total vers la couleur de fond */
+  );
 }
 
-/* Dark glass box behind the hero text */
+/* Boîte avec verre dépoli derrière le texte du hero
+   backdrop-filter: blur = flou ce qui est DERRIÈRE cet élément */
 .hero-content-box {
-  display: flex;
-  flex-direction: column;
+  display: flex; flex-direction: column;
   align-self: flex-start;
-  padding: 28px 36px 32px;
-  background: rgba(0, 0, 0, 0.38);
-  backdrop-filter: blur(6px);
+  padding: 28px 36px 32px;       /* ← MODIFIABLE */
+  background: rgba(0,0,0,0.38);  /* Fond noir à 38% d'opacité ← MODIFIABLE */
+  backdrop-filter: blur(6px);    /* Flou derrière la boîte ← MODIFIABLE */
   -webkit-backdrop-filter: blur(6px);
-  border-radius: 12px;
+  border-radius: 12px;           /* Coins arrondis ← MODIFIABLE */
 }
 
-/* Hero content stays above the animated bg — exclude absolute-positioned children */
+/* Tous les enfants directs du hero passent au z-index 5 SAUF les éléments de fond
+   Cela garantit que le texte est toujours au-dessus de la vidéo et du halo. */
 .hero > *:not(.hero-anim-bg):not(.hero-video-bg):not(.hero-video-overlay):not(.hero-scroll) {
-  position: relative;
-  z-index: 3;
+  position: relative; z-index: 5;
 }
 
 
-/* ─── Animated Background (global orbs) ────────────────────────────────────── */
+/* ============================================================
+   ORBES D'AMBIANCE — Cercles flous animés en arrière-plan
+   ============================================================
+   Visibles sur toutes les pages (injectés par JavaScript dans app.js).
+   Ils flottent lentement et donnent une ambiance chaleureuse à la page.
+   position: fixed = ils restent en place même quand on scrolle.
+   z-index: -1 = derrière tout le reste de la page. */
 .bg-anim {
-  position: fixed;
-  inset: 0;
+  position: fixed; inset: 0;
   z-index: -1;
-  pointer-events: none;
+  pointer-events: none; /* N'interfère pas avec les clics */
   overflow: hidden;
 }
 
+/* Style commun à tous les orbes */
 .bg-orb {
   position: absolute;
-  border-radius: 50%;
-  filter: blur(130px);
-  opacity: 0.08;
+  border-radius: 50%;           /* Rond */
+  filter: blur(130px);          /* Très flou → halo diffus ← MODIFIABLE */
+  opacity: 0.08;                /* Très discret (8%) ← MODIFIABLE (0.15 = plus visible) */
   animation: orbFloat 22s ease-in-out infinite;
-  will-change: transform;
+  will-change: transform;       /* Optimisation performance pour l'animation */
 }
 
+/* Orbe 1 : en haut à droite, orangé chaud */
 .bg-orb-1 {
-  width: 900px; height: 900px;
-  background: radial-gradient(circle, #3355ff, transparent 70%);
-  top: -300px; right: -200px;
-  animation-duration: 24s;
+  width: 900px; height: 900px;  /* ← MODIFIABLE */
+  background: radial-gradient(circle, #C85C10, transparent 70%); /* Couleur ← MODIFIABLE */
+  top: -300px; right: -200px;   /* Position (peut dépasser l'écran) ← MODIFIABLE */
+  animation-duration: 24s;       /* Sa propre durée de cycle ← MODIFIABLE */
 }
 
+/* Orbe 2 : à gauche au milieu de la page, orange foncé */
 .bg-orb-2 {
   width: 700px; height: 700px;
-  background: radial-gradient(circle, #6620cc, transparent 70%);
+  background: radial-gradient(circle, #A04010, transparent 70%); /* ← MODIFIABLE */
   top: 40%; left: -200px;
-  animation-delay: -8s;
+  animation-delay: -8s;          /* Commence 8s en avance → désynchronisé avec orbe 1 */
   animation-duration: 28s;
 }
 
+/* Orbe 3 : en bas à droite, violet-bleu (complément de l'orange) */
 .bg-orb-3 {
   width: 600px; height: 600px;
-  background: radial-gradient(circle, #1155dd, transparent 70%);
+  background: radial-gradient(circle, #5030A0, transparent 70%); /* ← MODIFIABLE */
   bottom: -150px; right: 20%;
   animation-delay: -16s;
   animation-duration: 20s;
 }
 
+/* L'orbe flotte doucement (translate = se déplace, scale = change de taille) */
 @keyframes orbFloat {
   0%,100% { transform: translate(0px,   0px)   scale(1);    }
-  25%     { transform: translate(50px,  -70px)  scale(1.07); }
-  50%     { transform: translate(-40px,  50px)  scale(0.93); }
+  25%     { transform: translate(50px,  -70px)  scale(1.07); } /* En haut à droite, légèrement agrandi */
+  50%     { transform: translate(-40px,  50px)  scale(0.93); } /* En bas à gauche, légèrement rétréci */
   75%     { transform: translate(70px,   30px)  scale(1.04); }
 }
 
-/* ─── Demo Reel ─────────────────────────────────────────────────────────────── */
+
+/* ============================================================
+   SECTION DEMO REEL — Vidéo de présentation
+   ============================================================ */
 .reel-section {
-  min-height: 100svh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: 32px;
-  padding: 56px 56px;
+  min-height: 100svh; /* Prend toute la hauteur de l'écran */
+  display: flex; flex-direction: column;
+  justify-content: center; /* Contenu centré verticalement */
+  gap: 32px;               /* Espace entre le titre et le player ← MODIFIABLE */
+  padding: 56px 56px;      /* ← MODIFIABLE */
 }
 
 .reel-top { width: 100%; text-align: center; }
 
+/* Titre "DEMO REEL" avec dégradé de couleur orange → crème
+   background-clip: text + color: transparent = le dégradé s'applique au texte */
 .reel-heading {
-  font-size: clamp(36px, 5vw, 72px);
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  line-height: 1.05;
-  margin-top: 0;
-  margin-bottom: 0;
-  background: linear-gradient(120deg, #a0b4ff 0%, #ffffff 45%, #ff7090 100%);
-  -webkit-background-clip: text;
+  font-size: clamp(36px, 5vw, 72px); /* ← MODIFIABLE */
+  font-weight: 800; text-transform: uppercase;
+  letter-spacing: 0.08em; line-height: 1.05;
+  margin-top: 0; margin-bottom: 0;
+  /* Dégradé du titre : orange → orange clair → crème ← MODIFIABLE */
+  background: linear-gradient(120deg, #DC7020 0%, #E0A040 42%, #EDE5D5 100%);
+  -webkit-background-clip: text; /* Safari */
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
+/* Petite ligne décorative sous le titre DEMO REEL */
 .reel-heading::after {
-  content: '';
-  display: block;
-  width: 120px;
-  height: 2px;
-  background: rgba(255,255,255,0.35);
-  margin: 20px auto 0;
+  content: ''; display: block;
+  width: 120px; height: 2px;   /* ← MODIFIABLE */
+  background: rgba(237, 229, 213, 0.22);
+  margin: 20px auto 0; /* Centré horizontalement */
 }
 
 .reel-heading span { color: var(--muted); }
+.reel-player-wrap  { width: 100%; }
 
-.reel-player-wrap { width: 100%; }
-
+/* Conteneur du player YouTube — ratio 16:9 responsive
+   Technique : height: 0 + padding-bottom calculé maintient le ratio.
+   max-width calculé pour que la hauteur 16:9 tienne dans l'écran. */
 .reel-frame {
-  position: relative;
-  width: 100%;
-  /* video max-width calculé pour que sa hauteur (16:9) tienne dans le viewport */
+  position: relative; width: 100%;
+  /* Largeur max pour que le player ne soit pas plus haut que l'écran (moins marges) */
   max-width: calc((100svh - 270px) * (16 / 9));
   margin: 0 auto;
   height: 0;
+  /* min entre 56.25% (ratio 16:9) et la hauteur calculée */
   padding-bottom: min(56.25%, calc(100svh - 270px));
   overflow: hidden;
   background: var(--bg-2);
@@ -1357,216 +1318,271 @@ footer {
 }
 
 .reel-frame iframe {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
   border: none;
 }
 
+/* Calque transparent cliquable par-dessus l'iframe (pour intercepter les clics) */
 .reel-overlay {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
   cursor: pointer;
-  z-index: 2;
+  z-index: 2; /* Au-dessus de l'iframe */
 }
 
+/* Cercle central contenant les icônes play/pause */
 .reel-center-btn {
-  position: relative;
-  width: 112px;
-  height: 112px;
+  position: relative; width: 112px; height: 112px; /* ← MODIFIABLE */
 }
 
+/* Fond flou derrière l'icône */
 .reel-btn-backdrop {
-  position: absolute;
-  inset: 0;
+  position: absolute; inset: 0;
   border-radius: 50%;
   backdrop-filter: blur(6px);
   -webkit-backdrop-filter: blur(6px);
 }
 
-.reel-icon-play,
-.reel-icon-pause {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
+/* Styles communs aux icônes play et pause */
+.reel-icon-play, .reel-icon-pause {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
   transition: opacity 0.3s ease, transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-.reel-icon-pause {
-  opacity: 0;
-  pointer-events: none;
-}
+/* ── LOGIQUE DES ICÔNES PLAY / PAUSE ──────────────────────────
+   La classe .is-playing est ajoutée/retirée par JavaScript
+   en fonction de l'état de lecture de la vidéo.
 
+   État "en pause" (pas de .is-playing) :
+     → icône PLAY visible à 40%, plein au hover
+     → icône PAUSE cachée
+
+   État "en lecture" (.is-playing) :
+     → icône PAUSE visible à 40%, pleine au hover
+     → icône PLAY cachée
+   ────────────────────────────────────────────────────────── */
+
+/* PLAY : visible au repos quand la vidéo est en pause (pas de survol nécessaire) */
 .reel-icon-play {
-  opacity: 0;
-  transform: scale(0.7);
+  opacity: 0.4;              /* Toujours un peu visible ← MODIFIABLE (0 = caché, 1 = plein) */
+  transform: scale(0.85);   /* Légèrement réduit au repos ← MODIFIABLE */
 }
 
+/* PLAY : plein et agrandi au survol */
 .reel-frame:hover .reel-icon-play {
-  opacity: 1;
-  transform: scale(1);
+  opacity: 1; transform: scale(1);
   filter: drop-shadow(0 0 32px rgba(255,255,255,0.55)) drop-shadow(0 4px 24px rgba(0,0,0,0.8));
 }
 
+/* PAUSE : caché quand la vidéo ne joue pas */
+.reel-icon-pause { opacity: 0; transform: scale(0.85); pointer-events: none; }
+
+/* PAUSE : légèrement visible quand la vidéo joue */
+.reel-frame.is-playing .reel-icon-pause {
+  opacity: 0.4;             /* ← MODIFIABLE */
+  pointer-events: auto;
+}
+
+/* PAUSE : plein et agrandi au survol quand la vidéo joue */
+.reel-frame.is-playing:hover .reel-icon-pause {
+  opacity: 1; transform: scale(1);
+  filter: drop-shadow(0 0 32px rgba(255,255,255,0.55)) drop-shadow(0 4px 24px rgba(0,0,0,0.8));
+}
+
+/* Quand la vidéo joue : cacher l'icône PLAY */
+.reel-frame.is-playing .reel-icon-play { opacity: 0; transform: scale(0.7); }
+
+/* Cercle animé qui se dessine autour du bouton au survol ---
+   stroke-dasharray = longueur totale du tracé
+   stroke-dashoffset = partie cachée (239 = tout caché, 0 = tout visible)
+   La transition anime le passage de 239 → 0 = le cercle se dessine */
 .reel-play-ring {
-  stroke-dasharray: 239;
-  stroke-dashoffset: 239;
+  stroke-dasharray: 239;    /* Doit correspondre à la circonférence du cercle SVG */
+  stroke-dashoffset: 239;   /* Tout caché par défaut */
   transform-origin: center;
-  transform: rotate(-90deg);
-  transition: stroke-dashoffset 0.55s ease;
+  transform: rotate(-90deg); /* Commence à midi (12h) plutôt qu'à 3h */
+  transition: stroke-dashoffset 0.55s ease; /* ← MODIFIABLE : durée du dessin */
 }
+/* Au survol : le cercle se dessine complètement */
+.reel-frame:hover .reel-play-ring { stroke-dashoffset: 0; }
 
-.reel-frame:hover .reel-play-ring {
-  stroke-dashoffset: 0;
-}
 
-/* ─── Reel Modal ─────────────────────────────────────────────────────────── */
+/* ============================================================
+   MODAL PLEIN ÉCRAN — S'ouvre au clic sur la vidéo du reel
+   ============================================================
+   La vidéo s'ouvre en grand format avec les contrôles YouTube complets.
+   État par défaut : invisible et non-interactif.
+   JavaScript ajoute .is-open pour l'afficher. */
 .reel-modal {
-  position: fixed;
-  inset: 0;
-  z-index: 9000;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(0, 0, 0, 0);
-  opacity: 0;
-  pointer-events: none;
+  position: fixed; inset: 0; z-index: 9000; /* Tout au-dessus */
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(0,0,0,0);  /* Fond transparent par défaut */
+  opacity: 0;                  /* Invisible */
+  pointer-events: none;        /* Non-interactif */
   transition: opacity 0.35s ease, background 0.35s ease;
 }
 
+/* Quand le modal est ouvert (.is-open ajouté par JS) */
 .reel-modal.is-open {
   opacity: 1;
-  pointer-events: all;
-  background: rgba(0, 0, 0, 0.88);
+  pointer-events: all;              /* Devient interactif */
+  background: rgba(0,0,0,0.88);    /* Fond sombre ← MODIFIABLE */
 }
 
+/* Boîte interne qui contient l'iframe (démarre rétrécie, s'agrandit à l'ouverture) */
 .reel-modal-inner {
+  /* Largeur = 95% de l'écran OU calculée pour que la hauteur = 90% de l'écran (ratio 16:9) */
   width: min(95vw, calc(90vh * 16 / 9));
   aspect-ratio: 16 / 9;
-  transform: scale(0.82);
-  transition: transform 0.42s cubic-bezier(0.34, 1.4, 0.64, 1);
+  transform: scale(0.82);     /* Démarre légèrement rétrécie */
+  transition: transform 0.42s cubic-bezier(0.34, 1.4, 0.64, 1); /* Rebond à l'ouverture */
   border: 1px solid rgba(255,255,255,0.08);
 }
 
-.reel-modal.is-open .reel-modal-inner {
-  transform: scale(1);
-}
+/* S'agrandit à taille normale quand le modal est ouvert */
+.reel-modal.is-open .reel-modal-inner { transform: scale(1); }
 
-.reel-modal-inner iframe {
-  width: 100%;
-  height: 100%;
-  border: none;
-  display: block;
-}
+.reel-modal-inner iframe { width: 100%; height: 100%; border: none; display: block; }
 
+/* Bouton × pour fermer le modal */
 .reel-modal-close {
-  position: absolute;
-  top: 20px;
-  right: 24px;
-  background: none;
-  border: none;
+  position: absolute; top: 20px; right: 24px;
+  background: none; border: none;
   color: rgba(255,255,255,0.7);
-  font-size: 36px;
-  line-height: 1;
-  cursor: pointer;
-  padding: 4px 8px;
+  font-size: 36px; line-height: 1;
+  cursor: pointer; padding: 4px 8px;
   transition: color 0.2s, transform 0.2s;
 }
+.reel-modal-close:hover { color: #fff; transform: rotate(90deg) scale(1.1); }
 
-.reel-modal-close:hover {
-  color: #fff;
-  transform: rotate(90deg) scale(1.1);
-}
 
-/* ─── Works title transition ────────────────────────────────────────────────── */
+/* ============================================================
+   TRANSITIONS DU TITRE DE LA PAGE WORKS (au changement de filtre)
+   ============================================================
+   JavaScript alterne entre .title-out (disparaît) et .title-in (réapparaît)
+   quand on change de catégorie de filtre. */
 @keyframes titleOut {
-  from { opacity: 1; filter: blur(0px);  transform: translateY(0px); }
-  to   { opacity: 0; filter: blur(6px);  transform: translateY(-10px); }
+  from { opacity: 1; filter: blur(0px);  transform: translateY(0px);   }
+  to   { opacity: 0; filter: blur(6px);  transform: translateY(-10px); } /* Flou + monte */
 }
-
 @keyframes titleIn {
-  from { opacity: 0; filter: blur(6px);  transform: translateY(10px); }
-  to   { opacity: 1; filter: blur(0px);  transform: translateY(0px); }
+  from { opacity: 0; filter: blur(6px);  transform: translateY(10px);  } /* Flou + en bas */
+  to   { opacity: 1; filter: blur(0px);  transform: translateY(0px);   }
 }
-
 .title-out { animation: titleOut 0.18s ease forwards; }
 .title-in  { animation: titleIn  0.22s ease forwards; }
 
-/* ─── Responsive ────────────────────────────────────────────────────────────── */
+
+/* ============================================================
+   RESPONSIVE — Adaptations pour tablettes et téléphones
+   ============================================================
+   @media (max-width: X) = ces règles s'appliquent UNIQUEMENT
+   quand l'écran est plus petit que X pixels.
+
+   Ordre : du plus large au plus petit :
+   - max-width: 1100px → tablette paysage
+   - max-width: 768px  → tablette portrait / mobile
+   - max-width: 480px  → petit mobile
+   ============================================================ */
+
+/* ── Tablette (≤ 1100px) ── */
 @media (max-width: 1100px) {
-  .featured-grid  { grid-template-columns: repeat(2, 1fr); }
-  .works-grid     { grid-template-columns: repeat(2, 1fr); }
-  .project-body   { grid-template-columns: 1fr; }
+  /* Passe de 3 colonnes à 2 colonnes pour les grilles de projets */
+  .featured-grid { grid-template-columns: repeat(2, 1fr); }
+  .works-grid    { grid-template-columns: repeat(2, 1fr); }
+
+  /* Page projet : passe de 2 colonnes à 1 colonne */
+  .project-body  { grid-template-columns: 1fr; }
   .project-description { padding-right: 0; }
+
+  /* La sidebar se place horizontalement sous la description */
   .project-sidebar {
     border-left: none;
-    border-top: 1px solid var(--border);
-    padding-left: 0;
-    padding-top: 40px;
-    margin-top: 48px;
-    display: flex;
-    gap: 48px;
-    flex-wrap: wrap;
+    border-top: 1px solid var(--border); /* Ligne en haut plutôt qu'à gauche */
+    padding-left: 0; padding-top: 40px; margin-top: 48px;
+    display: flex; gap: 48px; flex-wrap: wrap; /* Les infos s'affichent côte à côte */
   }
   .sidebar-block { margin-bottom: 0; }
+
+  /* Page About : passe de 2 colonnes à 1 colonne */
   .about-grid { grid-template-columns: 1fr; gap: 56px; }
 }
 
+/* ── Mobile (≤ 768px) ── */
 @media (max-width: 768px) {
+  /* Navigation : réduit les marges */
   nav { padding: 0 24px; }
+
+  /* Les liens de navigation se cachent par défaut sur mobile.
+     Ils apparaissent en overlay quand .open est ajouté par JS (bouton hamburger). */
   .nav-links {
     display: none;
-    position: fixed;
-    inset: var(--nav-h) 0 0 0;
+    position: fixed; inset: var(--nav-h) 0 0 0; /* Prend tout l'écran sous la nav */
     background: var(--bg);
-    flex-direction: column;
-    padding: 48px 32px;
-    gap: 28px;
-    z-index: 199;
+    flex-direction: column;   /* Liens empilés verticalement */
+    padding: 48px 32px; gap: 28px; z-index: 199;
   }
-  .nav-links.open { display: flex; }
-  .nav-links.open a { font-size: 18px; letter-spacing: 0.12em; }
+  .nav-links.open { display: flex; }  /* Visible quand ouvert */
+  .nav-links.open a { font-size: 18px; letter-spacing: 0.12em; } /* Plus grand sur mobile */
+
+  /* Le bouton hamburger ≡ devient visible */
   .nav-toggle { display: flex; }
 
+  /* Hero : marges réduites pour mobile */
   .hero { padding: calc(var(--nav-h) + 20px) 24px 72px; }
-  .hero-scroll { display: none; }
-  .hero-video-bg,
-  .hero-video-overlay { display: none; }
-  .reel-section { padding: 48px 24px; gap: 24px; min-height: auto; }
-  .reel-frame { max-width: 100%; padding-bottom: 56.25%; }
 
+  /* Cache l'indicateur de scroll vertical (trop petit pour mobile) */
+  .hero-scroll { display: none; }
+
+  /* Cache la vidéo de fond du hero (économise de la bande passante sur mobile) */
+  .hero-video-bg, .hero-video-overlay { display: none; }
+
+  /* Demo Reel : compacté sur mobile */
+  .reel-section { padding: 48px 24px; gap: 24px; min-height: auto; }
+  .reel-frame   { max-width: 100%; padding-bottom: 56.25%; } /* Ratio 16:9 pleine largeur */
+
+  /* Sections : marges réduites */
   .section-wrap { padding: 80px 24px; }
-  .divider { margin: 0 24px; }
+  .divider      { margin: 0 24px; }
+
+  /* Grilles : une seule colonne sur mobile */
   .featured-grid { grid-template-columns: 1fr; }
   .works-grid    { grid-template-columns: 1fr; padding: 0 24px 80px; }
   .view-all-wrap { padding: 56px 24px; }
 
+  /* Page Works */
   .works-header { padding: calc(var(--nav-h) + 56px) 24px 0; }
-  .filter-bar { overflow-x: auto; padding-bottom: 0; }
-  .filter-btn { padding: 12px 20px; white-space: nowrap; }
+  .filter-bar   { overflow-x: auto; padding-bottom: 0; } /* Défilement horizontal si beaucoup de filtres */
+  .filter-btn   { padding: 12px 20px; white-space: nowrap; }
 
+  /* Page projet */
   .project-banner-content { padding: 0 24px 40px; }
-  .project-body   { padding: 48px 24px 0; }
-  .project-trailer-wrap { padding: 48px 24px; }
-  .project-gallery-wrap { padding: 0 24px 80px; }
-  .back-link { padding: 0 24px; }
+  .project-body           { padding: 48px 24px 0; }
+  .project-trailer-wrap   { padding: 48px 24px; }
+  .project-gallery-wrap   { padding: 0 24px 80px; }
+  .back-link              { padding: 0 24px; }
 
+  /* Page About */
   .about-hero { padding: calc(var(--nav-h) + 56px) 24px 48px; flex-direction: column-reverse; align-items: flex-start; }
-  .about-hero-photo img { width: 160px; height: 160px; }
-  .about-grid { padding: 0 24px 56px; }
-  .contact-section { padding: 72px 24px 80px; }
-  .contact-grid { flex-direction: column; gap: 28px; }
+  .about-hero-photo img { width: 160px; height: 160px; } /* Photo plus petite sur mobile */
+  .about-grid           { padding: 0 24px 56px; }
 
+  /* Section contact */
+  .contact-section { padding: 72px 24px 80px; }
+  .contact-grid    { flex-direction: column; gap: 28px; }
+
+  /* Footer : s'empile verticalement */
   footer { padding: 24px; flex-direction: column-reverse; gap: 16px; text-align: center; }
   .footer-links { gap: 24px; }
 }
 
+/* ── Petit mobile (≤ 480px) ── */
 @media (max-width: 480px) {
+  /* Réduit encore l'espacement des lettres du grand titre */
   .hero-name { letter-spacing: -0.02em; }
+
+  /* La galerie passe à 1 image visible à la fois */
   .gallery-slide { flex: 0 0 100% !important; }
 }
