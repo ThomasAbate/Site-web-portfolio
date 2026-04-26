@@ -3,8 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Titre de l'onglet — mis à jour dynamiquement par JavaScript (renderProject dans app.js)
+       avec le format "NOM DU PROJET — Thomas Abate" -->
   <title>Project — Thomas Abate</title>
   <meta name="description" content="Project case study — Thomas Abate portfolio.">
+
   <link rel="icon" type="image/png" href="Site_Web_Ico/Logo%20Web.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -13,7 +17,9 @@
 </head>
 <body>
 
-  <!-- ── Navigation ─────────────────────────────────────────────────────── -->
+  <!-- ════════════════════════════════════════════════════════════════════════
+       NAVIGATION — Identique sur toutes les pages
+       ════════════════════════════════════════════════════════════════════════ -->
   <nav>
     <a class="nav-logo" href="index.html">Thomas Abate</a>
     <ul class="nav-links" id="navList">
@@ -27,7 +33,11 @@
     </button>
   </nav>
 
-  <!-- ── Back link ──────────────────────────────────────────────────────── -->
+  <!-- ════════════════════════════════════════════════════════════════════════
+       LIEN RETOUR — "← All Projects"
+       Ramène à la page Works. Styles dans .back-link dans style.css.
+       ← MODIFIABLE : changer le texte "All Projects" si besoin
+       ════════════════════════════════════════════════════════════════════════ -->
   <a class="back-link" href="works.html">
     <svg width="14" height="10" viewBox="0 0 14 10" fill="none">
       <path d="M13 5H1M6 1L2 5l4 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
@@ -35,37 +45,67 @@
     All Projects
   </a>
 
-  <!-- ── Banner ─────────────────────────────────────────────────────────── -->
+  <!-- ════════════════════════════════════════════════════════════════════════
+       BANNIÈRE DU PROJET — Image + Gradient + Texte superposé
+       Tout le contenu est injecté par renderProject() dans app.js.
+       - id="projectBanner"   : JavaScript remplit l'image src
+       - id="projectTag"      : "Catégorie · Année" (ex: "Game Jam · 2024")
+       - id="projectTitle"    : Nom du projet
+       - id="projectSubtitle" : Description courte
+       Styles dans .project-banner dans style.css.
+       ════════════════════════════════════════════════════════════════════════ -->
   <div class="project-banner" id="projectBanner">
+    <!-- Image de la bannière — src="" rempli par JavaScript -->
     <img src="" alt="">
+
+    <!-- Dégradé en fondu de l'image vers la couleur de fond (défini dans style.css) -->
     <div class="project-banner-gradient"></div>
+
+    <!-- Texte positionné en bas de la bannière -->
     <div class="project-banner-content">
-      <div class="project-tag" id="projectTag"></div>
-      <h1 class="project-title" id="projectTitle"></h1>
-      <p class="project-subtitle" id="projectSubtitle"></p>
+      <div class="project-tag" id="projectTag"></div><!-- Ex: "Game Jam · 2024" -->
+      <h1 class="project-title" id="projectTitle"></h1><!-- Nom du projet -->
+      <p class="project-subtitle" id="projectSubtitle"></p><!-- Description courte -->
     </div>
   </div>
 
-  <!-- ── Body: description + sidebar ───────────────────────────────────── -->
+  <!-- ════════════════════════════════════════════════════════════════════════
+       CORPS DU PROJET — Deux colonnes : description + sidebar
+       - Colonne principale : texte d'intro + liste de points clés (bullets)
+       - Sidebar : métadonnées rapides (catégorie, année, moteur)
+       Passe à 1 colonne sur tablette (CSS @media max-width: 1100px)
+       ════════════════════════════════════════════════════════════════════════ -->
   <div class="project-body">
-    <!-- Main description -->
+
+    <!-- ── Description principale ─────────────────────────────────────────
+         - id="projectIntro"   : paragraphe d'intro injecté par JavaScript
+         - id="projectBullets" : liste des points clés injectée par JavaScript
+         Les données viennent des champs "intro" et "bullets" dans data.js -->
     <div class="project-description">
       <p class="project-intro" id="projectIntro"></p>
       <ul class="project-bullets" id="projectBullets">
-        <!-- Populated by app.js -->
+        <!-- Les <li class="bullet-item"> sont créés par renderProject() dans app.js -->
       </ul>
     </div>
 
-    <!-- Sidebar meta -->
+    <!-- ── Sidebar : informations rapides ─────────────────────────────────
+         - id="sideCategory" : injecté par JavaScript depuis project.categoryLabel
+         - id="sideYear"     : injecté par JavaScript depuis project.year
+         POUR AJOUTER UNE INFO dans la sidebar :
+           1. Ajouter un bloc <div class="sidebar-block">...</div> ici
+           2. Donner un id au .sidebar-value
+           3. Appeler setText('monId', project.maValeur) dans renderProject() dans app.js -->
     <aside class="project-sidebar">
       <div class="sidebar-block">
         <div class="sidebar-label">Category</div>
-        <div class="sidebar-value" id="sideCategory"></div>
+        <div class="sidebar-value" id="sideCategory"></div><!-- Ex: "Game Jam" -->
       </div>
       <div class="sidebar-block">
         <div class="sidebar-label">Year</div>
-        <div class="sidebar-value" id="sideYear"></div>
+        <div class="sidebar-value" id="sideYear"></div><!-- Ex: "2024" -->
       </div>
+      <!-- Moteur de jeu — affiché en dur (tous les projets utilisent UE5)
+           POUR MODIFIER : changer le texte ou l'image du logo ← MODIFIABLE -->
       <div class="sidebar-block">
         <div class="sidebar-label">Engine</div>
         <div class="sidebar-value sidebar-engine">
@@ -76,35 +116,54 @@
     </aside>
   </div>
 
-  <!-- ── Trailer ────────────────────────────────────────────────────────── -->
+  <!-- ════════════════════════════════════════════════════════════════════════
+       SECTION TRAILER — Vidéo YouTube du projet
+       - L'iframe est chargée paresseusement par initLazyVideo() dans app.js
+       - Si project.trailerID est null, cette section est cachée par JavaScript
+       ════════════════════════════════════════════════════════════════════════ -->
   <div class="project-trailer-wrap" id="trailerSection">
+    <!-- Label au-dessus ← MODIFIABLE -->
     <div class="section-sublabel">Gameplay Trailer</div>
+    <!-- Boîte ratio 16:9 — l'iframe occupe 100% en position absolue -->
     <div class="trailer-box">
+      <!-- src="" = vide par défaut, rempli par initLazyVideo() dans app.js -->
       <iframe id="trailerFrame" src="" title="Project trailer" allowfullscreen
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture">
       </iframe>
     </div>
   </div>
 
-  <!-- ── Gallery ────────────────────────────────────────────────────────── -->
+  <!-- ════════════════════════════════════════════════════════════════════════
+       SECTION GALERIE — Carrousel d'images
+       - Les slides sont injectés par renderProject() dans app.js
+       - Si project.gallery est vide [], cette section est cachée par JavaScript
+       - Un clic sur une image ouvre la lightbox
+       ════════════════════════════════════════════════════════════════════════ -->
   <div class="project-gallery-wrap" id="gallerySection">
+    <!-- Label au-dessus ← MODIFIABLE -->
     <div class="section-sublabel">Gallery</div>
     <div class="gallery-grid" id="galleryGrid">
-      <!-- Populated by app.js -->
+      <!-- Le filmstrip (piste défilante + boutons flèches + compteur) est créé par app.js -->
     </div>
   </div>
 
-  <!-- ── Project navigation ───────────────────────────────────────────── -->
+  <!-- ════════════════════════════════════════════════════════════════════════
+       NAVIGATION ENTRE PROJETS — Boutons Précédent / Suivant
+       - Les href et textes sont mis à jour par renderProject() dans app.js
+       - Le bouton est caché (visibility: hidden) s'il n'y a pas de projet adjacent
+       ════════════════════════════════════════════════════════════════════════ -->
   <div class="divider" style="margin:0 56px"></div>
   <div style="padding:64px 56px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px">
+    <!-- Bouton "← Projet précédent" -->
     <a class="btn-outline" id="prevProject" href="works.html">
       <svg width="14" height="10" viewBox="0 0 14 10" fill="none">
         <path d="M13 5H1M6 1L2 5l4 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
       </svg>
-      Previous Project
+      Previous Project<!-- Texte remplacé par le nom du projet précédent par JavaScript -->
     </a>
+    <!-- Bouton "Projet suivant →" -->
     <a class="btn-outline" id="nextProject" href="works.html">
-      Next Project
+      Next Project<!-- Texte remplacé par le nom du projet suivant par JavaScript -->
       <svg width="14" height="10" viewBox="0 0 14 10" fill="none">
         <path d="M1 5h12M8 1l4 4-4 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
       </svg>
@@ -112,6 +171,7 @@
   </div>
 
 
+  <!-- data.js doit être chargé avant app.js -->
   <script src="js/data.js"></script>
   <script src="js/app.js"></script>
 </body>

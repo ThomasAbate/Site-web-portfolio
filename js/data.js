@@ -1,13 +1,67 @@
 /* ─────────────────────────────────────────────────────────────────────────────
-   data.js  –  All portfolio project data
-   Images are stored locally in /picture/<project-id>/
-───────────────────────────────────────────────────────────────────────────── */
+   data.js  –  Toutes les données des projets du portfolio
 
-/* ─── Project Data ────────────────────────────────────────────────────────── */
+   COMMENT MODIFIER CE FICHIER :
+   - Pour ajouter un projet  → copie un bloc existant et remplis les champs
+   - Pour supprimer un projet → supprime son bloc entier (de { jusqu'au }, suivant)
+   - Pour modifier l'ordre   → change "homeFeaturedOrder" ou le tri dans CATEGORY_ORDER
+   - Les images doivent être dans /picture/<id-du-projet>/
+   ───────────────────────────────────────────────────────────────────────────── */
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   STRUCTURE D'UN PROJET — Explication de chaque champ
+   ─────────────────────────────────────────────────────────────────────────────
+   {
+     id:            Identifiant unique du projet (string, sans espace, en minuscules)
+                    → Utilisé dans l'URL : project.html?id=MON-ID
+                    → Doit correspondre exactement au nom du dossier dans /picture/
+
+     name:          Nom affiché du projet (string)
+                    → Affiché sur les cartes et en bannière de la page projet
+
+     category:      Catégorie technique (string) — 3 valeurs possibles :
+                    'personal' | 'school' | 'gamejam'
+                    → Utilisé pour les filtres sur la page Works
+
+     categoryLabel: Libellé affiché de la catégorie (string)
+                    → Exemple : 'Personal Project', 'Game Jam', 'School Project'
+
+     year:          Année du projet (string, ex: '2025' ou '2026')
+
+     shortDesc:     Courte description affichée sur la carte (string, ~1 ligne)
+
+     intro:         Paragraphe d'introduction affiché en haut de la page projet (string)
+
+     bullets:       Liste des points clés du projet (tableau d'objets)
+                    → Chaque bullet a un 'title' et un 'text'
+                    → Affiché comme une liste à la page projet
+
+     mainImageSlug: Chemin de l'image principale (string)
+                    → Format : 'picture/ID-PROJET/nom-du-fichier.png'
+                    → Utilisé comme image de la carte ET bannière de la page projet
+                    → null = aucune image (placeholder affiché)
+
+     trailerID:     ID YouTube de la vidéo de présentation (string)
+                    → Exemple : 'hBTu7WFeQU0' (partie après ?v= dans l'URL YouTube)
+                    → null = pas de trailer (section trailer cachée)
+
+     gallery:       Tableau d'images pour le carrousel de la page projet
+                    → Chaque image : { slug: 'chemin/vers/image.png', title: 'Légende' }
+                    → [] = galerie vide (section galerie cachée)
+
+     featured:      (boolean) Réservé pour un usage futur (non utilisé actuellement)
+
+     homeFeatured:  (boolean) true = affiché dans la section "Selected Works" de l'accueil
+
+     homeFeaturedOrder: (number) Ordre d'affichage sur l'accueil (1 = premier, 2 = deuxième...)
+                        → Ignoré si homeFeatured est false
+   }
+   ───────────────────────────────────────────────────────────────────────────── */
+
 const PROJECTS = [
 
   /* ════════════════════════════════════════════════
-     GAME JAM
+     GAME JAM — Projets réalisés lors de Game Jams
   ════════════════════════════════════════════════ */
   {
     id:            'mask-snatchers',
@@ -75,7 +129,7 @@ const PROJECTS = [
   },
 
   /* ════════════════════════════════════════════════
-     PERSONAL PROJECTS
+     PERSONAL — Projets personnels
   ════════════════════════════════════════════════ */
   {
     id:            'splinter-cell-prototype',
@@ -108,7 +162,7 @@ const PROJECTS = [
     ],
     featured: true,
     homeFeatured: true,
-    homeFeaturedOrder: 2,
+    homeFeaturedOrder: 2, /* ← 2ème carte sur l'accueil */
   },
   {
     id:            'tikivolcano',
@@ -142,7 +196,7 @@ const PROJECTS = [
     ],
     featured: true,
     homeFeatured: true,
-    homeFeaturedOrder: 3,
+    homeFeaturedOrder: 3, /* ← 3ème carte sur l'accueil */
   },
   {
     id:            'night-city',
@@ -214,7 +268,7 @@ const PROJECTS = [
   },
 
   /* ════════════════════════════════════════════════
-     SCHOOL PROJECTS
+     SCHOOL — Projets scolaires (ARTFX)
   ════════════════════════════════════════════════ */
   {
     id:            'fk-this-job',
@@ -231,13 +285,13 @@ const PROJECTS = [
       },
     ],
     mainImageSlug: 'picture/fk-this-job/main.png',
-    trailerID:     null,
+    trailerID:     null, /* ← null = pas de trailer, la section sera cachée */
     gallery: [
       { slug: 'picture/fk-this-job/gallery-concept-art.png', title: 'Concept Art' },
     ],
     featured: false,
     homeFeatured: true,
-    homeFeaturedOrder: 1,
+    homeFeaturedOrder: 1, /* ← 1ère carte sur l'accueil (le projet de diplôme en avant) */
   },
   {
     id:            'heart-of-darkness',
@@ -343,33 +397,54 @@ const PROJECTS = [
   },
 ];
 
-/* ─── Helpers ────────────────────────────────────────────────────────────── */
+/* ─── Fonctions utilitaires ──────────────────────────────────────────────────
+   Ces fonctions sont appelées par app.js pour récupérer les données.
+   Tu n'as normalement pas besoin de les modifier.
+   ─────────────────────────────────────────────────────────────────────────── */
 
+/* Retourne un projet par son id (ou null si pas trouvé) */
 function getProjectById(id) {
   return PROJECTS.find(p => p.id === id) || null;
 }
 
+/* Ordre d'affichage des catégories dans la grille Works
+   1 = affiché en premier, 2 = deuxième, etc.
+   ← MODIFIABLE : change les chiffres pour changer l'ordre des sections */
 const CATEGORY_ORDER = { personal: 1, school: 2, gamejam: 3 };
 
+/* Retourne les projets filtrés par catégorie, triés par catégorie puis par année (desc) */
 function getProjectsByCategory(cat) {
+  /* 'all' ou vide = tous les projets ; sinon filtre par catégorie */
   const list = (!cat || cat === 'all') ? [...PROJECTS] : PROJECTS.filter(p => p.category === cat);
   return list.sort((a, b) => {
     const catDiff = (CATEGORY_ORDER[a.category] || 9) - (CATEGORY_ORDER[b.category] || 9);
     if (catDiff !== 0) return catDiff;
-    return Number(b.year) - Number(a.year);
+    return Number(b.year) - Number(a.year); /* Plus récent en premier dans chaque catégorie */
   });
 }
 
+/* Retourne uniquement les projets affichés sur l'accueil, triés par homeFeaturedOrder */
 function getHomeFeatured() {
   return PROJECTS.filter(p => p.homeFeatured)
                  .sort((a, b) => (a.homeFeaturedOrder || 99) - (b.homeFeaturedOrder || 99));
 }
 
-function cardImageUrl(slug)     { return slug || null; }
-function bannerImageUrl(slug)   { return slug || null; }
-function galleryImageUrl(slug)  { return slug || null; }
-function lightboxImageUrl(slug) { return slug || null; }
+/* ─── Constructeurs d'URL d'images ───────────────────────────────────────────
+   Ces fonctions renvoient directement le slug (chemin relatif de l'image).
+   Elles existent pour permettre de centraliser la logique d'URL plus tard
+   (par exemple ajouter un CDN ou un sous-domaine d'images).
+   ─────────────────────────────────────────────────────────────────────────── */
+function cardImageUrl(slug)     { return slug || null; } /* Image de la carte */
+function bannerImageUrl(slug)   { return slug || null; } /* Image de la bannière de page projet */
+function galleryImageUrl(slug)  { return slug || null; } /* Image dans le carrousel */
+function lightboxImageUrl(slug) { return slug || null; } /* Image en plein écran (lightbox) */
 
+/* Construit l'URL d'embed YouTube avec les paramètres appropriés
+   - rel=0          : n'affiche pas les vidéos recommandées en fin
+   - color=white    : barre de progression blanche
+   - autoplay=1     : démarre automatiquement (muet par défaut si requis)
+   - loop=1         : boucle infinie
+   - playlist=id    : nécessaire pour que loop=1 fonctionne sur YouTube */
 function youtubeEmbedUrl(id) {
   return `https://www.youtube.com/embed/${id}?rel=0&color=white&autoplay=1&mute=1&loop=1&playlist=${id}`;
 }

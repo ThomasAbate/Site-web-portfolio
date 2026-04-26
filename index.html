@@ -3,56 +3,108 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Titre de l'onglet du navigateur ← MODIFIABLE -->
   <title>Thomas Abate — Technical Game / Level Designer</title>
+
+  <!-- Description pour les moteurs de recherche (SEO) ← MODIFIABLE -->
   <meta name="description" content="Portfolio of Thomas Abate — Technical Game & Level Designer specialising in Unreal Engine prototyping, 3C design, and systemic gameplay systems.">
+
+  <!-- Favicon (icône dans l'onglet) ← MODIFIABLE : remplace le fichier dans Site_Web_Ico/ -->
   <link rel="icon" type="image/png" href="Site_Web_Ico/Logo%20Web.png">
+
+  <!-- Chargement de la police Inter depuis Google Fonts
+       preconnect = établit la connexion à l'avance pour accélérer le chargement -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Feuille de style principale du site -->
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-  <!-- ── Navigation ─────────────────────────────────────────────────────── -->
+  <!-- ════════════════════════════════════════════════════════════════════════
+       NAVIGATION — Barre fixe en haut de chaque page
+       Identique sur les 4 pages HTML. Pour modifier les liens, édite les 4 fichiers.
+       - .nav-logo  : nom / logo à gauche ← MODIFIABLE
+       - .nav-links : liens de navigation ← MODIFIABLE (ajouter/supprimer des <li>)
+       - .nav-toggle : bouton hamburger mobile (géré par app.js)
+       ════════════════════════════════════════════════════════════════════════ -->
   <nav>
-    <a class="nav-logo" href="index.html">Thomas Abate</a>
+    <a class="nav-logo" href="index.html">Thomas Abate</a><!-- ← MODIFIABLE -->
     <ul class="nav-links" id="navList">
       <li><a href="index.html">Home</a></li>
       <li><a href="works.html">Work</a></li>
       <li><a href="about.html">About</a></li>
-      <li><a href="about.html#cv">CV</a></li>
+      <li><a href="about.html#cv">CV</a></li><!-- #cv = ancre vers la section CV dans about.html -->
     </ul>
+    <!-- Bouton hamburger (3 barres) — visible uniquement sur mobile (CSS le cache sur desktop) -->
     <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">
       <span></span><span></span><span></span>
     </button>
   </nav>
 
-  <!-- ── Hero ───────────────────────────────────────────────────────────── -->
+  <!-- ════════════════════════════════════════════════════════════════════════
+       HERO — Grande section d'accueil (plein écran)
+       Contient : fond animé orange, vidéo de fond, calque assombrisseur, texte
+       ════════════════════════════════════════════════════════════════════════ -->
   <section class="hero">
+
+    <!-- Fond animé (halo orange) — animé par CSS, styles dans .hero-anim-bg -->
     <div class="hero-anim-bg"></div>
 
+    <!-- Vidéo de fond lue en boucle (muette, sans contrôles)
+         - aria-hidden="true" : invisible aux lecteurs d'écran (décoratif)
+         - La vidéo est gérée par initHeroBgVideo() dans app.js
+         POUR CHANGER LA VIDÉO : remplacer le fichier mp4 dans BackGround_video/
+         et mettre à jour le chemin dans <source src="..."> ← MODIFIABLE -->
     <div class="hero-video-bg" aria-hidden="true">
       <video id="heroBgVideo" autoplay muted playsinline preload="auto">
         <source src="BackGround_video/Background%20Vagas.mp4" type="video/mp4">
       </video>
     </div>
+
+    <!-- Calque sombre semi-transparent par-dessus la vidéo (pour la lisibilité du texte)
+         Styles dans .hero-video-overlay dans style.css -->
     <div class="hero-video-overlay"></div>
 
+    <!-- Boîte de texte principal avec effet "verre dépoli" derrière -->
     <div class="hero-content-box">
+      <!-- Petit texte en haut ← MODIFIABLE -->
       <div class="hero-eyebrow">Portfolio / Game Design</div>
+
+      <!-- Grand nom ← MODIFIABLE -->
       <h1 class="hero-name">Thomas Abate</h1>
+
+      <!-- Ligne décorative entre le nom et le titre -->
       <div class="hero-divider"></div>
+
+      <!-- Sous-titre (spécialité) ← MODIFIABLE -->
       <p class="hero-title">Technical Game / Level Designer</p>
     </div>
   </section>
 
-  <!-- ── Demo Reel ──────────────────────────────────────────────────────────── -->
+  <!-- ════════════════════════════════════════════════════════════════════════
+       DEMO REEL — Section vidéo YouTube
+       - La vidéo se charge paresseusement (quand la section est visible)
+       - Au survol : la vidéo joue (muette)
+       - Au clic : ouvre un modal plein écran avec son
+       - Géré par initReel() dans app.js
+       POUR CHANGER LA VIDÉO :
+         1. Changer data-src ci-dessous (vidéo en hover muette)
+         2. Changer MODAL_SRC dans app.js ligne ~200 (vidéo dans le modal)
+       ════════════════════════════════════════════════════════════════════════ -->
   <section class="reel-section" id="reel">
     <div class="reel-top">
+      <!-- Titre de la section ← MODIFIABLE -->
       <h2 class="reel-heading reveal">Demo Reel</h2>
     </div>
     <div class="reel-player-wrap reveal">
       <div class="reel-frame">
+        <!-- iframe YouTube — le src est vide, il sera rempli par app.js
+             data-src = URL source réelle, lue par JavaScript
+             ← MODIFIABLE : remplace l'ID YouTube (e88P-_075KE) dans data-src -->
         <iframe
           id="reelIframe"
           data-src="https://www.youtube.com/embed/e88P-_075KE?rel=0&modestbranding=1&color=white&autoplay=1&mute=1&loop=1&playlist=e88P-_075KE"
@@ -60,20 +112,34 @@
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
           allowfullscreen>
         </iframe>
+
+        <!-- Calque par-dessus l'iframe pour intercepter les clics et afficher le bouton play
+             role="button" + tabindex + aria-label = accessibilité clavier -->
         <div class="reel-overlay" id="reelOverlay" role="button" tabindex="0" aria-label="Watch Demo Reel in fullscreen">
+
+          <!-- Miniature YouTube — visible tant que la vidéo n'a pas chargé
+               POUR CHANGER LA MINIATURE : remplacer l'ID YouTube dans l'URL src
+               Format : https://img.youtube.com/vi/ID_YOUTUBE/maxresdefault.jpg
+               ← MODIFIABLE -->
+          <img
+            class="reel-thumbnail"
+            id="reelThumbnail"
+            src="https://img.youtube.com/vi/e88P-_075KE/maxresdefault.jpg"
+            alt="Demo Reel thumbnail">
+
+          <!-- Bouton PLAY centré — toujours affiché, ouvre le modal plein écran au clic -->
           <div class="reel-center-btn">
+            <!-- Fond flou derrière l'icône -->
             <div class="reel-btn-backdrop"></div>
+
+            <!-- Icône PLAY -->
             <svg class="reel-icon-play" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
               <circle cx="40" cy="40" r="38" fill="rgba(0,0,0,0.72)"/>
               <circle cx="40" cy="40" r="38" stroke="rgba(255,255,255,0.22)" stroke-width="1.5"/>
+              <!-- Cercle animé qui se dessine au survol -->
               <circle class="reel-play-ring" cx="40" cy="40" r="38" stroke="white" stroke-width="2" stroke-linecap="round"/>
+              <!-- Triangle play -->
               <polygon points="32,22 32,58 59,40" fill="white"/>
-            </svg>
-            <svg class="reel-icon-pause" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <circle cx="40" cy="40" r="38" fill="rgba(0,0,0,0.72)"/>
-              <circle cx="40" cy="40" r="38" stroke="rgba(255,255,255,0.22)" stroke-width="1.5"/>
-              <rect x="26" y="22" width="10" height="36" rx="3" fill="white"/>
-              <rect x="44" y="22" width="10" height="36" rx="3" fill="white"/>
             </svg>
           </div>
         </div>
@@ -81,15 +147,28 @@
     </div>
   </section>
 
+  <!-- Ligne séparatrice horizontale entre les sections -->
   <div class="divider"></div>
 
-  <!-- ── Featured Works ─────────────────────────────────────────────────── -->
+  <!-- ════════════════════════════════════════════════════════════════════════
+       PROJETS EN VEDETTE — Grille des projets sélectionnés
+       - Le contenu (#featuredGrid) est injecté par renderFeatured() dans app.js
+       - Les projets affichés sont ceux avec homeFeatured: true dans data.js
+       POUR MODIFIER LES PROJETS AFFICHÉS : édite homeFeatured et homeFeaturedOrder dans data.js
+       ════════════════════════════════════════════════════════════════════════ -->
   <section class="section-wrap">
+    <!-- Petit label au-dessus du titre ← MODIFIABLE -->
     <div class="section-tag">Selected Works</div>
+
+    <!-- Titre de la section (le <span> est affiché en version atténuée) ← MODIFIABLE -->
     <h2 class="section-heading">Last <span>Works</span></h2>
+
+    <!-- Grille injectée par JavaScript (app.js → renderFeatured) -->
     <div class="featured-grid" id="featuredGrid">
-      <!-- Populated by app.js -->
+      <!-- Les cartes de projets sont créées dynamiquement par app.js -->
     </div>
+
+    <!-- Bouton "View All Projects" → redirige vers works.html -->
     <div style="margin-top:48px">
       <a class="btn-outline" href="works.html">
         View All Projects
@@ -102,11 +181,14 @@
 
   <div class="divider"></div>
 
-  <!-- ── About Snippet ──────────────────────────────────────────────────── -->
+  <!-- ════════════════════════════════════════════════════════════════════════
+       EXTRAIT "ABOUT" — Paragraphe de présentation + lien vers about.html
+       ════════════════════════════════════════════════════════════════════════ -->
   <section class="section-wrap">
-    <div class="section-tag">About</div>
-    <h2 class="section-heading reveal">Designing with <span>intent.</span></h2>
+    <div class="section-tag">About</div><!-- ← MODIFIABLE -->
+    <h2 class="section-heading reveal">Designing with <span>intent.</span></h2><!-- ← MODIFIABLE -->
     <div style="max-width:680px">
+      <!-- Texte de présentation ← MODIFIABLE -->
       <p class="reveal" style="font-size:17px;line-height:1.85;color:var(--muted);margin-bottom:32px">
         I'm a <strong style="color:var(--text)">Technical Game / Level Designer</strong> specialising in rapid prototyping and polished gameplay systems inside <strong style="color:var(--text)">Unreal Engine</strong>. I believe the heart of the craft lies in the experience lived by the player. Every mechanic, feedback loop, and level flow exists to serve that moment.
       </p>
@@ -121,19 +203,24 @@
 
   <div class="divider"></div>
 
-  <!-- ── Contact Strip ──────────────────────────────────────────────────── -->
+  <!-- ════════════════════════════════════════════════════════════════════════
+       BANDE DE CONTACT — Email et LinkedIn
+       POUR MODIFIER : changer les href (mailto: et le lien LinkedIn) ← MODIFIABLE
+       ════════════════════════════════════════════════════════════════════════ -->
   <section class="section-wrap" style="padding-top:80px;padding-bottom:80px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:32px">
     <div>
-      <div class="section-tag">Let's Connect</div>
-      <h2 class="section-heading reveal" style="margin-bottom:0">Get in touch.</h2>
+      <div class="section-tag">Let's Connect</div><!-- ← MODIFIABLE -->
+      <h2 class="section-heading reveal" style="margin-bottom:0">Get in touch.</h2><!-- ← MODIFIABLE -->
     </div>
     <div style="display:flex;gap:20px;flex-wrap:wrap">
+      <!-- Bouton Email ← MODIFIABLE : changer l'adresse dans href="mailto:..." -->
       <a class="btn-outline reveal" href="mailto:thomasabatepro@gmail.com">
         Email
         <svg width="14" height="10" viewBox="0 0 14 10" fill="none">
           <path d="M1 5h12M8 1l4 4-4 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
       </a>
+      <!-- Bouton LinkedIn ← MODIFIABLE : changer le href -->
       <a class="btn-outline reveal" href="https://www.linkedin.com/in/thomas-abate" target="_blank" rel="noopener">
         LinkedIn
         <svg width="14" height="10" viewBox="0 0 14 10" fill="none">
@@ -144,6 +231,10 @@
   </section>
 
 
+  <!-- ════════════════════════════════════════════════════════════════════════
+       SCRIPTS — Chargés à la fin du body pour ne pas bloquer le rendu HTML
+       data.js doit être chargé AVANT app.js car app.js utilise ses fonctions
+       ════════════════════════════════════════════════════════════════════════ -->
   <script src="js/data.js"></script>
   <script src="js/app.js"></script>
 </body>

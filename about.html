@@ -3,8 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Titre de l'onglet ← MODIFIABLE -->
   <title>About — Thomas Abate</title>
   <meta name="description" content="About Thomas Abate — Technical Game & Level Designer. Education, skills, and contact.">
+
   <link rel="icon" type="image/png" href="Site_Web_Ico/Logo%20Web.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -13,7 +16,9 @@
 </head>
 <body>
 
-  <!-- ── Navigation ─────────────────────────────────────────────────────── -->
+  <!-- ════════════════════════════════════════════════════════════════════════
+       NAVIGATION — Identique sur toutes les pages
+       ════════════════════════════════════════════════════════════════════════ -->
   <nav>
     <a class="nav-logo" href="index.html">Thomas Abate</a>
     <ul class="nav-links" id="navList">
@@ -27,14 +32,24 @@
     </button>
   </nav>
 
-  <!-- ── About Hero ─────────────────────────────────────────────────────── -->
+  <!-- ════════════════════════════════════════════════════════════════════════
+       EN-TÊTE DE LA PAGE ABOUT — Titre + Photo
+       Layout : flex en deux colonnes (texte gauche, photo droite)
+       Sur mobile : la photo passe au-dessus du texte (CSS : flex-direction: column-reverse)
+       ════════════════════════════════════════════════════════════════════════ -->
   <header class="about-hero">
+    <!-- Bloc texte gauche -->
     <div class="about-hero-text">
       <div class="section-tag">About</div>
+      <!-- Titre principal de la page ← MODIFIABLE -->
       <h1 class="section-heading" style="max-width:700px">
         Technical Game &amp; Level Designer<br><span>based in France.</span>
       </h1>
     </div>
+
+    <!-- Photo de profil droite
+         Styles dans .about-hero-photo img dans style.css
+         POUR CHANGER LA PHOTO : remplacer le fichier et mettre à jour src ← MODIFIABLE -->
     <div class="about-hero-photo">
       <img src="picture/Photo Moi.webp" alt="Thomas Abate">
     </div>
@@ -42,10 +57,17 @@
 
   <div class="divider"></div>
 
-  <!-- ── About Grid ─────────────────────────────────────────────────────── -->
+  <!-- ════════════════════════════════════════════════════════════════════════
+       GRILLE ABOUT — Deux colonnes : biographie + informations latérales
+       Passe à 1 colonne sur tablette (CSS @media max-width: 1100px)
+       ════════════════════════════════════════════════════════════════════════ -->
   <div class="about-grid" style="padding-top:48px">
 
-    <!-- Bio -->
+    <!-- ── Colonne gauche : Texte biographique ─────────────────────────────
+         Chaque <p> est un paragraphe.
+         <strong> = texte en gras (couleur principale)
+         <em>     = texte en italique
+         ← MODIFIABLE : édite librement le texte -->
     <div class="about-bio">
       <p>
         I'm <strong>Thomas Abate</strong>, a Technical Game / Level Designer who discovered his vocation after reading <em>Marc Albinet's</em> work on game design, a reading that crystallised a simple belief: <strong>"the heart of our craft lies in the experience lived by the player."</strong>
@@ -64,10 +86,12 @@
       </p>
     </div>
 
-    <!-- Side info -->
+    <!-- ── Colonne droite : Compétences, Formation, Langues ──────────────── -->
     <aside class="about-side">
 
-      <!-- Skills -->
+      <!-- Bloc Compétences techniques
+           POUR AJOUTER UNE COMPÉTENCE : ajouter un <span class="skill-pill">Texte</span>
+           ← MODIFIABLE -->
       <div class="side-block">
         <div class="side-label">Technical Skills</div>
         <div class="skills-wrap">
@@ -85,12 +109,14 @@
         </div>
       </div>
 
-      <!-- Education -->
+      <!-- Bloc Formation
+           POUR AJOUTER UNE FORMATION : copier un bloc <div class="edu-item">...</div>
+           ← MODIFIABLE -->
       <div class="side-block">
         <div class="side-label">Education</div>
         <div class="edu-item">
-          <div class="edu-school">ARTFX</div>
-          <div class="edu-degree">Master's Degree in Game Design</div>
+          <div class="edu-school">ARTFX</div><!-- Nom de l'école ← MODIFIABLE -->
+          <div class="edu-degree">Master's Degree in Game Design</div><!-- Diplôme ← MODIFIABLE -->
         </div>
         <div class="edu-item">
           <div class="edu-school">La Salle</div>
@@ -98,7 +124,10 @@
         </div>
       </div>
 
-      <!-- Languages -->
+      <!-- Bloc Langues
+           skill-pill--fr : affiche le drapeau français au survol (défini dans style.css)
+           skill-pill--en : affiche le drapeau britannique au survol
+           ← MODIFIABLE : modifier le texte ou ajouter d'autres langues -->
       <div class="side-block">
         <div class="side-label">Languages</div>
         <div class="skills-wrap">
@@ -112,20 +141,33 @@
 
   <div class="divider"></div>
 
-  <!-- ── CV Section ─────────────────────────────────────────────────────── -->
+  <!-- ════════════════════════════════════════════════════════════════════════
+       SECTION CV — Téléchargement du CV (ancre #cv)
+       L'ancre id="cv" permet au lien about.html#cv dans la nav de pointer ici.
+       app.js surveille cette section et active le lien "CV" dans la nav quand
+       on scrolle jusqu'ici.
+       ════════════════════════════════════════════════════════════════════════ -->
   <section id="cv" class="section-wrap" style="padding-top:96px;padding-bottom:96px;display:flex;flex-direction:column;align-items:center;text-align:center">
-    <div class="section-tag">Curriculum Vitae</div>
-    <h2 class="section-heading reveal">Download my CV</h2>
+    <div class="section-tag">Curriculum Vitae</div><!-- ← MODIFIABLE -->
+    <h2 class="section-heading reveal">Download my CV</h2><!-- ← MODIFIABLE -->
     <p class="reveal" style="font-size:15px;color:var(--muted);max-width:520px;margin-bottom:40px;line-height:1.75">
-      Available in both English and French. Updated for 2026 opportunities.
+      Available in both English and French. Updated for 2026 opportunities.<!-- ← MODIFIABLE -->
     </p>
+
+    <!-- Boutons de téléchargement
+         - href = chemin vers le fichier PDF ← MODIFIABLE
+         - download = force le téléchargement au lieu d'ouvrir dans le navigateur
+         - L'animation au clic est gérée par initDownloadBtns() dans app.js -->
     <div style="display:flex;gap:16px;flex-wrap:wrap;justify-content:center">
+      <!-- CV Anglais ← MODIFIABLE : changer le fichier PDF dans CV/ -->
       <a class="btn-outline reveal" href="CV/Thomas_Abate_CV_EN.pdf" download>
         CV English
+        <!-- Icône flèche vers le bas (téléchargement) -->
         <svg width="13" height="13" viewBox="0 0 13 13" fill="none">
           <path d="M6.5 1v8M3 6.5l3.5 3.5 3.5-3.5M1 12h11" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
       </a>
+      <!-- CV Français ← MODIFIABLE : changer le fichier PDF dans CV/ -->
       <a class="btn-outline reveal" href="CV/Thomas_Abate_CV_FR.pdf" download>
         CV Français
         <svg width="13" height="13" viewBox="0 0 13 13" fill="none">
@@ -137,38 +179,52 @@
 
   <div class="divider"></div>
 
-  <!-- ── Contact ────────────────────────────────────────────────────────── -->
+  <!-- ════════════════════════════════════════════════════════════════════════
+       SECTION CONTACT — Email, LinkedIn, Localisation
+       POUR MODIFIER : changer les href et les textes ci-dessous ← MODIFIABLE
+       POUR AJOUTER UN CONTACT : copier un bloc <div class="contact-item">...</div>
+       ════════════════════════════════════════════════════════════════════════ -->
   <section class="contact-section">
-    <div class="section-tag">Contact</div>
-    <h2 class="section-heading reveal">Open to opportunities.</h2>
+    <div class="section-tag">Contact</div><!-- ← MODIFIABLE -->
+    <h2 class="section-heading reveal">Open to opportunities.</h2><!-- ← MODIFIABLE -->
     <p class="reveal" style="font-size:15px;color:var(--muted);max-width:480px;line-height:1.75;margin-bottom:0">
-      Whether you're looking for a Game Designer for your team, or simply want to talk about design, don't hesitate to reach out.
+      Whether you're looking for a Game Designer for your team, or simply want to talk about design, don't hesitate to reach out.<!-- ← MODIFIABLE -->
     </p>
+
     <div class="contact-grid">
+
+      <!-- Email ← MODIFIABLE -->
       <div class="contact-item">
         <span class="contact-label">
+          <!-- Icône email (SVG inline) -->
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 7l10 7 10-7"/></svg>
           Email
         </span>
-        <a href="mailto:thomasabatepro@gmail.com">
-          <span class="contact-val">thomasabatepro@gmail.com</span>
+        <a href="mailto:thomasabatepro@gmail.com"><!-- ← MODIFIABLE : changer l'adresse email -->
+          <span class="contact-val">thomasabatepro@gmail.com</span><!-- ← MODIFIABLE -->
         </a>
       </div>
+
+      <!-- LinkedIn ← MODIFIABLE -->
       <div class="contact-item">
         <span class="contact-label">
+          <!-- Logo LinkedIn (SVG inline) -->
           <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M20.45 20.45h-3.554v-5.57c0-1.328-.024-3.037-1.85-3.037-1.851 0-2.134 1.445-2.134 2.939v5.668H9.358V9h3.414v1.561h.048c.476-.9 1.637-1.85 3.368-1.85 3.6 0 4.265 2.37 4.265 5.455v6.284zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
           LinkedIn
         </span>
-        <a href="https://www.linkedin.com/in/thomas-abate" target="_blank" rel="noopener">
-          <span class="contact-val">linkedin.com/in/thomas-abate</span>
+        <a href="https://www.linkedin.com/in/thomas-abate" target="_blank" rel="noopener"><!-- ← MODIFIABLE -->
+          <span class="contact-val">linkedin.com/in/thomas-abate</span><!-- ← MODIFIABLE -->
         </a>
       </div>
+
+      <!-- Localisation (pas de lien, juste un texte) ← MODIFIABLE -->
       <div class="contact-item">
         <span class="contact-label">
+          <!-- Icône pin localisation -->
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
           Location
         </span>
-        <span class="contact-val">France</span>
+        <span class="contact-val">France</span><!-- ← MODIFIABLE -->
       </div>
     </div>
   </section>
@@ -176,5 +232,7 @@
 
   <script src="js/data.js"></script>
   <script src="js/app.js"></script>
+  <!-- boids.js = animation de fond (petits triangles volants) — uniquement sur cette page -->
+  <script src="js/boids.js"></script>
 </body>
 </html>
