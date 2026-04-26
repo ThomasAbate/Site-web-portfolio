@@ -25,29 +25,41 @@
    - Gère l'ouverture/fermeture du menu hamburger sur mobile
    ───────────────────────────────────────────────────────────────────────────── */
 (function initNav() {
-  /* Récupère le nom de fichier de la page courante (ex: 'works.html') */
-  const page    = location.pathname.split('/').pop() || 'index.html';
-  const hash    = location.hash;                         /* Ancre dans l'URL (ex: '#cv') */
-  const links   = document.querySelectorAll('.nav-links a'); /* Tous les liens de nav */
-  const toggle  = document.getElementById('navToggle');     /* Bouton hamburger mobile */
-  const navList = document.getElementById('navList');       /* Liste des liens nav */
+  /* ── Normalisation de l'URL ───────────────────────────────────────────────
+     Sur un serveur de production, l'URL peut être /works (sans .html)
+     alors que les hrefs dans le HTML sont "works.html".
+     On normalise tout en retirant .html pour comparer correctement.
+     Exemples :
+       Local      : pathname = '/works.html' → rawPage = 'works.html' → page = 'works'
+       Production : pathname = '/works'      → rawPage = 'works'      → page = 'works'
+       Accueil    : pathname = '/'           → rawPage = ''           → page = 'index'
+     ─────────────────────────────────────────────────────────────────────── */
+  const rawPage = location.pathname.split('/').pop() || 'index.html';
+  const page    = rawPage.replace(/\.html$/, '') || 'index'; /* Retire .html */
+  const hash    = location.hash;                             /* Ex: '#cv' */
+  const links   = document.querySelectorAll('.nav-links a');
+  const toggle  = document.getElementById('navToggle');
+  const navList = document.getElementById('navList');
 
-  /* Active visuellement le lien dont le href correspond à 'href' */
-  function setActive(href) {
-    links.forEach(a => a.classList.toggle('active', a.getAttribute('href') === href));
+  /* Normalise un href : retire .html pour la comparaison
+     'works.html' → 'works'  |  'about.html#cv' → 'about#cv' */
+  function norm(href) {
+    return href.replace(/\.html(?=#|$)/, '');
+  }
+
+  /* Active visuellement le lien dont le href normalisé correspond à 'target' */
+  function setActive(target) {
+    links.forEach(a => a.classList.toggle('active', norm(a.getAttribute('href')) === target));
   }
 
   /* Détermine quel lien activer au chargement de la page */
-  const fullMatch = page + hash; /* Ex: 'about.html#cv' */
-  const hasHashLink = [...links].some(a => a.getAttribute('href') === fullMatch);
+  const fullMatch = page + hash; /* Ex: 'about#cv' ou 'works' */
+  const hasHashLink = [...links].some(a => norm(a.getAttribute('href')) === fullMatch);
   if (hasHashLink) {
-    /* Si un lien correspond exactement à page+ancre, on l'active en priorité */
     setActive(fullMatch);
   } else {
-    /* Sinon on active le lien qui correspond au nom de la page */
     links.forEach(a => {
-      const href = a.getAttribute('href');
-      if (href === page || (page === '' && href === 'index.html')) {
+      if (norm(a.getAttribute('href')) === page) {
         a.classList.add('active');
       }
     });
@@ -56,37 +68,33 @@
   /* ── Sur about.html : change l'actif entre "About" et "CV" au scroll ──
      Quand la section #cv atteint 45% du haut de l'écran, le lien "CV" s'active */
   const cvSection = document.getElementById('cv');
-  if (cvSection && page === 'about.html') {
+  if (cvSection && page === 'about') {
     function updateNavOnScroll() {
       const cvTop = cvSection.getBoundingClientRect().top;
-      /* cvTop <= 45% de la hauteur d'écran = la section CV est suffisamment visible */
-      if (cvTop <= window.innerHeight * 0.45) { /* ← MODIFIABLE (0.45 = 45% de l'écran) */
-        setActive('about.html#cv');
+      if (cvTop <= window.innerHeight * 0.45) { /* ← MODIFIABLE */
+        setActive('about#cv');
       } else {
-        setActive('about.html');
+        setActive('about');
       }
     }
-    /* passive: true = améliore les performances (le listener ne bloque pas le scroll) */
     window.addEventListener('scroll', updateNavOnScroll, { passive: true });
-    updateNavOnScroll(); /* Appel initial pour le cas où on arrive directement sur #cv */
+    updateNavOnScroll();
   }
 
   /* ── Animation de clic + scroll vers le haut si on clique sur la page en cours ── */
   links.forEach(a => {
     a.addEventListener('click', e => {
-      /* Force un restart de l'animation (astuce : remove + forceReflow + add) */
       a.classList.remove('nav-clicked');
-      void a.offsetWidth; /* Force le navigateur à recalculer le style (reflow) */
+      void a.offsetWidth;
       a.classList.add('nav-clicked');
-      /* Supprime la classe une fois l'animation terminée */
       a.addEventListener('animationend', () => a.classList.remove('nav-clicked'), { once: true });
 
-      const href = a.getAttribute('href');
-      /* Si on clique sur la page où on est déjà : scroll vers le haut en douceur */
-      if (href === page) {
+      const hrefNorm = norm(a.getAttribute('href'));
+      /* Si la partie page (avant #) correspond à la page courante ET pas d'ancre → scroll haut */
+      if (hrefNorm.split('#')[0] === page && !hrefNorm.includes('#')) {
         e.preventDefault();
         window.scrollTo({ top: 0, behavior: 'smooth' });
-        history.pushState(null, '', href); /* Met à jour l'URL sans ancre */
+        history.pushState(null, '', a.getAttribute('href'));
       }
     });
   });
