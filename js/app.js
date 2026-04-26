@@ -835,6 +835,64 @@ function initDownloadBtns() {
 
 
 /* ─────────────────────────────────────────────────────────────────────────────
+   13. TRANSITIONS DE PAGE — Fondu noir entre les pages
+   ─────────────────────────────────────────────────────────────────────────────
+   - Crée un overlay .page-transition (défini dans style.css)
+   - Au chargement : l'overlay disparaît en fondu (animation ptEnter)
+   - Au clic sur un lien interne : l'overlay apparaît (ptLeave), puis navigue
+   - Liens ignorés : externes (_blank), mailto:, ancres (#...), download
+   ───────────────────────────────────────────────────────────────────────────── */
+function initPageTransitions() {
+  /* Récupère l'overlay déjà présent dans le HTML (évite le flicker au chargement) */
+  const overlay = document.getElementById('pageTransition');
+  if (!overlay) return;
+
+  /* Cache l'overlay (pointer-events off) une fois le fondu d'entrée terminé */
+  overlay.addEventListener('animationend', () => {
+    if (!overlay.classList.contains('leaving')) {
+      overlay.style.pointerEvents = 'none';
+      overlay.style.opacity = '0';
+    }
+  });
+
+  document.addEventListener('click', e => {
+    const link = e.target.closest('a');
+    if (!link) return;
+
+    const href = link.getAttribute('href');
+    if (!href) return;
+
+    /* Ignore les liens non-navigants */
+    if (
+      link.target === '_blank'       ||
+      link.hasAttribute('download')  ||
+      href.startsWith('mailto:')     ||
+      href.startsWith('tel:')        ||
+      href.startsWith('javascript:')
+    ) return;
+
+    /* Ignore les ancres et les liens vers la même page */
+    const destFile    = href.split('#')[0];
+    const currentFile = location.pathname.split('/').pop() || 'index.html';
+    if (!destFile || destFile === currentFile) return;
+
+    /* Ignore si modificateur clavier (Ctrl/Cmd = nouvel onglet) */
+    if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+
+    e.preventDefault();
+
+    /* Lance le fondu de sortie puis navigue après la fin de l'animation */
+    overlay.style.opacity = '';
+    overlay.style.pointerEvents = 'all';
+    overlay.classList.add('leaving');
+    overlay.addEventListener('animationend', () => {
+      window.location.href = href;
+    }, { once: true });
+  });
+}
+
+
+/* ─────────────────────────────────────────────────────────────────────────────
    12. INITIALISATION — Point d'entrée du script
    ─────────────────────────────────────────────────────────────────────────────
    DOMContentLoaded = le HTML est entièrement parsé (mais images pas encore chargées).
@@ -842,10 +900,11 @@ function initDownloadBtns() {
    donc toutes peuvent être appelées sur toutes les pages sans erreur.
    ───────────────────────────────────────────────────────────────────────────── */
 document.addEventListener('DOMContentLoaded', () => {
-  initAnimBg();      /* Orbes en arrière-plan (toutes les pages) */
-  renderFeatured();  /* Grille des projets en vedette (index.html uniquement) */
-  renderWorks();     /* Grille + filtres de la page Works (works.html uniquement) */
-  renderProject();   /* Page de détail d'un projet (project.html uniquement) */
-  initReel();        /* Demo Reel hover + modal (index.html uniquement) */
-  initDownloadBtns();/* Animation boutons CV (about.html uniquement) */
+  initPageTransitions(); /* Transitions fluides entre pages (toutes les pages) */
+  initAnimBg();          /* Orbes en arrière-plan (toutes les pages) */
+  renderFeatured();      /* Grille des projets en vedette (index.html uniquement) */
+  renderWorks();         /* Grille + filtres de la page Works (works.html uniquement) */
+  renderProject();       /* Page de détail d'un projet (project.html uniquement) */
+  initReel();            /* Demo Reel hover + modal (index.html uniquement) */
+  initDownloadBtns();    /* Animation boutons CV (about.html uniquement) */
 });

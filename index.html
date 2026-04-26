@@ -24,6 +24,10 @@
 </head>
 <body>
 
+  <!-- Overlay de transition de page — doit être le premier élément du body
+       pour bloquer le rendu dès le premier frame (évite le flicker) -->
+  <div class="page-transition" id="pageTransition"></div>
+
   <!-- ════════════════════════════════════════════════════════════════════════
        NAVIGATION — Barre fixe en haut de chaque page
        Identique sur les 4 pages HTML. Pour modifier les liens, édite les 4 fichiers.
@@ -54,35 +58,42 @@
     <!-- Fond animé (halo orange) — animé par CSS, styles dans .hero-anim-bg -->
     <div class="hero-anim-bg"></div>
 
-    <!-- Vidéo de fond lue en boucle (muette, sans contrôles)
-         - aria-hidden="true" : invisible aux lecteurs d'écran (décoratif)
-         - La vidéo est gérée par initHeroBgVideo() dans app.js
-         POUR CHANGER LA VIDÉO : remplacer le fichier mp4 dans BackGround_video/
-         et mettre à jour le chemin dans <source src="..."> ← MODIFIABLE -->
+    <!-- Vidéo de fond lue en boucle (muette, sans contrôles) -->
     <div class="hero-video-bg" aria-hidden="true">
       <video id="heroBgVideo" autoplay muted playsinline preload="auto">
         <source src="BackGround_video/Background%20Vagas.mp4" type="video/mp4">
       </video>
     </div>
 
-    <!-- Calque sombre semi-transparent par-dessus la vidéo (pour la lisibilité du texte)
-         Styles dans .hero-video-overlay dans style.css -->
+    <!-- Calque sombre semi-transparent par-dessus la vidéo -->
     <div class="hero-video-overlay"></div>
 
-    <!-- Boîte de texte principal avec effet "verre dépoli" derrière -->
-    <div class="hero-content-box">
+    <!-- Watermark large en arrière-plan (décoratif) -->
+    <div class="hero-watermark" aria-hidden="true">ABATE</div>
+
+    <!-- Tag décoratif côté droit ← MODIFIABLE -->
+    <div class="hero-deco" aria-hidden="true">_ Game Design</div>
+
+    <!-- Contenu principal : eyebrow + nom en deux lignes + titre -->
+    <div class="hero-content">
       <!-- Petit texte en haut ← MODIFIABLE -->
       <div class="hero-eyebrow">Portfolio / Game Design</div>
 
-      <!-- Grand nom ← MODIFIABLE -->
-      <h1 class="hero-name">Thomas Abate</h1>
+      <!-- Grand nom en deux lignes : prénom crème, nom en doré ← MODIFIABLE -->
+      <h1 class="hero-name">
+        THOMAS<br>
+        <span class="hero-name-accent">ABATE</span>
+      </h1>
 
-      <!-- Ligne décorative entre le nom et le titre -->
+      <!-- Ligne décorative -->
       <div class="hero-divider"></div>
 
       <!-- Sous-titre (spécialité) ← MODIFIABLE -->
       <p class="hero-title">Technical Game / Level Designer</p>
     </div>
+
+    <!-- Indicateur de scroll (desktop uniquement, caché sur mobile) -->
+    <div class="hero-scroll" aria-hidden="true">Scroll</div>
   </section>
 
   <!-- ════════════════════════════════════════════════════════════════════════

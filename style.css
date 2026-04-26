@@ -250,25 +250,33 @@ nav {
   font-weight:    500;
   letter-spacing: 0.26em;
   text-transform: uppercase;
-  color: rgba(237, 229, 213, 0.55); /* Crème à 55% d'opacité ← MODIFIABLE */
+  color: rgba(237, 229, 213, 0.55);
   margin-bottom: 18px;
+  text-shadow: 0 2px 12px rgba(0,0,0,0.7);
   opacity: 0; /* Commence invisible, l'animation le fait apparaître */
   /* fadeUp : monte de 20px en 0.8s, démarre après 0.2s de délai */
   animation: fadeUp 0.8s 0.2s ease forwards;
 }
 
-/* --- Grand titre "Thomas Abate" --- */
+/* --- Grand titre "THOMAS / ABATE" en deux lignes --- */
 .hero-name {
-  /* clamp(min, préféré, max) = s'adapte à la largeur de l'écran
-     min 56px | idéal 8.5% de la largeur d'écran | max 110px */
-  font-size: clamp(56px, 8.5vw, 110px); /* ← MODIFIABLE */
+  font-size: clamp(72px, 13vw, 180px);
   font-weight:    800;
-  letter-spacing: -0.03em; /* Légèrement resserré pour un titre impactant ← MODIFIABLE */
-  line-height:    0.92;     /* Interligne serré pour les gros titres ← MODIFIABLE */
-  margin-bottom:  24px;
+  letter-spacing: -0.04em;
+  line-height:    0.88;
+  text-transform: uppercase;
+  margin-bottom:  28px;
   opacity: 0;
-  animation: fadeUp 0.8s 0.35s ease forwards; /* Délai 0.35s (après le eyebrow) */
-  text-shadow: 0 4px 40px rgba(0,0,0,0.6);    /* Ombre pour lisibilité sur la vidéo */
+  animation: fadeUp 0.8s 0.35s ease forwards;
+  text-shadow:
+    0 2px 8px  rgba(0,0,0,0.65),
+    0 8px 32px rgba(0,0,0,0.45);
+}
+
+/* Deuxième ligne du nom (ABATE) en couleur dorée */
+.hero-name-accent {
+  display: block;
+  color: #DC7020;
 }
 
 /* --- Sous-titre "Technical Game / Level Designer" --- */
@@ -277,11 +285,11 @@ nav {
   font-weight:    500;
   letter-spacing: 0.22em;
   text-transform: uppercase;
-  color: rgba(237, 229, 213, 0.6); /* Légèrement transparent ← MODIFIABLE */
+  color: rgba(237, 229, 213, 0.6);
   margin-bottom: 0;
   opacity: 0;
-  animation: fadeUp 0.8s 0.5s ease forwards; /* Délai 0.5s */
-  text-shadow: 0 2px 20px rgba(0,0,0,0.5);
+  animation: fadeUp 0.8s 0.5s ease forwards;
+  text-shadow: 0 2px 12px rgba(0,0,0,0.7);
 }
 
 /* --- Petite ligne horizontale entre le nom et le titre --- */
@@ -1185,21 +1193,50 @@ footer {
   );
 }
 
-/* Boîte avec verre dépoli derrière le texte du hero
-   backdrop-filter: blur = flou ce qui est DERRIÈRE cet élément */
-.hero-content-box {
-  display: flex; flex-direction: column;
+/* Conteneur du texte principal du hero — pas de carte, texte direct sur le fond */
+.hero-content {
+  display: flex;
+  flex-direction: column;
   align-self: flex-start;
-  padding: 28px 36px 32px;       /* ← MODIFIABLE */
-  background: rgba(0,0,0,0.38);  /* Fond noir à 38% d'opacité ← MODIFIABLE */
-  backdrop-filter: blur(6px);    /* Flou derrière la boîte ← MODIFIABLE */
-  -webkit-backdrop-filter: blur(6px);
-  border-radius: 12px;           /* Coins arrondis ← MODIFIABLE */
 }
 
-/* Tous les enfants directs du hero passent au z-index 5 SAUF les éléments de fond
-   Cela garantit que le texte est toujours au-dessus de la vidéo et du halo. */
-.hero > *:not(.hero-anim-bg):not(.hero-video-bg):not(.hero-video-overlay):not(.hero-scroll) {
+/* Watermark géant semi-transparent en arrière-plan (côté droit) */
+.hero-watermark {
+  position: absolute;
+  right: -1vw;
+  bottom: 60px;
+  font-size: clamp(120px, 22vw, 300px);
+  font-weight: 800;
+  letter-spacing: -0.05em;
+  text-transform: uppercase;
+  color: rgba(237, 229, 213, 0.04);
+  line-height: 0.85;
+  pointer-events: none;
+  user-select: none;
+  z-index: 3;
+  white-space: nowrap;
+}
+
+/* Tag décoratif italic à droite (type "_ Game Design") */
+.hero-deco {
+  position: absolute;
+  right: 56px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 16px;
+  font-weight: 500;
+  font-style: italic;
+  letter-spacing: 0.06em;
+  color: rgba(220, 112, 32, 0.55);
+  pointer-events: none;
+  user-select: none;
+  z-index: 5;
+  opacity: 0;
+  animation: fadeUp 0.8s 0.9s ease forwards;
+}
+
+/* Tous les enfants directs du hero passent au z-index 5 SAUF les éléments de fond et le watermark */
+.hero > *:not(.hero-anim-bg):not(.hero-video-bg):not(.hero-video-overlay):not(.hero-scroll):not(.hero-watermark) {
   position: relative; z-index: 5;
 }
 
@@ -1538,6 +1575,9 @@ footer {
   /* Cache la vidéo de fond du hero (économise de la bande passante sur mobile) */
   .hero-video-bg, .hero-video-overlay { display: none; }
 
+  /* Cache les éléments décoratifs sur mobile */
+  .hero-watermark, .hero-deco { display: none; }
+
   /* Demo Reel : compacté sur mobile */
   .reel-section { padding: 48px 24px; gap: 24px; min-height: auto; }
   .reel-frame   { max-width: 100%; padding-bottom: 56.25%; } /* Ratio 16:9 pleine largeur */
@@ -1580,8 +1620,39 @@ footer {
 /* ── Petit mobile (≤ 480px) ── */
 @media (max-width: 480px) {
   /* Réduit encore l'espacement des lettres du grand titre */
-  .hero-name { letter-spacing: -0.02em; }
+  .hero-name { font-size: clamp(52px, 18vw, 80px); letter-spacing: -0.02em; }
 
   /* La galerie passe à 1 image visible à la fois */
   .gallery-slide { flex: 0 0 100% !important; }
+}
+
+
+/* ============================================================
+   TRANSITION DE PAGE — Fondu noir entre les pages
+   ============================================================ */
+
+/* Overlay plein écran créé par JS (initPageTransitions) */
+.page-transition {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: var(--bg);
+  pointer-events: none;
+  animation: ptEnter 0.45s ease forwards; /* Fondu sortant au chargement */
+}
+
+/* Quand on quitte la page, JS ajoute .leaving → fondu entrant */
+.page-transition.leaving {
+  animation: ptLeave 0.35s ease forwards;
+  pointer-events: all; /* Bloque les clics pendant la transition */
+}
+
+@keyframes ptEnter {
+  from { opacity: 1; }
+  to   { opacity: 0; }
+}
+
+@keyframes ptLeave {
+  from { opacity: 0; }
+  to   { opacity: 1; }
 }
