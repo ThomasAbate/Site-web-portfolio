@@ -939,76 +939,89 @@ function initLoaderFlip() {
   var FLIP_DELAY = 2700;
 
   setTimeout(function () {
-    var fromRect = loaderName.getBoundingClientRect();
-    var toRect   = heroName.getBoundingClientRect();
+    /* ── Positions sources (dans le loader) ───────────────────────────── */
+    var loaderThomasEl = loaderName.querySelector('.loader-thomas');
+    var loaderAbateEl  = loaderName.querySelector('.loader-name-accent');
 
-    /* Créé un clone au style du hero-name (uppercase, grande police) */
-    var clone = document.createElement('div');
-    clone.setAttribute('aria-hidden', 'true');
-    clone.innerHTML = 'THOMAS<span style="display:block;color:#DC7020">ABATE</span>';
+    /* THOMAS : span inline → getBoundingClientRect donne le rect exact du texte */
+    var loaderThomasRect = loaderThomasEl.getBoundingClientRect();
 
-    var heroCS = window.getComputedStyle(heroName);
-    clone.style.cssText = [
-      'position:fixed',
-      'z-index:9998',
-      'left:0', 'top:0',
-      'margin:0', 'padding:0',
-      'pointer-events:none',
-      'transform-origin:0 0',
-      'will-change:transform,opacity',
-      'color:#EDE5D5',
-      'text-transform:uppercase',
-      'line-height:0.88',
-      'font-weight:800',
-      'letter-spacing:-0.04em',
-      'font-family:' + heroCS.fontFamily,
-      'font-size:'   + heroCS.fontSize,
-    ].join(';');
+    /* ABATE : display:block centré → Range sur le text node pour le rect du texte seul */
+    var range = document.createRange();
+    var abateNode = loaderAbateEl.childNodes[0];
+    range.setStart(abateNode, 0);
+    range.setEnd(abateNode, abateNode.textContent.length);
+    var loaderAbateRect = range.getBoundingClientRect();
 
-    document.body.appendChild(clone);
+    /* ── Positions cibles (dans le hero) ─────────────────────────────── */
+    var heroNameRect  = heroName.getBoundingClientRect();
+    var heroAbateEl   = heroName.querySelector('.hero-name-accent');
+    var heroAbateRect = heroAbateEl.getBoundingClientRect();
 
-    /* Mesure la taille naturelle du clone (= hero-name size) */
-    var cloneW = clone.offsetWidth;
-    var cloneH = clone.offsetHeight;
-
-    /* Scale basé sur le ratio des font-size réels (pas la largeur du texte) :
-       évite le décalage dû aux caractères différents (Thomas vs THOMAS,
-       letter-spacing -0.03em vs -0.04em, casse différente). */
-    var loaderFS = parseFloat(window.getComputedStyle(loaderName).fontSize);
-    var heroFS   = parseFloat(heroCS.fontSize);
+    /* ── Scale (ratio des font-size) ─────────────────────────────────── */
+    var heroCS    = window.getComputedStyle(heroName);
+    var loaderFS  = parseFloat(window.getComputedStyle(loaderName).fontSize);
+    var heroFS    = parseFloat(heroCS.fontSize);
     var scaleFrom = loaderFS / heroFS;
 
-    /* Coordonnées de départ : centre visuel = centre du loader-name */
-    var startX = fromRect.left + fromRect.width  / 2 - cloneW * scaleFrom / 2;
-    var startY = fromRect.top  + fromRect.height / 2 - cloneH * scaleFrom / 2;
+    /* ── Styles communs aux deux clones ──────────────────────────────── */
+    var baseCSS = [
+      'position:fixed', 'z-index:10001', 'left:0', 'top:0',
+      'margin:0', 'padding:0', 'pointer-events:none',
+      'transform-origin:0 0', 'will-change:transform,opacity',
+      'text-transform:uppercase', 'line-height:0.88',
+      'font-weight:800', 'letter-spacing:-0.04em', 'white-space:nowrap',
+      'font-family:' + heroCS.fontFamily,
+      'font-size:'   + heroCS.fontSize,
+    ];
 
-    /* Coordonnées d'arrivée : coin haut-gauche du hero-name */
-    var endX = toRect.left;
-    var endY = toRect.top;
+    /* ── Clone THOMAS (crème) ─────────────────────────────────────────── */
+    var cloneT = document.createElement('div');
+    cloneT.setAttribute('aria-hidden', 'true');
+    cloneT.textContent = 'THOMAS';
+    cloneT.style.cssText = baseCSS.concat('color:#EDE5D5').join(';');
+    document.body.appendChild(cloneT);
 
-    /* Positionne le clone au point de départ (petite taille, centre écran) */
-    clone.style.transform = 'translate(' + startX + 'px,' + startY + 'px) scale(' + scaleFrom + ')';
+    /* ── Clone ABATE (orange) ─────────────────────────────────────────── */
+    var cloneA = document.createElement('div');
+    cloneA.setAttribute('aria-hidden', 'true');
+    cloneA.textContent = 'ABATE';
+    cloneA.style.cssText = baseCSS.concat('color:#DC7020').join(';');
+    document.body.appendChild(cloneA);
 
-    /* Cache le loader-name original (le clone le remplace visuellement) */
-    loaderName.style.setProperty('opacity', '0', 'important');
+    /* ── Positions de départ : chaque mot sur sa position exacte dans le loader ── */
+    cloneT.style.transform = 'translate(' + loaderThomasRect.left + 'px,' + loaderThomasRect.top + 'px) scale(' + scaleFrom + ')';
+    cloneA.style.transform = 'translate(' + loaderAbateRect.left  + 'px,' + loaderAbateRect.top  + 'px) scale(' + scaleFrom + ')';
+
+    /* Cache le loader-name original */
+    loaderName.style.setProperty('opacity',   '0',    'important');
     loaderName.style.setProperty('animation', 'none', 'important');
 
-    /* Double rAF pour que le navigateur applique la position initiale avant la transition */
+    /* Double rAF : assure que le navigateur peigne la position initiale avant la transition */
     requestAnimationFrame(function () {
       requestAnimationFrame(function () {
-        /* Ease-in-out : lent au départ, rapide au milieu, lent à l'arrivée */
-        clone.style.transition = [
-          'transform 1s cubic-bezier(0.65,0,0.35,1)',
-          'opacity   0.4s 0.65s ease',
-        ].join(',');
-        clone.style.transform = 'translate(' + endX + 'px,' + endY + 'px) scale(1)';
+        var ease = 'transform 1s cubic-bezier(0.65,0,0.35,1)';
 
-        /* À l'arrivée : révèle le hero-name, efface le clone */
+        /* THOMAS → coin haut-gauche du hero-name */
+        cloneT.style.transition = ease;
+        cloneT.style.transform  = 'translate(' + heroNameRect.left  + 'px,' + heroNameRect.top  + 'px) scale(1)';
+
+        /* ABATE → position exacte du span .hero-name-accent */
+        cloneA.style.transition = ease;
+        cloneA.style.transform  = 'translate(' + heroAbateRect.left + 'px,' + heroAbateRect.top + 'px) scale(1)';
+
+        /* À l'arrivée : révèle le hero-name réel, efface les clones */
         setTimeout(function () {
           heroName.style.transition = 'opacity 0.4s ease';
-          heroName.style.opacity = '1';
-          clone.style.opacity = '0';
-          setTimeout(function () { clone.remove(); }, 450);
+          heroName.style.opacity    = '1';
+
+          var fadeOut = 'opacity 0.4s ease';
+          cloneT.style.transition   = fadeOut;
+          cloneT.style.opacity      = '0';
+          cloneA.style.transition   = fadeOut;
+          cloneA.style.opacity      = '0';
+
+          setTimeout(function () { cloneT.remove(); cloneA.remove(); }, 450);
         }, 1020);
       });
     });

@@ -1715,9 +1715,10 @@ footer {
   font-family: var(--font);
   font-size: clamp(54px, 10vw, 100px);
   font-weight: 800;
-  line-height: 1;
+  line-height: 0.88;
   color: var(--text);
-  letter-spacing: -0.03em;
+  letter-spacing: -0.04em;
+  text-transform: uppercase;
   opacity: 0;
   animation: loaderSlideUp 0.7s 0.35s ease forwards, loaderNameGlitch 0.28s 1.8s ease;
 }
