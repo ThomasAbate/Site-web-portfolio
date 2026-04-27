@@ -20,13 +20,37 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
   <!-- Feuille de style principale du site -->
-  <link rel="stylesheet" href="style.css?v=3">
+  <link rel="stylesheet" href="style.css?v=4">
 
-  <!-- Supprime le loader du DOM une fois son animation terminée (3.3s) -->
+  <!-- Loader : skippé uniquement si on vient d'un lien interne (pas sur F5/refresh) -->
   <script>
+    /* Le flag est posé par initPageTransitions() juste avant chaque navigation interne.
+       F5 / ouverture directe / nouvel onglet ne posent jamais ce flag → loader visible. */
+    if (sessionStorage.getItem('internalNav')) {
+      sessionStorage.removeItem('internalNav'); /* consommé une seule fois */
+      document.documentElement.classList.add('loader-skip');
+    }
+
     window.addEventListener('load', function () {
       var l = document.getElementById('loader');
       if (l) setTimeout(function () { l.remove(); }, 3300);
+    });
+
+    document.addEventListener('DOMContentLoaded', function () {
+      if (document.documentElement.classList.contains('loader-skip')) return;
+      var pct = document.getElementById('loaderPct');
+      if (!pct) return;
+      var BAR_DELAY    = 600;
+      var BAR_DURATION = 1900;
+      setTimeout(function () {
+        var t0 = performance.now();
+        function tick() {
+          var p = Math.min(1, (performance.now() - t0) / BAR_DURATION);
+          pct.textContent = String(Math.round(p * 100)).padStart(3, '0') + '%';
+          if (p < 1) requestAnimationFrame(tick);
+        }
+        requestAnimationFrame(tick);
+      }, BAR_DELAY);
     });
   </script>
 </head>
@@ -41,7 +65,10 @@
       <p class="loader-welcome">Welcome</p>
       <h1 class="loader-name">Thomas<span class="loader-name-accent">Abate</span></h1>
       <div class="loader-bar-wrap">
-        <div class="loader-bar"></div>
+        <div class="loader-bar-track">
+          <div class="loader-bar-fill"></div>
+        </div>
+        <span class="loader-pct" id="loaderPct">000%</span>
       </div>
     </div>
   </div>
@@ -267,6 +294,6 @@
        data.js doit être chargé AVANT app.js car app.js utilise ses fonctions
        ════════════════════════════════════════════════════════════════════════ -->
   <script src="js/data.js?v=3"></script>
-  <script src="js/app.js?v=3"></script>
+  <script src="js/app.js?v=4"></script>
 </body>
 </html>

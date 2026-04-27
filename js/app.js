@@ -719,56 +719,78 @@ function initLazyVideo(iframe, src, target) {
    2. Changer MODAL_SRC ci-dessous (vidéo dans le modal plein écran)
    ───────────────────────────────────────────────────────────────────────────── */
 function initReel() {
-  const iframe  = document.getElementById('reelIframe');
   const section = document.getElementById('reel');
-  if (!iframe || !section) return; /* N'existe que sur index.html */
+  if (!section) return; /* N'existe que sur index.html */
 
-  const overlay = document.getElementById('reelOverlay'); /* Calque cliquable par-dessus l'iframe */
-  const frame   = iframe.closest('.reel-frame');
+  const overlay = document.getElementById('reelOverlay');
+  const frame   = document.querySelector('.reel-frame');
   if (!overlay || !frame) return;
 
-  /* URL de la vidéo inline (survol) — chargée sans autoplay pour préchargement */
-  const INLINE_SRC = iframe.dataset.src
-    .replace('autoplay=1', 'autoplay=0')
-    + '&enablejsapi=1'; /* enablejsapi permet les commandes play/pause par postMessage */
+  /* ← MODIFIABLE : remplace cet ID YouTube par le nouvel ID de la vidéo */
+  const VIDEO_ID = 'e88P-_075KE';
+  const MODAL_SRC = `https://www.youtube.com/embed/${VIDEO_ID}?rel=0&modestbranding=1&color=white&autoplay=1`;
 
-  /* URL de la vidéo dans le modal plein écran (avec autoplay et son)
-     ← MODIFIABLE : remplace l'ID YouTube (e88P-_075KE) par le nouvel ID */
-  const MODAL_SRC = 'https://www.youtube.com/embed/e88P-_075KE?rel=0&modestbranding=1&color=white&autoplay=1';
+  let ytPlayer    = null;
+  let playerReady = false;
+  let hovering    = false; /* true quand la souris est sur la frame */
+  let pendingPlay = false; /* true si survol avant que le player soit prêt */
 
-  /* Raccourci pour envoyer des commandes à YouTube via l'API IFrame */
-  const ytCmd = (func) => iframe.contentWindow?.postMessage(
-    JSON.stringify({ event: 'command', func, args: '' }), '*'
-  );
-
-  /* Charge l'iframe dès que la section Demo Reel entre dans le viewport */
-  let loaded = false;
-  const loadObserver = new IntersectionObserver(entries => {
-    if (entries[0].intersectionRatio > 0 && !loaded) {
-      iframe.src = INLINE_SRC; /* Injecte le src → YouTube commence à charger */
-      loaded = true;
-      loadObserver.disconnect();
-    }
-  }, { threshold: [0] });
-  loadObserver.observe(section);
-
-  /* ── Miniature : cachée dès que la vidéo commence à jouer ───────────── */
   const thumbnail = document.getElementById('reelThumbnail');
   function hideThumbnail() {
     if (thumbnail) thumbnail.classList.add('reel-thumbnail--hidden');
   }
 
+  /* Crée le player avec autoplay:1 pour buffering pendant le loader,
+     puis onStateChange le pause dès qu'il commence à jouer */
+  function createPlayer() {
+    ytPlayer = new YT.Player('reelIframe', {
+      videoId: VIDEO_ID,
+      playerVars: {
+        rel: 0, modestbranding: 1, color: 'white',
+        mute: 1, loop: 1, playlist: VIDEO_ID,
+        autoplay: 1 /* démarre en background pour pré-charger le buffer */
+      },
+      events: {
+        onReady: function () {
+          playerReady = true;
+          if (pendingPlay) { ytPlayer.playVideo(); pendingPlay = false; }
+        },
+        onStateChange: function (e) {
+          /* Première fois que la vidéo passe en PLAYING : on la pause sauf si survol */
+          if (e.data === YT.PlayerState.PLAYING && !hovering) {
+            ytPlayer.pauseVideo();
+            hideThumbnail(); /* vidéo buffée → cache la miniature */
+          }
+        }
+      }
+    });
+  }
+
+  /* Charge l'API immédiatement (pendant le loader) — pas d'IntersectionObserver */
+  if (window.YT && window.YT.Player) {
+    createPlayer();
+  } else {
+    const prev = window.onYouTubeIframeAPIReady;
+    window.onYouTubeIframeAPIReady = function () {
+      if (typeof prev === 'function') prev();
+      createPlayer();
+    };
+    const s = document.createElement('script');
+    s.src = 'https://www.youtube.com/iframe_api';
+    document.head.appendChild(s);
+  }
+
   /* ── Survol : joue la vidéo | Sortie : pause ─────────────────────────── */
   frame.addEventListener('mouseenter', () => {
-    ytCmd('playVideo');
-    /* Retry si l'API YouTube n'était pas encore prête au premier essai */
-    setTimeout(() => ytCmd('playVideo'), 500); /* ← MODIFIABLE */
-    /* Cache la miniature après un court délai (temps que YouTube réponde) */
-    setTimeout(hideThumbnail, 800);
+    hovering = true;
+    if (playerReady) ytPlayer.playVideo();
+    else pendingPlay = true;
   });
 
   frame.addEventListener('mouseleave', () => {
-    ytCmd('pauseVideo');
+    hovering = false;
+    if (playerReady) ytPlayer.pauseVideo();
+    else pendingPlay = false;
   });
 
   /* ── Modal plein écran ───────────────────────────────────────────────── */
@@ -789,29 +811,24 @@ function initReel() {
   const modalIframe = modal.querySelector('iframe');
   const closeBtn    = modal.querySelector('.reel-modal-close');
 
-  /* Ouvre le modal et lance la vidéo plein écran */
   function openModal() {
-    modalIframe.src = MODAL_SRC; /* Injecte la vidéo avec autoplay */
+    if (playerReady) ytPlayer.pauseVideo();
+    modalIframe.src = MODAL_SRC;
     modal.classList.add('is-open');
-    document.body.style.overflow = 'hidden'; /* Bloque le scroll */
+    document.body.style.overflow = 'hidden';
   }
 
-  /* Ferme le modal et arrête la vidéo (en vidant son src) */
   function closeModal() {
     modal.classList.remove('is-open');
     document.body.style.overflow = '';
-    /* Délai pour que l'animation de fermeture se finisse avant de couper la vidéo */
-    setTimeout(() => { modalIframe.src = ''; }, 380); /* ← MODIFIABLE : doit correspondre à la transition CSS */
+    setTimeout(() => { modalIframe.src = ''; }, 380);
   }
 
-  /* Ouvre le modal au clic ou via clavier (accessibilité) */
   overlay.addEventListener('click', openModal);
   overlay.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') openModal(); });
-
-  /* Ferme le modal */
   closeBtn.addEventListener('click', closeModal);
-  modal.addEventListener('click', e => { if (e.target === modal) closeModal(); }); /* Clic sur le fond */
-  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); }); /* Touche Échap */
+  modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
 }
 
 
@@ -881,6 +898,10 @@ function initPageTransitions() {
 
     e.preventDefault();
 
+    /* Marque la navigation interne AVANT de quitter la page
+       (F5/reload ne déclenche jamais ce chemin → loader s'affiche normalement) */
+    sessionStorage.setItem('internalNav', '1');
+
     /* Lance le fondu de sortie puis navigue après la fin de l'animation */
     overlay.style.opacity = '';
     overlay.style.pointerEvents = 'all';
@@ -893,13 +914,118 @@ function initPageTransitions() {
 
 
 /* ─────────────────────────────────────────────────────────────────────────────
-   12. INITIALISATION — Point d'entrée du script
+   12. LOADER FLIP — Le nom du loader s'envole vers le hero
+   ─────────────────────────────────────────────────────────────────────────────
+   Technique FLIP (First → Last → Invert → Play) :
+   1. Mesure la position du loader-name (centre écran, petite taille)
+   2. Mesure la position cible du hero-name (bas gauche, grande taille)
+   3. Crée un clone à la taille/style du hero-name
+   4. Applique un transform inversé pour le placer visuellement au centre
+   5. Anime le retrait du transform → le clone "vole" vers sa position finale
+   6. Révèle le hero-name réel à l'arrivée
+   ───────────────────────────────────────────────────────────────────────────── */
+function initLoaderFlip() {
+  if (document.documentElement.classList.contains('loader-skip')) return;
+
+  const loaderName = document.querySelector('.loader-name');
+  const heroName   = document.querySelector('.hero-name');
+  if (!loaderName || !heroName) return;
+
+  /* Bloque l'animation fadeUp du hero-name — on la remplace par le FLIP */
+  heroName.style.animationName = 'none';
+  heroName.style.opacity = '0';
+
+  /* Déclenche le FLIP 200ms après la fin de la barre (600ms delay + 1900ms durée) */
+  var FLIP_DELAY = 2700;
+
+  setTimeout(function () {
+    var fromRect = loaderName.getBoundingClientRect();
+    var toRect   = heroName.getBoundingClientRect();
+
+    /* Créé un clone au style du hero-name (uppercase, grande police) */
+    var clone = document.createElement('div');
+    clone.setAttribute('aria-hidden', 'true');
+    clone.innerHTML = 'THOMAS<span style="display:block;color:#DC7020">ABATE</span>';
+
+    var heroCS = window.getComputedStyle(heroName);
+    clone.style.cssText = [
+      'position:fixed',
+      'z-index:9998',
+      'left:0', 'top:0',
+      'margin:0', 'padding:0',
+      'pointer-events:none',
+      'transform-origin:0 0',
+      'will-change:transform,opacity',
+      'color:#EDE5D5',
+      'text-transform:uppercase',
+      'line-height:0.88',
+      'font-weight:800',
+      'letter-spacing:-0.04em',
+      'font-family:' + heroCS.fontFamily,
+      'font-size:'   + heroCS.fontSize,
+    ].join(';');
+
+    document.body.appendChild(clone);
+
+    /* Mesure la taille naturelle du clone (= hero-name size) */
+    var cloneW = clone.offsetWidth;
+    var cloneH = clone.offsetHeight;
+
+    /* Scale basé sur le ratio des font-size réels (pas la largeur du texte) :
+       évite le décalage dû aux caractères différents (Thomas vs THOMAS,
+       letter-spacing -0.03em vs -0.04em, casse différente). */
+    var loaderFS = parseFloat(window.getComputedStyle(loaderName).fontSize);
+    var heroFS   = parseFloat(heroCS.fontSize);
+    var scaleFrom = loaderFS / heroFS;
+
+    /* Coordonnées de départ : centre visuel = centre du loader-name */
+    var startX = fromRect.left + fromRect.width  / 2 - cloneW * scaleFrom / 2;
+    var startY = fromRect.top  + fromRect.height / 2 - cloneH * scaleFrom / 2;
+
+    /* Coordonnées d'arrivée : coin haut-gauche du hero-name */
+    var endX = toRect.left;
+    var endY = toRect.top;
+
+    /* Positionne le clone au point de départ (petite taille, centre écran) */
+    clone.style.transform = 'translate(' + startX + 'px,' + startY + 'px) scale(' + scaleFrom + ')';
+
+    /* Cache le loader-name original (le clone le remplace visuellement) */
+    loaderName.style.setProperty('opacity', '0', 'important');
+    loaderName.style.setProperty('animation', 'none', 'important');
+
+    /* Double rAF pour que le navigateur applique la position initiale avant la transition */
+    requestAnimationFrame(function () {
+      requestAnimationFrame(function () {
+        /* Ease-in-out : lent au départ, rapide au milieu, lent à l'arrivée */
+        clone.style.transition = [
+          'transform 1s cubic-bezier(0.65,0,0.35,1)',
+          'opacity   0.4s 0.65s ease',
+        ].join(',');
+        clone.style.transform = 'translate(' + endX + 'px,' + endY + 'px) scale(1)';
+
+        /* À l'arrivée : révèle le hero-name, efface le clone */
+        setTimeout(function () {
+          heroName.style.transition = 'opacity 0.4s ease';
+          heroName.style.opacity = '1';
+          clone.style.opacity = '0';
+          setTimeout(function () { clone.remove(); }, 450);
+        }, 1020);
+      });
+    });
+
+  }, FLIP_DELAY);
+}
+
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   13. INITIALISATION — Point d'entrée du script
    ─────────────────────────────────────────────────────────────────────────────
    DOMContentLoaded = le HTML est entièrement parsé (mais images pas encore chargées).
    Chaque fonction vérifie elle-même si ses éléments existent (if (!el) return)
    donc toutes peuvent être appelées sur toutes les pages sans erreur.
    ───────────────────────────────────────────────────────────────────────────── */
 document.addEventListener('DOMContentLoaded', () => {
+  initLoaderFlip();      /* FLIP : nom du loader → position hero (index.html uniquement) */
   initPageTransitions(); /* Transitions fluides entre pages (toutes les pages) */
   initAnimBg();          /* Orbes en arrière-plan (toutes les pages) */
   renderFeatured();      /* Grille des projets en vedette (index.html uniquement) */
