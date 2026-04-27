@@ -1000,17 +1000,14 @@ function initLoaderFlip() {
     /* Double rAF : assure que le navigateur peigne la position initiale avant la transition */
     requestAnimationFrame(function () {
       requestAnimationFrame(function () {
-        var ease = 'transform 1s cubic-bezier(0.65,0,0.35,1)';
-
-        /* THOMAS → coin haut-gauche du hero-name */
-        cloneT.style.transition = ease;
-        cloneT.style.transform  = 'translate(' + heroNameRect.left  + 'px,' + heroNameRect.top  + 'px) scale(1)';
-
-        /* ABATE → position exacte du span .hero-name-accent */
-        cloneA.style.transition = ease;
+        /* ABATE part en premier, THOMAS avec 160ms de décalage */
+        cloneA.style.transition = 'transform 0.9s cubic-bezier(0.65,0,0.35,1)';
         cloneA.style.transform  = 'translate(' + heroAbateRect.left + 'px,' + heroAbateRect.top + 'px) scale(1)';
 
-        /* À l'arrivée : révèle le hero-name réel, efface les clones */
+        cloneT.style.transition = 'transform 0.9s 0.16s cubic-bezier(0.65,0,0.35,1)';
+        cloneT.style.transform  = 'translate(' + heroNameRect.left  + 'px,' + heroNameRect.top  + 'px) scale(1)';
+
+        /* THOMAS arrive à 0.16 + 0.9 = 1.06s → révèle le hero-name juste après */
         setTimeout(function () {
           heroName.style.transition = 'opacity 0.4s ease';
           heroName.style.opacity    = '1';
@@ -1022,7 +1019,7 @@ function initLoaderFlip() {
           cloneA.style.opacity      = '0';
 
           setTimeout(function () { cloneT.remove(); cloneA.remove(); }, 450);
-        }, 1020);
+        }, 1120);
       });
     });
 
