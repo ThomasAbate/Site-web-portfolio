@@ -118,7 +118,7 @@ nav {
   -webkit-backdrop-filter: blur(16px); /* Version Safari */
 
   border-bottom: 1px solid var(--border); /* Fine ligne séparatrice en bas */
-  z-index: 200;                 /* La nav se superpose au-dessus de tout le reste */
+  z-index: 10000;               /* La nav se superpose au-dessus de tout le reste */
   transition: background var(--ease); /* Transition douce si le fond change */
 }
 
@@ -1621,13 +1621,19 @@ footer {
      Ils apparaissent en overlay quand .open est ajouté par JS (bouton hamburger). */
   .nav-links {
     display: none;
-    position: fixed; inset: var(--nav-h) 0 0 0; /* Prend tout l'écran sous la nav */
-    background: var(--bg);
-    flex-direction: column;   /* Liens empilés verticalement */
-    padding: 48px 32px; gap: 28px; z-index: 199;
+    position: fixed; inset: var(--nav-h) 0 0 0;
+    background-color: var(--bg); /* background-color évite tout héritage d'opacité */
+    flex-direction: column;
+    padding: 48px 32px; gap: 28px;
+    z-index: 9999; /* Au-dessus de tout, y compris les filter/transform du hero */
+    isolation: isolate; /* Crée un stacking context propre */
   }
-  .nav-links.open { display: flex; }  /* Visible quand ouvert */
-  .nav-links.open a { font-size: 18px; letter-spacing: 0.12em; } /* Plus grand sur mobile */
+  .nav-links.open { display: flex; }
+  .nav-links.open a { font-size: 18px; letter-spacing: 0.12em; }
+
+  /* Gèle les animations du hero quand le menu est ouvert */
+  .nav-links.open ~ * .hero-name-arrow,
+  body:has(.nav-links.open) .hero-name-arrow { pointer-events: none; }
 
   /* Le bouton hamburger ≡ devient visible */
   .nav-toggle { display: flex; }
