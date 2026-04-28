@@ -924,6 +924,53 @@ function initPageTransitions() {
    5. Anime le retrait du transform → le clone "vole" vers sa position finale
    6. Révèle le hero-name réel à l'arrivée
    ───────────────────────────────────────────────────────────────────────────── */
+/* ─────────────────────────────────────────────────────────────────────────────
+   HERO ARROW — Génère des chevrons alignés dans .hero-name-arrow-line
+   ───────────────────────────────────────────────────────────────────────────── */
+function initHeroArrow() {
+  const line     = document.querySelector('.hero-name-arrow-line');
+  const heroName = document.querySelector('.hero-name');
+  if (!line || !heroName) return;
+
+  /* Clic sur la flèche → scroll vers la section suivante */
+  const arrow  = line.closest('.hero-name-arrow');
+  const target = document.querySelector('#reel');
+  if (arrow && target) {
+    arrow.addEventListener('click', () => {
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  }
+
+  const GAP      = 16;   /* Espacement entre chevrons (px) ← MODIFIABLE */
+  const DURATION = 2.2;  /* Durée d'un cycle complet (s) ← MODIFIABLE */
+  const h        = heroName.offsetHeight;
+  const count    = Math.max(2, Math.floor(h / GAP));
+
+  for (let i = 0; i < count; i++) {
+    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    svg.setAttribute('width', '20');
+    svg.setAttribute('height', '14');
+    svg.setAttribute('viewBox', '0 0 20 14');
+    /* currentColor permet à l'animation CSS de contrôler la couleur du trait */
+    svg.style.cssText = 'display:block;flex-shrink:0;color:rgba(237,229,213,0.35);';
+
+    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    path.setAttribute('d', 'M2 4l8 6 8-6');
+    path.setAttribute('stroke', 'currentColor');
+    path.setAttribute('stroke-width', '2.2');
+    path.setAttribute('fill', 'none');
+    path.setAttribute('stroke-linecap', 'round');
+    path.setAttribute('stroke-linejoin', 'round');
+    svg.appendChild(path);
+
+    /* Délai échelonné : la vague descend du premier au dernier chevron */
+    const delay = (i / count) * DURATION;
+    svg.style.animation = 'chevronPulse ' + DURATION + 's ' + delay.toFixed(2) + 's ease-in-out infinite';
+
+    line.appendChild(svg);
+  }
+}
+
 function initLoaderFlip() {
   if (document.documentElement.classList.contains('loader-skip')) return;
 
@@ -1000,17 +1047,19 @@ function initLoaderFlip() {
     /* Double rAF : assure que le navigateur peigne la position initiale avant la transition */
     requestAnimationFrame(function () {
       requestAnimationFrame(function () {
-        /* ABATE part en premier, THOMAS avec 160ms de décalage */
+        /* ABATE part en premier, THOMAS avec 70ms de décalage */
         cloneA.style.transition = 'transform 0.9s cubic-bezier(0.65,0,0.35,1)';
         cloneA.style.transform  = 'translate(' + heroAbateRect.left + 'px,' + heroAbateRect.top + 'px) scale(1)';
 
-        cloneT.style.transition = 'transform 0.9s 0.16s cubic-bezier(0.65,0,0.35,1)';
+        cloneT.style.transition = 'transform 0.9s 0.07s cubic-bezier(0.65,0,0.35,1)';
         cloneT.style.transform  = 'translate(' + heroNameRect.left  + 'px,' + heroNameRect.top  + 'px) scale(1)';
 
-        /* THOMAS arrive à 0.16 + 0.9 = 1.06s → révèle le hero-name juste après */
+        /* THOMAS arrive à 0.07 + 0.9 = 0.97s → révèle le hero-name et la flèche juste après */
         setTimeout(function () {
           heroName.style.transition = 'opacity 0.4s ease';
           heroName.style.opacity    = '1';
+          var heroArrow = document.querySelector('.hero-name-arrow');
+          if (heroArrow) { heroArrow.style.transition = 'opacity 0.4s ease'; heroArrow.style.opacity = '1'; }
 
           var fadeOut = 'opacity 0.4s ease';
           cloneT.style.transition   = fadeOut;
@@ -1035,6 +1084,7 @@ function initLoaderFlip() {
    donc toutes peuvent être appelées sur toutes les pages sans erreur.
    ───────────────────────────────────────────────────────────────────────────── */
 document.addEventListener('DOMContentLoaded', () => {
+  initHeroArrow();       /* Chevrons animés à gauche du nom (index.html uniquement) */
   initLoaderFlip();      /* FLIP : nom du loader → position hero (index.html uniquement) */
   initPageTransitions(); /* Transitions fluides entre pages (toutes les pages) */
   initAnimBg();          /* Orbes en arrière-plan (toutes les pages) */
