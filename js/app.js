@@ -120,24 +120,45 @@
 
 
 /* ─────────────────────────────────────────────────────────────────────────────
-   2. VIDÉO YOUTUBE DE FOND DU HERO — Fondu d'apparition synchronisé au loader
+   2. VIDÉO YOUTUBE DE FOND DU HERO — Qualité HD forcée via IFrame API
    ─────────────────────────────────────────────────────────────────────────────
-   L'iframe commence à charger dès le départ (pendant l'écran de chargement).
-   Elle devient visible dès que le player YouTube a répondu (event "load")
-   ou au bout de 3s maximum pour garantir l'apparition même si YouTube est lent.
+   1. L'iframe charge dès le départ (pendant le loader) grâce au src immédiat.
+   2. On charge l'IFrame API YouTube pour appeler setPlaybackQuality('hd1080')
+      dès que le player est prêt — YouTube ignore sinon et choisit basse qualité.
+   3. Fallback à 4s si l'API est bloquée (réseau lent, ad-blocker…).
    ───────────────────────────────────────────────────────────────────────────── */
 (function initHeroBgVideo() {
   const iframe = document.getElementById('heroBgVideo');
   if (!iframe) return;
   const bg = iframe.closest('.hero-video-bg');
+  let revealed = false;
 
-  function reveal() { bg.classList.add('ready'); }
+  function reveal() {
+    if (revealed) return;
+    revealed = true;
+    bg.classList.add('ready');
+  }
 
-  /* Révèle dès que l'iframe YouTube a répondu */
-  iframe.addEventListener('load', reveal, { once: true });
+  /* Charge l'IFrame API YouTube de façon asynchrone */
+  const apiScript = document.createElement('script');
+  apiScript.src = 'https://www.youtube.com/iframe_api';
+  document.head.appendChild(apiScript);
 
-  /* Fallback : révèle au bout de 3s même si l'événement ne se déclenche pas */
-  setTimeout(reveal, 3000);
+  /* L'API appelle cette fonction globale quand elle est prête */
+  window.onYouTubeIframeAPIReady = function () {
+    var player = new YT.Player('heroBgVideo', {
+      events: {
+        onReady: function (e) {
+          e.target.setPlaybackQuality('hd1080'); /* Force la qualité 1080p */
+          reveal();
+        },
+        onError: reveal /* Révèle quand même si erreur */
+      }
+    });
+  };
+
+  /* Fallback : révèle après 4s si l'API ne répond pas */
+  setTimeout(reveal, 4000);
 })();
 
 
