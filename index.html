@@ -107,11 +107,13 @@
     <!-- Fond animé (halo orange) — animé par CSS, styles dans .hero-anim-bg -->
     <div class="hero-anim-bg"></div>
 
-    <!-- Vidéo de fond lue en boucle (muette, sans contrôles) -->
+    <!-- Vidéo YouTube de fond lue en boucle (muette, sans contrôles) -->
     <div class="hero-video-bg" aria-hidden="true">
-      <video id="heroBgVideo" autoplay muted playsinline preload="auto">
-        <source src="BackGround_video/Background%20Vagas.mp4" type="video/mp4">
-      </video>
+      <iframe id="heroBgVideo"
+        src="https://www.youtube.com/embed/lKkg2NGqUbM?autoplay=1&mute=1&loop=1&playlist=lKkg2NGqUbM&controls=0&rel=0&modestbranding=1&playsinline=1"
+        allow="autoplay; encrypted-media"
+        frameborder="0">
+      </iframe>
     </div>
 
     <!-- Calque sombre semi-transparent par-dessus la vidéo -->

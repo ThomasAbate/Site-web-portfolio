@@ -120,33 +120,24 @@
 
 
 /* ─────────────────────────────────────────────────────────────────────────────
-   2. VIDÉO DE FOND DU HERO — Fondu d'apparition + boucle sans flash
+   2. VIDÉO YOUTUBE DE FOND DU HERO — Fondu d'apparition synchronisé au loader
    ─────────────────────────────────────────────────────────────────────────────
-   - La vidéo reste invisible jusqu'à ce que le premier frame soit décodé
-   - Redémarre 0.3s avant la fin pour éviter le flash de noir au changement de boucle
-   MODIFIER LA VIDÉO : changer l'attribut src dans index.html (balise <source>)
+   L'iframe commence à charger dès le départ (pendant l'écran de chargement).
+   Elle devient visible dès que le player YouTube a répondu (event "load")
+   ou au bout de 3s maximum pour garantir l'apparition même si YouTube est lent.
    ───────────────────────────────────────────────────────────────────────────── */
 (function initHeroBgVideo() {
-  const video = document.getElementById('heroBgVideo');
-  if (!video) return; /* La vidéo n'existe que sur index.html */
-  const bg = video.closest('.hero-video-bg');
+  const iframe = document.getElementById('heroBgVideo');
+  if (!iframe) return;
+  const bg = iframe.closest('.hero-video-bg');
 
-  /* Rend la vidéo visible dès que le premier frame est prêt (évite le flash blanc) */
-  function reveal() { bg.classList.add('ready'); } /* .ready → opacity: 1 en CSS */
-  if (video.readyState >= 3) {
-    /* readyState 3 = HAVE_FUTURE_DATA : assez de données pour jouer sans saccade */
-    reveal();
-  } else {
-    video.addEventListener('canplay', reveal, { once: true }); /* { once } = écoute une seule fois */
-  }
+  function reveal() { bg.classList.add('ready'); }
 
-  /* Boucle sans clignotement : on repart à t=0 quand il reste 0.3s avant la fin
-     ← MODIFIABLE : augmente 0.3 si tu vois encore un flash, diminue pour une boucle plus propre */
-  video.addEventListener('timeupdate', function () {
-    if (this.duration && this.currentTime >= this.duration - 0.3) {
-      this.currentTime = 0;
-    }
-  });
+  /* Révèle dès que l'iframe YouTube a répondu */
+  iframe.addEventListener('load', reveal, { once: true });
+
+  /* Fallback : révèle au bout de 3s même si l'événement ne se déclenche pas */
+  setTimeout(reveal, 3000);
 })();
 
 
@@ -471,13 +462,13 @@ function renderProject() {
       const prevBtn = document.createElement('button');
       prevBtn.className = 'gallery-arrow prev';
       prevBtn.setAttribute('aria-label', 'Previous');
-      prevBtn.innerHTML = '&#8592;'; /* ← */
+      prevBtn.innerHTML = '<svg width="14" height="10" viewBox="0 0 14 10" fill="none" aria-hidden="true"><path d="M13 5H1M6 1L2 5l4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
       prevBtn.disabled = true; /* Désactivé au départ (on est au début) */
 
       const nextBtn = document.createElement('button');
       nextBtn.className = 'gallery-arrow next';
       nextBtn.setAttribute('aria-label', 'Next');
-      nextBtn.innerHTML = '&#8594;'; /* → */
+      nextBtn.innerHTML = '<svg width="14" height="10" viewBox="0 0 14 10" fill="none" aria-hidden="true"><path d="M1 5h12M8 1l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 
       strip.appendChild(track);
       strip.appendChild(prevBtn);

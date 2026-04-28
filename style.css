@@ -69,6 +69,16 @@
      'Inter' est chargée via Google Fonts dans le HTML.
      Pour en changer, modifie le lien Google Fonts dans index.html ET cette valeur. */
   --font: 'Inter', sans-serif;
+
+  /* Gradient derrière les sections de texte pour masquer les particules
+     Fade progressif en haut/bas (12%), opaque au centre ← MODIFIABLE */
+  --section-veil: linear-gradient(
+    to bottom,
+    transparent            0%,
+    rgba(14, 12, 8, 0.88) 12%,
+    rgba(14, 12, 8, 0.88) 88%,
+    transparent            100%
+  );
 }
 
 
@@ -415,7 +425,7 @@ nav {
    ============================================================ */
 
 /* Espace intérieur standard d'une section ← MODIFIABLE */
-.section-wrap { padding: 112px 56px; }
+.section-wrap { padding: 112px 56px; background: var(--section-veil); }
 
 /* Petit label au-dessus des titres ("Selected Works", "About"...) */
 .section-tag {
@@ -589,6 +599,40 @@ nav {
 
 
 /* ============================================================
+   BOUTON REMPLI — Variante solide des boutons de navigation projet
+   ============================================================ */
+.btn-filled {
+  display: inline-flex; align-items: center;
+  gap: 12px;
+  padding: 16px 40px;
+  background: var(--text);
+  color: var(--bg);
+  border: none;
+  font-size: 11px; font-weight: 700;
+  letter-spacing: 0.18em; text-transform: uppercase;
+  text-decoration: none;
+  transition: background var(--ease), transform 0.25s ease, box-shadow 0.25s ease;
+}
+.btn-filled:hover {
+  background: rgba(237, 229, 213, 0.82);
+  transform: scale(1.04);
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.45);
+}
+.btn-filled svg { transition: transform 0.3s ease; }
+.btn-filled:hover svg { transform: translateX(3px); }
+#prevProject:hover svg { transform: translateX(-3px); }
+
+/* Barre de navigation précédent / suivant sur la page projet */
+.project-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 64px 56px;
+  background: var(--section-veil);
+}
+
+/* ============================================================
    ANIMATIONS DU BOUTON DE TÉLÉCHARGEMENT DU CV
    ============================================================
    Ces animations se déclenchent via JavaScript quand on clique.
@@ -638,7 +682,7 @@ a[download].dl-anim svg {
    PAGE WORKS — En-tête et filtres de catégorie
    ============================================================ */
 /* Espace sous la nav fixe + marge supplémentaire */
-.works-header { padding: calc(var(--nav-h) + 80px) 56px 0; }
+.works-header { padding: calc(var(--nav-h) + 80px) 56px 0; background: var(--section-veil); }
 
 /* Barre de filtres (All / Personal / Game Jam / School) */
 .filter-bar {
@@ -687,6 +731,7 @@ a[download].dl-anim svg {
   gap: 24px;
   padding: 12px 56px 120px;
   overflow: visible;
+  background: var(--section-veil);
 }
 
 /* Classe appliquée par JavaScript pour cacher les cartes filtrées */
@@ -749,6 +794,7 @@ a[download].dl-anim svg {
   gap: 0;
   padding: 64px 56px 0;
   max-width: 1400px; /* Largeur maximale pour éviter des lignes trop longues ← MODIFIABLE */
+  background: var(--section-veil);
 }
 
 /* Espace à droite de la description pour la séparer de la sidebar */
@@ -801,7 +847,7 @@ a[download].dl-anim svg {
 .ue-logo { width: 18px; height: 18px; flex-shrink: 0; object-fit: contain; position: relative; top: -1px; }
 
 /* Section trailer (video YouTube) d'un projet */
-.project-trailer-wrap { padding: 64px 56px; text-align: center; }
+.project-trailer-wrap { padding: 64px 56px; text-align: center; background: var(--section-veil); }
 
 .section-sublabel {
   font-size: 10px; font-weight: 600;
@@ -838,7 +884,7 @@ a[download].dl-anim svg {
 /* ============================================================
    GALERIE FILMSTRIP — Carrousel d'images sur la page projet
    ============================================================ */
-.project-gallery-wrap { padding: 0 160px 120px; } /* ← MODIFIABLE */
+.project-gallery-wrap { padding: 0 160px 120px; background: var(--section-veil); } /* ← MODIFIABLE */
 
 .gallery-filmstrip { position: relative; overflow: hidden; }
 
@@ -890,7 +936,7 @@ a[download].dl-anim svg {
   background: rgba(0,0,0,0.6);
   border: 1px solid rgba(255,255,255,0.18);
   border-radius: 50%; /* Rond */
-  color: #fff; font-size: 18px;
+  color: #fff;
   cursor: pointer;
   display: flex; align-items: center; justify-content: center;
   z-index: 3; /* Au-dessus des images */
@@ -998,6 +1044,7 @@ a[download].dl-anim svg {
   display: flex; align-items: center;
   justify-content: space-between;
   gap: 48px;
+  background: var(--section-veil);
 }
 .about-hero .section-heading { margin-bottom: 0; }
 .about-hero-text  { flex: 1; }         /* Prend l'espace restant */
@@ -1021,6 +1068,7 @@ a[download].dl-anim svg {
   grid-template-columns: 1fr 1fr; /* Deux colonnes égales ← MODIFIABLE */
   gap: 80px; align-items: start;
   padding: 0 56px 80px;
+  background: var(--section-veil);
 }
 
 /* Texte biographique */
@@ -1104,6 +1152,7 @@ a[download].dl-anim svg {
 .contact-section {
   padding: 96px 56px 112px;
   border-top: 1px solid var(--border);
+  background: var(--section-veil);
   display: flex; flex-direction: column;
   align-items: center; text-align: center;
 }
@@ -1227,13 +1276,18 @@ footer {
 /* JavaScript ajoute .ready quand la vidéo est prête à jouer → fondu vers opacity 1 */
 .hero-video-bg.ready { opacity: 1; }
 
-.hero-video-bg video {
-  position: absolute; inset: 0;
-  width: 100%; height: 100%;
-  object-fit: cover;         /* Remplit sans déformer */
-  pointer-events: none;      /* La vidéo ne capte pas les clics de la souris */
-  filter: blur(2px);         /* Légèrement floutée ← MODIFIABLE (0 = nette, 10 = très flou) */
-  transform: scale(1.02);    /* Légèrement agrandie pour masquer les bords du blur */
+/* iframe YouTube — technique "cover 16:9" : toujours plus grand que le conteneur */
+.hero-video-bg iframe {
+  position: absolute;
+  top: 50%; left: 50%;
+  /* Couvre le hero quel que soit le ratio écran (portrait ou paysage) */
+  width:  max(100%, calc(100vh * 1.7778));
+  height: max(100%, calc(100vw * 0.5625));
+  transform: translate(-50%, -50%);
+  border: none;
+  pointer-events: none;      /* L'iframe ne capte pas les clics */
+  filter: blur(2px);         /* Légèrement floutée ← MODIFIABLE */
+  transform: translate(-50%, -50%) scale(1.02);
 }
 
 /* Calque sombre au-dessus de la vidéo pour assombrir et fondre vers le bas ---
@@ -1644,8 +1698,9 @@ footer {
   /* Cache l'indicateur de scroll vertical (trop petit pour mobile) */
   .hero-scroll { display: none; }
 
-  /* Cache la vidéo de fond du hero (économise de la bande passante sur mobile) */
-  .hero-video-bg, .hero-video-overlay { display: none; }
+  /* Réduit le gap et la taille du nom pour que tout rentre avec la flèche */
+  .hero-name-wrap { gap: 10px; }
+  .hero-name { font-size: clamp(44px, 11vw, 72px); }
 
   /* Cache les éléments décoratifs sur mobile */
   .hero-watermark, .hero-deco { display: none; }
@@ -1674,6 +1729,19 @@ footer {
   .project-trailer-wrap   { padding: 48px 24px; }
   .project-gallery-wrap   { padding: 0 24px 80px; }
   .back-link              { padding: 0 24px; }
+
+  /* Navigation prev/next : boutons empilés pleine largeur */
+  .project-nav {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 40px 24px;
+    gap: 12px;
+  }
+  .btn-filled {
+    justify-content: center;
+    padding: 18px 24px;
+    font-size: 10px;
+  }
 
   /* Page About */
   .about-hero { padding: calc(var(--nav-h) + 56px) 24px 48px; flex-direction: column-reverse; align-items: flex-start; }
