@@ -91,7 +91,11 @@ const PROJECTS = [
     ],
     mainImageSlug: 'picture/mask-snatchers/main.png',
     trailerID:     'hBTu7WFeQU0',
-    gallery: [],
+    gallery: [
+      { slug: 'picture/mask-snatchers/gallery-Animation de course du joueur.png', title: 'Animation de course du joueur' },
+      { slug: 'picture/mask-snatchers/gallery-Shared player camera.png',          title: 'Shared Player Camera' },
+      { slug: 'picture/mask-snatchers/gallery-Shared player camera Bleuprint.png', title: 'Shared Player Camera Blueprint' },
+    ],
     featured: false,
     homeFeatured: false,
   },
