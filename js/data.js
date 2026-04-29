@@ -142,22 +142,22 @@ const PROJECTS = [
     categoryLabel: 'Personal Project',
     year:          '2026',
     shortDesc:     'Prototyping luminance-driven detection and systemic stealth mechanics',
-    intro:         "The objective of this prototype was to engineer a systemic stealth framework where player visibility is calculated in real-time based on global illumination (Direct, Emissive, and VFX):",
+    intro:         "The objective of this prototype was to engineer a systemic stealth framework where player visibility is calculated in real-time based on global illumination (Direct Light and VFX):",
     bullets: [
       {
         title: 'Real-Time Luminance Extraction',
         text:  "Engineered a visibility detection system using a SceneCaptureComponent2D parented to a proxy mesh above the player. By sampling the Render Target data, I extracted raw luminance values to calculate a precise exposure float, which is the core variable for the player's detection state.",
       },
       {
-        title: 'Unified Light Feedback (Direct, Emissive & VFX)',
-        text:  "Unlike standard distance-based light checks, this method captures all light sources within the engine, including Static/Dynamic lights, Emissive materials, and Niagara VFX. This ensures consistent behaviour in complex environments where traditional line-trace methods would fail to detect ambient or particle-based lighting.",
+        title: 'Unified Light Feedback (Direct & VFX)',
+        text:  "Unlike standard distance-based light checks, this method captures all light sources within the engine, including Static/Dynamic lights and Niagara VFX. This ensures consistent behaviour in complex environments where traditional line-trace methods would fail to detect ambient or particle-based lighting.",
       },
       {
         title: 'Multi-Modal AI Perception',
         text:  "Integrated the luminance data with an acoustic movement system. These variables (Light + Sound) are fed into the AI Perception Component, creating a high-stakes stealth loop where player velocity and environmental positioning directly impact NPC detection thresholds.",
       },
     ],
-    mainImageSlug: 'picture/splinter-cell-prototype/gallery-Shadow_Map.png',
+    mainImageSlug: 'picture/splinter-cell-prototype/main.png',
     trailerID:     'P28pe9pNZCQ',
     gallery: [
       { slug: 'picture/splinter-cell-prototype/gallery-Shadow_Map.png',    title: 'Shadow Map' },
