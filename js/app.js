@@ -441,10 +441,13 @@ function renderProject() {
     if (project.trailerID) {
       /* Lance le chargement "lazy" de l'iframe YouTube (voir initLazyVideo) */
       const trailerFrame = document.getElementById('trailerFrame');
+      const trailerPlaceholder = document.getElementById('trailerPlaceholder');
+      if (trailerPlaceholder) trailerPlaceholder.style.display = 'none';
       initLazyVideo(trailerFrame, youtubeEmbedUrl(project.trailerID), trailerSection);
     } else {
-      /* Pas de trailerID dans data.js → cache toute la section trailer */
-      trailerSection.style.display = 'none';
+      /* Pas de trailerID → affiche le placeholder */
+      const trailerFrame = document.getElementById('trailerFrame');
+      if (trailerFrame) trailerFrame.style.display = 'none';
     }
   }
 
