@@ -332,7 +332,7 @@ const PROJECTS = [
   },
   {
     id:            'workshop-jetpack',
-    name:          'WorkShop Jetpack',
+    name:          'Exercice Jetpack',
     category:      'school',
     categoryLabel: 'School Project',
     year:          '2025',
@@ -369,7 +369,7 @@ const PROJECTS = [
   },
   {
     id:            'workshop-enviro-storytelling',
-    name:          'WorkShop Enviro Storytelling',
+    name:          'Exercice Enviro Storytelling',
     category:      'school',
     categoryLabel: 'School Project',
     year:          '2025',

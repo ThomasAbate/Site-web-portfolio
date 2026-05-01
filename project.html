@@ -40,21 +40,9 @@
        Ramène à la page Works. Styles dans .back-link dans style.css.
        ← MODIFIABLE : changer le texte "All Projects" si besoin
        ════════════════════════════════════════════════════════════════════════ -->
-  <a class="back-link" href="works.html">
-    <svg width="14" height="10" viewBox="0 0 14 10" fill="none">
-      <path d="M13 5H1M6 1L2 5l4 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
-    </svg>
-    All Projects
-  </a>
-
   <!-- ════════════════════════════════════════════════════════════════════════
        BANNIÈRE DU PROJET — Image + Gradient + Texte superposé
        Tout le contenu est injecté par renderProject() dans app.js.
-       - id="projectBanner"   : JavaScript remplit l'image src
-       - id="projectTag"      : "Catégorie · Année" (ex: "Game Jam · 2024")
-       - id="projectTitle"    : Nom du projet
-       - id="projectSubtitle" : Description courte
-       Styles dans .project-banner dans style.css.
        ════════════════════════════════════════════════════════════════════════ -->
   <div class="project-banner" id="projectBanner">
     <!-- Image de la bannière — src="" rempli par JavaScript -->
@@ -63,11 +51,19 @@
     <!-- Dégradé en fondu de l'image vers la couleur de fond (défini dans style.css) -->
     <div class="project-banner-gradient"></div>
 
+    <!-- Lien retour positionné en haut de la bannière -->
+    <a class="back-link" href="works.html">
+      <svg width="20" height="14" viewBox="0 0 14 10" fill="none">
+        <path d="M13 5H1M6 1L2 5l4 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      All Projects
+    </a>
+
     <!-- Texte positionné en bas de la bannière -->
     <div class="project-banner-content">
-      <div class="project-tag" id="projectTag"></div><!-- Ex: "Game Jam · 2024" -->
-      <h1 class="project-title" id="projectTitle"></h1><!-- Nom du projet -->
-      <p class="project-subtitle" id="projectSubtitle"></p><!-- Description courte -->
+      <div class="project-tag" id="projectTag"></div>
+      <h1 class="project-title" id="projectTitle"></h1>
+      <p class="project-subtitle" id="projectSubtitle"></p>
     </div>
   </div>
 
