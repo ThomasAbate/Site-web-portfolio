@@ -191,7 +191,7 @@ const PROJECTS = [
       },
     ],
     mainImageSlug: 'picture/tikivolcano/main.png',
-    trailerID:     '-CHgOl1frsc',
+    trailerID:     'gVtPi6dOryk',
     gallery: [
       { slug: 'picture/tikivolcano/gallery-selection-preview-in-game.png',       title: 'Selection Preview (In Game)' },
       { slug: 'picture/tikivolcano/gallery-selection-preview-in-editor.png',     title: 'Selection Preview (In Editor)' },

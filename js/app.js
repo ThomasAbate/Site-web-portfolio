@@ -448,6 +448,16 @@ function renderProject() {
     }
   }
 
+  /* ── Deuxième vidéo YouTube (optionnelle) ─────────────────────────────── */
+  const trailerSection2 = document.getElementById('trailerSection2');
+  if (trailerSection2) {
+    if (project.trailerID2) {
+      trailerSection2.style.display = '';
+      const trailerFrame2 = document.getElementById('trailerFrame2');
+      initLazyVideo(trailerFrame2, youtubeEmbedUrl(project.trailerID2), trailerSection2);
+    }
+  }
+
   /* ── Galerie filmstrip ────────────────────────────────────────────────── */
   const gallerySection = document.getElementById('gallerySection');
   const galleryGrid    = document.getElementById('galleryGrid');
