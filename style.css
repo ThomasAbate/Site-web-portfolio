@@ -790,7 +790,7 @@ a[download].dl-anim svg {
 /* Corps du projet : deux colonnes (description à gauche, sidebar à droite) */
 .project-body {
   display: grid;
-  grid-template-columns: 1fr 340px; /* Colonne principale + sidebar de 340px ← MODIFIABLE */
+  grid-template-columns: 1fr 220px; /* Colonne principale + sidebar de 220px ← MODIFIABLE */
   gap: 0;
   padding: 64px 56px 0;
   max-width: 1400px; /* Largeur maximale pour éviter des lignes trop longues ← MODIFIABLE */
@@ -798,11 +798,11 @@ a[download].dl-anim svg {
 }
 
 /* Espace à droite de la description pour la séparer de la sidebar */
-.project-description { padding-right: 80px; } /* ← MODIFIABLE */
+.project-description { padding-right: 48px; } /* ← MODIFIABLE */
 
 /* Texte d'introduction du projet */
 .project-intro {
-  font-size: 17px; line-height: 1.8;
+  font-size: 19px; line-height: 1.8;
   color: rgba(237, 229, 213, 0.75); /* Légèrement transparent ← MODIFIABLE */
   margin-bottom: 48px;
 }
@@ -819,15 +819,15 @@ a[download].dl-anim svg {
   border-left: 2px solid var(--border);
 }
 
-.bullet-title { font-size: 14px; font-weight: 700; margin-bottom: 4px; letter-spacing: -0.01em; color: var(--text); }
-.bullet-text  { font-size: 12.5px; color: rgba(237, 229, 213, 0.55); line-height: 1.55; }
+.bullet-title { font-size: 16px; font-weight: 700; margin-bottom: 4px; letter-spacing: -0.01em; color: var(--text); }
+.bullet-text  { font-size: 14px; color: rgba(237, 229, 213, 0.55); line-height: 1.55; }
 .bullet-text ul { list-style: disc; padding-left: 18px; margin-top: 8px; display: flex; flex-direction: column; gap: 6px; }
 .bullet-text ul li { padding-left: 4px; }
 
 /* Colonne de droite (infos rapides : catégorie, année, moteur...) */
 .project-sidebar {
   border-left: 1px solid var(--border); /* Séparation avec la description ← MODIFIABLE */
-  padding-left: 40px;
+  padding-left: 32px;
 }
 
 .sidebar-block { margin-bottom: 40px; }
