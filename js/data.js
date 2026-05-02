@@ -260,7 +260,7 @@ const PROJECTS = [
     mainImageSlug: 'picture/evil-house/main.png',
     trailerID:     '19qvPKIn0f0',
     gallery: [
-      { slug: 'picture/evil-house/gallery-mouvement-inpute.jpg',        title: 'Mouvement Input' },
+      { slug: 'picture/evil-house/gallery-mouvement-inpute.jpg',        title: 'Movement Input' },
       { slug: 'picture/evil-house/gallery-animation-blueprint.png',    title: 'Animation Blueprint' },
       { slug: 'picture/evil-house/gallery-camera-blueprint.png',       title: 'Camera Blueprint' },
       { slug: 'picture/evil-house/gallery-camera-world-blueprint.png', title: 'Camera – World Blueprint' },
@@ -341,7 +341,7 @@ const PROJECTS = [
   },
   {
     id:            'workshop-jetpack',
-    name:          'Exercice Jetpack',
+    name:          'Exercise Jetpack',
     category:      'school',
     categoryLabel: 'School Project',
     year:          '2025',
@@ -378,7 +378,7 @@ const PROJECTS = [
   },
   {
     id:            'workshop-enviro-storytelling',
-    name:          'Exercice Enviro Storytelling',
+    name:          'Exercise Enviro Storytelling',
     category:      'school',
     categoryLabel: 'School Project',
     year:          '2025',
