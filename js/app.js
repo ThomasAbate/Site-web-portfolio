@@ -761,6 +761,10 @@ function initReel() {
   let pendingPlay = false; /* true si survol avant que le player soit prêt */
 
   const thumbnail = document.getElementById('reelThumbnail');
+  if (thumbnail) {
+    const base = thumbnail.src.split('?')[0];
+    thumbnail.src = base + '?_=' + Date.now();
+  }
   function hideThumbnail() {
     if (thumbnail) thumbnail.classList.add('reel-thumbnail--hidden');
   }
