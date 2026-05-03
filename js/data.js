@@ -284,7 +284,7 @@ const PROJECTS = [
     intro:         "A project that places nervous gameplay and visual clarity at the heart of every design decision, with DOOM 2016 as a reference.",
     bullets: [
       {
-        title: 'Game Design & 3C (Character, Controls, Camera)',
+        title: 'Game Design & 3C',
         text:  "My work revolved around a single core goal : crafting an <strong>immediate, reactive and visceral feeling</strong>, on par with the intensity of modern FPS games.<ul><li><strong>Weapon Positioning</strong> : Drawing on a Techland GDC talk (Dying Light) and the principles of the <strong>Golden Ratio</strong>, I optimized the weapon placement on screen. The result : <strong>precise visual balance, zero clipping</strong>, and a strong weapon presence without ever obstructing the player's field of view.</li><li><strong>Game Feel & Impact</strong> : I integrated and calibrated <strong>camera shakes</strong> specific to each type of action, to add weight to interactions and amplify combat readability.</li></ul>",
       },
       {

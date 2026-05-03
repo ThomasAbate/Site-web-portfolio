@@ -1112,6 +1112,17 @@ function initLoaderFlip() {
    Chaque fonction vérifie elle-même si ses éléments existent (if (!el) return)
    donc toutes peuvent être appelées sur toutes les pages sans erreur.
    ───────────────────────────────────────────────────────────────────────────── */
+function initScrollTopBtn() {
+  const btn = document.getElementById('scrollTopBtn');
+  if (!btn) return;
+  window.addEventListener('scroll', () => {
+    btn.classList.toggle('visible', window.scrollY > 300);
+  }, { passive: true });
+  btn.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   initHeroArrow();       /* Chevrons animés à gauche du nom (index.html uniquement) */
   initLoaderFlip();      /* FLIP : nom du loader → position hero (index.html uniquement) */
@@ -1122,4 +1133,5 @@ document.addEventListener('DOMContentLoaded', () => {
   renderProject();       /* Page de détail d'un projet (project.html uniquement) */
   initReel();            /* Demo Reel hover + modal (index.html uniquement) */
   initDownloadBtns();    /* Animation boutons CV (about.html uniquement) */
+  initScrollTopBtn();    /* Bouton retour en haut (toutes les pages) */
 });
