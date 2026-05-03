@@ -753,7 +753,8 @@ function initReel() {
 
   /* ← MODIFIABLE : remplace cet ID YouTube par le nouvel ID de la vidéo */
   const VIDEO_ID = 'e88P-_075KE';
-  const MODAL_SRC = `https://www.youtube.com/embed/${VIDEO_ID}?rel=0&modestbranding=1&color=white&autoplay=1`;
+  const userLang = (navigator.language || 'en').split('-')[0];
+  const MODAL_SRC = `https://www.youtube.com/embed/${VIDEO_ID}?rel=0&modestbranding=1&color=white&autoplay=1&cc_load_policy=1&cc_lang_pref=${userLang}&hl=${userLang}`;
 
   let ytPlayer    = null;
   let playerReady = false;
