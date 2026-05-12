@@ -33,7 +33,7 @@
 
     window.addEventListener('load', function () {
       var l = document.getElementById('loader');
-      if (l) setTimeout(function () { l.remove(); }, 3300);
+      if (l) setTimeout(function () { l.remove(); }, 5100);
     });
 
     document.addEventListener('DOMContentLoaded', function () {
@@ -41,7 +41,7 @@
       var pct = document.getElementById('loaderPct');
       if (!pct) return;
       var BAR_DELAY    = 600;
-      var BAR_DURATION = 1900;
+      var BAR_DURATION = 3500;
       setTimeout(function () {
         var t0 = performance.now();
         function tick() {
@@ -110,10 +110,11 @@
     <!-- Vidéo YouTube de fond lue en boucle (muette, sans contrôles) -->
     <div class="hero-video-bg" aria-hidden="true">
       <iframe id="heroBgVideo"
-        src="https://www.youtube.com/embed/lKkg2NGqUbM?autoplay=1&mute=1&loop=1&playlist=lKkg2NGqUbM&controls=0&rel=0&modestbranding=1&playsinline=1&enablejsapi=1&vq=hd1080"
+        src="https://www.youtube.com/embed/lKkg2NGqUbM?autoplay=1&mute=1&loop=1&playlist=lKkg2NGqUbM&controls=0&disablekb=1&rel=0&modestbranding=1&playsinline=1&enablejsapi=1&vq=hd1080"
         allow="autoplay; encrypted-media"
         frameborder="0">
       </iframe>
+      <div class="hero-video-shield"></div>
     </div>
 
     <!-- Calque sombre semi-transparent par-dessus la vidéo -->

@@ -1012,8 +1012,8 @@ function initLoaderFlip() {
   heroName.style.animationName = 'none';
   heroName.style.opacity = '0';
 
-  /* Déclenche le FLIP 200ms après la fin de la barre (600ms delay + 1900ms durée) */
-  var FLIP_DELAY = 2700;
+  /* Déclenche le FLIP 200ms après la fin de la barre (600ms delay + 3500ms durée) */
+  var FLIP_DELAY = 4300;
 
   setTimeout(function () {
     /* ── Positions sources (dans le loader) ───────────────────────────── */
@@ -1043,7 +1043,7 @@ function initLoaderFlip() {
 
     /* ── Styles communs aux deux clones ──────────────────────────────── */
     var baseCSS = [
-      'position:fixed', 'z-index:10001', 'left:0', 'top:0',
+      'position:fixed', 'z-index:20001', 'left:0', 'top:0',
       'margin:0', 'padding:0', 'pointer-events:none',
       'transform-origin:0 0', 'will-change:transform,opacity',
       'text-transform:uppercase', 'line-height:0.88',

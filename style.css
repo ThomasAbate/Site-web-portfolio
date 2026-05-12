@@ -1311,6 +1311,15 @@ footer {
 /* JavaScript ajoute .ready quand la vidéo est prête à jouer → fondu vers opacity 1 */
 .hero-video-bg.ready { opacity: 1; }
 
+/* Bouclier transparent sur l'iframe — capture tous les événements souris/touch
+   avant qu'ils n'atteignent YouTube, empêchant l'apparition des contrôles */
+.hero-video-shield {
+  position: absolute; inset: 0;
+  z-index: 2;
+  background: transparent;
+  cursor: default;
+}
+
 /* iframe YouTube — technique "cover 16:9" : toujours plus grand que le conteneur */
 .hero-video-bg iframe {
   position: absolute;
@@ -1872,7 +1881,7 @@ footer {
   align-items: center;
   justify-content: center;
   pointer-events: all;
-  animation: loaderFadeOut 0.7s 2.6s ease forwards;
+  animation: loaderFadeOut 0.7s 4.3s ease forwards;
 }
 
 .loader-inner {
@@ -1900,7 +1909,7 @@ footer {
   letter-spacing: -0.04em;
   text-transform: uppercase;
   opacity: 0;
-  animation: loaderSlideUp 0.7s 0.35s ease forwards, loaderNameGlitch 0.28s 1.8s ease;
+  animation: loaderSlideUp 0.7s 0.35s ease forwards, loaderNameGlitch 0.28s 3.5s ease;
 }
 
 .loader-name-accent {
@@ -1925,7 +1934,7 @@ footer {
   inset: 0;
   width: 0;
   background: #DC7020;
-  animation: loaderBarFill 1.9s 0.6s cubic-bezier(0.25, 0, 0.1, 1) forwards;
+  animation: loaderBarFill 3.5s 0.6s cubic-bezier(0.25, 0, 0.1, 1) forwards;
 }
 
 /* Dot lumineux qui voyage avec la barre */
