@@ -1065,18 +1065,24 @@ a[download].dl-anim svg {
 }
 .about-hero .section-heading { margin-bottom: 0; }
 .about-hero-text  { flex: 1; }         /* Prend l'espace restant */
-.about-hero-photo { flex-shrink: 0; }  /* Ne rétrécit pas */
+.about-hero-photo {
+  flex-shrink: 0;
+  width: 320px; height: 320px;         /* ← MODIFIABLE */
+  border-radius: 50%;
+  overflow: hidden;                     /* Masque circulaire sur le conteneur = bords nets */
+  border: 1px solid rgba(255,255,255,0.1);
+  transform: translateZ(0);             /* Force le rendu GPU pour anti-aliasing */
+}
 
 /* Photo de profil ronde */
 .about-hero-photo img {
-  width: 320px; height: 320px;         /* ← MODIFIABLE */
+  width: 100%; height: 100%;
   object-fit: cover;
-  transform: scaleX(-1);               /* Miroir horizontal (photo inversée) */
-  object-position: center top;          /* Cadre en haut (pour les visages) */
-  border-radius: 50%;                   /* Rend la photo ronde */
-  border: 1px solid rgba(255,255,255,0.1);
-  filter: grayscale(15%);              /* Légèrement désaturé ← MODIFIABLE (0% = couleurs, 100% = N&B) */
+  object-position: 70% 45%;             /* Cadre le visage ← MODIFIABLE */
+  transform: scaleX(-1);               /* Miroir horizontal */
   display: block;
+  image-rendering: high-quality;
+  filter: grayscale(15%);              /* Légèrement désaturé ← MODIFIABLE (0% = couleurs, 100% = N&B) */
 }
 
 /* Grille bio (texte) + side (compétences/formation) */
@@ -1812,7 +1818,7 @@ footer {
 
   /* Page About */
   .about-hero { padding: calc(var(--nav-h) + 56px) 24px 48px; flex-direction: column-reverse; align-items: flex-start; }
-  .about-hero-photo img { width: 160px; height: 160px; } /* Photo plus petite sur mobile */
+  .about-hero-photo { width: 160px; height: 160px; } /* Photo plus petite sur mobile */
   .about-grid           { padding: 0 24px 56px; }
 
   /* Section contact */
