@@ -209,7 +209,7 @@ const PROJECTS = [
     categoryLabel: 'Personal Project',
     year:          '2025',
     shortDesc:     'Prototyping fast-paced platformers',
-    intro:         "Inspired by the fluid momentum of Mirror's Edge and Ghostrunner, I developed a high-speed movement prototype focused on kinetic feedback and precise player control. My work centred on creating a seamless synergy between player velocity and visual immersion:",
+    intro:         "Inspired by the fluid momentum of Mirror's Edge and Ghostrunner, I developed a high-speed movement prototype focused on kinetic feedback and precise player control. My work centred on creating a seamless synergy between player velocity and visual immersion :",
     bullets: [
       {
         title: 'Kinetic Feedback & Velocity Visualisation',
@@ -280,7 +280,7 @@ const PROJECTS = [
     category:      'school',
     categoryLabel: 'School Project',
     year:          '2026',
-    shortDesc:     'Graduation Project (In Progress)',
+    shortDesc:     'Graduation Project',
     intro:         "A project that places nervous gameplay and visual clarity at the heart of every design decision, with DOOM 2016 as a reference.",
     bullets: [
       {
@@ -345,7 +345,7 @@ const PROJECTS = [
     category:      'school',
     categoryLabel: 'School Project',
     year:          '2025',
-    shortDesc:     '1-Week Team Workshop as Game Designer / Level Designer',
+    shortDesc:     '1-Week Team Exercise as Game Designer / Level Designer',
     intro:         "During this week-long collaboration, I served as the bridge between design and code. My goal was to create a highly responsive jetpack system by defining clear technical requirements for the programming team while ensuring a polished player experience:",
     bullets: [
       {
@@ -382,7 +382,7 @@ const PROJECTS = [
     category:      'school',
     categoryLabel: 'School Project',
     year:          '2025',
-    shortDesc:     '1-Week Team Workshop as Game Designer / Level Designer',
+    shortDesc:     '1-Week Team Exercise as Game Designer / Level Designer',
     intro:         "I designed an immersive horror experience where the player explores an abandoned factory through the lens of a live stream. My goal was to merge industrial realism with a claustrophobic 'Found Footage' aesthetic, centred on three technical pillars:",
     bullets: [
       {
