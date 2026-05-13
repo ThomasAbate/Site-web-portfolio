@@ -724,6 +724,30 @@ a[download].dl-anim svg {
 /* Micro-animation au clic (JavaScript ajoute/enlève cette classe) */
 .filter-btn.clicked { transform: scale(0.92); }
 
+/* Badge de comptage affiché à côté du label de chaque filtre */
+.filter-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  margin-left: 8px;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  border-radius: 20px;
+  background: rgba(255,255,255,0.08);
+  color: var(--muted);
+  vertical-align: middle;
+  transition: background 0.25s ease, color 0.25s ease;
+}
+.filter-btn:hover .filter-count,
+.filter-btn.active .filter-count {
+  background: rgba(255,255,255,0.15);
+  color: var(--text);
+}
+
 /* Grille des projets sur la page Works (3 colonnes, même que featured-grid) */
 .works-grid {
   display: grid;

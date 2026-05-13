@@ -269,6 +269,13 @@ function renderWorks() {
   const btns = document.querySelectorAll('.filter-btn'); /* Boutons de filtre */
   if (!grid) return; /* N'existe que sur works.html */
 
+  /* Injecte un badge de comptage dans chaque bouton de filtre */
+  btns.forEach(btn => {
+    const cat = btn.dataset.cat;
+    const count = cat === 'all' ? PROJECTS.length : PROJECTS.filter(p => p.category === cat).length;
+    btn.innerHTML += `<span class="filter-count">${count}</span>`;
+  });
+
   /* Vide la grille et la re-remplit avec les projets de la catégorie 'cat' */
   function render(cat) {
     grid.innerHTML = ''; /* Vide la grille */
