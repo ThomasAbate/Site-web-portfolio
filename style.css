@@ -112,24 +112,31 @@ img { display: block; max-width: 100%; }
    NAVIGATION — La barre fixe en haut de l'écran
    ============================================================ */
 nav {
-  position: fixed;              /* Reste collée en haut même quand on scrolle */
-  top: 0; left: 0; right: 0;   /* S'étend sur toute la largeur de l'écran */
-  height: var(--nav-h);         /* Hauteur définie dans les variables (64px) */
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: var(--nav-h);
   display: flex;
-  align-items: center;          /* Centre les éléments verticalement */
-  justify-content: space-between; /* Logo à gauche, liens à droite */
-  padding: 0 56px;              /* Espace intérieur gauche/droite ← MODIFIABLE */
-
-  /* Fond semi-transparent avec flou derrière (effet "verre givré")
-     rgba(14, 12, 8, 0.88) = même couleur que --bg mais à 88% d'opacité
-     backdrop-filter: blur = flou ce qui est derrière la nav */
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 56px;
   background: rgba(14, 12, 8, 0.88);
   backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px); /* Version Safari */
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border);
+  z-index: 10000;
+  transition: background var(--ease);
+}
 
-  border-bottom: 1px solid var(--border); /* Fine ligne séparatrice en bas */
-  z-index: 10000;               /* La nav se superpose au-dessus de tout le reste */
-  transition: background var(--ease); /* Transition douce si le fond change */
+/* Barre de progression scroll — fine ligne en bas de la nav */
+.scroll-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 4px;
+  width: 0%;
+  background: #dc7020;
+  z-index: 99999;
+  pointer-events: none;
 }
 
 /* --- Logo "Thomas Abate" dans la nav --- */
@@ -160,25 +167,23 @@ nav {
   display: inline-block;        /* Permet d'appliquer transform (translateY) */
 }
 
-/* --- Soulignement animé sous chaque lien ---
-   Technique : on crée un pseudo-élément invisible (scaleX 0 = width 0)
-   qui s'étire à la largeur du lien au survol (scaleX 1 = 100%). */
+/* --- Soulignement animé sous chaque lien --- */
 .nav-links a::after {
-  content: '';                  /* Obligatoire pour que ::after existe */
+  content: '';
   position: absolute;
   bottom: 0; left: 0;
-  width: 100%; height: 1px;     /* Fine ligne de 1px ← MODIFIABLE */
-  background: var(--text);
-  transform: scaleX(0);         /* Invisible par défaut (largeur = 0) */
-  transform-origin: left center; /* L'animation part de la gauche */
-  transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1); /* Animation fluide */
+  width: 100%; height: 1px;
+  background: rgba(255,255,255,0.35);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* --- Effets au survol d'un lien --- */
 .nav-links a:hover {
-  color: var(--text);                           /* Texte pleine couleur */
-  transform: translateY(-2px);                  /* Monte légèrement de 2px ← MODIFIABLE */
-  text-shadow: 0 0 18px rgba(255,255,255,0.25); /* Lueur blanche subtile */
+  color: var(--text);
+  transform: translateY(-2px);
+  text-shadow: 0 0 18px rgba(255,255,255,0.25);
 }
 
 /* Soulignement visible au survol */
@@ -502,12 +507,12 @@ nav {
 
 .card-img img {
   width: 100%; height: 100%;
-  object-fit: cover; /* L'image remplit le cadre sans se déformer (recadrage centré) */
+  object-fit: cover;
   transition: transform 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
 /* L'image zoome doucement au survol de la carte */
-.card:hover .card-img img { transform: scale(1.05); } /* ← MODIFIABLE */
+.card:hover .card-img img { transform: scale(1.05); }
 
 /* Placeholder si pas d'image pour le projet */
 .card-img-placeholder {
@@ -1282,11 +1287,10 @@ footer {
    quand ils entrent dans le champ de vision (géré par JavaScript avec IntersectionObserver) */
 .reveal {
   opacity: 0;
-  transform: translateY(24px); /* Décalé de 24px vers le bas ← MODIFIABLE */
-  transition: opacity 0.6s ease, transform 0.6s ease; /* Durée de l'apparition ← MODIFIABLE */
+  transform: translateY(24px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
 }
 .reveal.visible {
-  /* JavaScript ajoute .visible quand l'élément est à l'écran */
   opacity: 1;
   transform: translateY(0);
 }

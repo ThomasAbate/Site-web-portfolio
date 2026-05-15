@@ -173,15 +173,10 @@
 (function initReveal() {
   const io = new IntersectionObserver(
     entries => entries.forEach(e => {
-      /* Quand l'élément est visible : ajoute .visible et arrête de l'observer */
       if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); }
     }),
-    {
-      threshold: 0.12 /* L'élément doit être visible à 12% pour déclencher l'animation
-                         ← MODIFIABLE : 0 = dès qu'un pixel entre, 0.5 = à moitié visible */
-    }
+    { threshold: 0.12 }
   );
-  /* Observe tous les éléments marqués .reveal dans la page */
   document.querySelectorAll('.reveal').forEach(el => io.observe(el));
 })();
 
@@ -246,8 +241,7 @@ function renderFeatured() {
   /* Récupère les projets en vedette (filtrés et triés dans data.js) */
   getHomeFeatured().forEach(p => wrap.appendChild(buildCard(p)));
 
-  /* Re-déclenche le scroll-reveal pour les nouvelles cartes injectées dynamiquement
-     (le premier initReveal() au chargement ne voit pas les éléments créés après) */
+  /* Re-déclenche le scroll-reveal pour les nouvelles cartes injectées dynamiquement */
   document.querySelectorAll('.reveal:not(.visible)').forEach(el => {
     const io = new IntersectionObserver(entries => {
       entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); } });
@@ -1131,6 +1125,27 @@ function initScrollTopBtn() {
   });
 }
 
+/* ─────────────────────────────────────────────────────────────────────────────
+   SCROLL PROGRESS BAR — Fine barre colorée qui se remplit au fur et à mesure
+   ───────────────────────────────────────────────────────────────────────────── */
+function initScrollBar() {
+  const bar = document.getElementById('scrollBar');
+  if (!bar) return;
+
+  let ticking = false;
+  window.addEventListener('scroll', () => {
+    if (ticking) return;
+    requestAnimationFrame(() => {
+      const scrolled  = window.scrollY;
+      const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+      bar.style.width = maxScroll > 0 ? `${(scrolled / maxScroll) * 100}%` : '0%';
+      ticking = false;
+    });
+    ticking = true;
+  }, { passive: true });
+
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   initHeroArrow();       /* Chevrons animés à gauche du nom (index.html uniquement) */
   initLoaderFlip();      /* FLIP : nom du loader → position hero (index.html uniquement) */
@@ -1142,4 +1157,5 @@ document.addEventListener('DOMContentLoaded', () => {
   initReel();            /* Demo Reel hover + modal (index.html uniquement) */
   initDownloadBtns();    /* Animation boutons CV (about.html uniquement) */
   initScrollTopBtn();    /* Bouton retour en haut (toutes les pages) */
+  initScrollBar();       /* Barre de progression scroll (toutes les pages) */
 });
