@@ -160,9 +160,10 @@ const PROJECTS = [
     mainImageSlug: 'picture/splinter-cell-prototype/main.png',
     trailerID:     'P28pe9pNZCQ',
     gallery: [
-      { slug: 'picture/splinter-cell-prototype/gallery-Shadow_Map.png',    title: 'Shadow Map' },
-      { slug: 'picture/splinter-cell-prototype/gallery-light-sensor.png',  title: 'Light Sensor' },
-      { slug: 'picture/splinter-cell-prototype/gallery-Seencomponet2d.png', title: 'Scene Capture 2D' },
+      { slug: 'picture/splinter-cell-prototype/gallery-Shadow_Map.png',           title: 'Shadow Map' },
+      { slug: 'picture/splinter-cell-prototype/gallery-light-sensor.png',         title: 'Light Sensor' },
+      { slug: 'picture/splinter-cell-prototype/gallery-Seencomponet2d.png',         title: 'Scene Capture 2D' },
+      { slug: 'picture/splinter-cell-prototype/gallery-light-sensor-blueprint.png', title: 'Light Sensor Blueprint' },
     ],
     featured: true,
     homeFeatured: true,
