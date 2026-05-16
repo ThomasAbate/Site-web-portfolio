@@ -132,11 +132,32 @@ nav {
   position: fixed;
   top: 0;
   left: 0;
-  height: 4px;
+  height: 2px;
   width: 0%;
   background: #dc7020;
+  opacity: 0.7;
+  box-shadow: 0 0 8px rgba(220, 112, 32, 0.6);
   z-index: 99999;
   pointer-events: none;
+  overflow: hidden;
+  transition: width 0.1s linear, opacity 0.4s ease;
+}
+
+/* Reflet lumineux qui glisse en boucle */
+.scroll-bar::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 40%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent);
+  transform: translateX(-150%);
+  animation: bar-shimmer 2s ease-in-out infinite;
+}
+
+@keyframes bar-shimmer {
+  0%   { transform: translateX(-150%); }
+  100% { transform: translateX(350%); }
 }
 
 /* --- Logo "Thomas Abate" dans la nav --- */
@@ -1283,12 +1304,11 @@ footer {
   to   { opacity: 1; transform: translateY(0);    } /* Arrivée : visible + position normale */
 }
 
-/* Classe .reveal : les éléments partent invisibles et apparaissent
-   quand ils entrent dans le champ de vision (géré par JavaScript avec IntersectionObserver) */
+/* Classe .reveal : fade + remontée au scroll (éléments non couverts par initScrollFade) */
 .reveal {
   opacity: 0;
-  transform: translateY(24px);
-  transition: opacity 0.6s ease, transform 0.6s ease;
+  transform: translateY(20px);
+  transition: opacity 0.55s ease, transform 0.55s ease;
 }
 .reveal.visible {
   opacity: 1;

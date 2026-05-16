@@ -1138,12 +1138,70 @@ function initScrollBar() {
     requestAnimationFrame(() => {
       const scrolled  = window.scrollY;
       const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
-      bar.style.width = maxScroll > 0 ? `${(scrolled / maxScroll) * 100}%` : '0%';
+      bar.style.width  = maxScroll > 0 ? `${(scrolled / maxScroll) * 100}%` : '0%';
+      bar.style.opacity = scrolled > 80 ? '0.7' : '0'; /* invisible tout en haut */
       ticking = false;
     });
     ticking = true;
   }, { passive: true });
 
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   SCROLL FADE — Les sections apparaissent/disparaissent selon leur position écran
+   ───────────────────────────────────────────────────────────────────────────── */
+function initScrollFade() {
+  /* ── Sections : fade + parallax rapide ──────────────────────────────────── */
+  const sectionEls = Array.from(document.querySelectorAll(
+    'section:not(.hero):not(.about-hero):not(.works-header), .about-grid, .project-body, .project-trailer-wrap, .project-gallery-wrap'
+  ));
+
+  /* ── Textes : parallax léger (utilise `translate` pour ne pas écraser
+        la transition `transform` des éléments .reveal) ─────────────────────
+     Exclusions : nav, loader, cartes de projet (le texte resterait figé
+     par rapport à l'image de la carte, ce qui serait étrange)             */
+  const textEls = Array.from(document.querySelectorAll(
+    'h1, h2, h3, p, .section-tag, .hero-eyebrow, .hero-title, .hero-name-wrap, .project-intro, .project-tag, .project-subtitle, .sidebar-label, .sidebar-value'
+  )).filter(el =>
+    !el.closest('nav') &&
+    !el.closest('#loader') &&
+    !el.closest('.card') &&
+    !el.closest('.card-img')
+  );
+
+  if (!sectionEls.length && !textEls.length) return;
+
+  const ENTER         = 350;
+  const EXIT          = 100;
+  const SECTION_SPEED = 0.06;
+  const TEXT_SPEED    = 0.025; /* plus lent → texte "flotte" devant les sections */
+
+  function loop() {
+    const vh = window.innerHeight;
+
+    /* Sections — fade + parallax via transform */
+    sectionEls.forEach(el => {
+      const { top, bottom } = el.getBoundingClientRect();
+      let o = 1;
+      if (top > vh - ENTER) o = Math.max(0, (vh - top) / ENTER);
+      if (bottom < EXIT)    o = Math.min(o, Math.max(0, bottom / EXIT));
+      el.style.opacity = o.toFixed(2);
+      const center    = (top + bottom) / 2 - vh / 2;
+      el.style.translate = `0 ${((1 - o) * 20 + center * SECTION_SPEED).toFixed(1)}px`;
+    });
+
+    /* Textes — parallax seul via `translate` (propriété CSS individuelle,
+       se compose avec transform sans l'écraser) */
+    textEls.forEach(el => {
+      const { top, bottom } = el.getBoundingClientRect();
+      const center = (top + bottom) / 2 - vh / 2;
+      el.style.translate = `0 ${(center * TEXT_SPEED).toFixed(1)}px`;
+    });
+
+    requestAnimationFrame(loop);
+  }
+
+  requestAnimationFrame(loop);
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -1158,4 +1216,5 @@ document.addEventListener('DOMContentLoaded', () => {
   initDownloadBtns();    /* Animation boutons CV (about.html uniquement) */
   initScrollTopBtn();    /* Bouton retour en haut (toutes les pages) */
   initScrollBar();       /* Barre de progression scroll (toutes les pages) */
+  initScrollFade();      /* Fade in/out des éléments selon leur position (toutes les pages) */
 });
