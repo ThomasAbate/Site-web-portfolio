@@ -24,6 +24,10 @@
 
   <!-- Loader : skippé uniquement si on vient d'un lien interne (pas sur F5/refresh) -->
   <script>
+    /* Empêche le navigateur de restaurer la position de scroll au rechargement */
+    if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+    window.scrollTo(0, 0);
+
     /* Le flag est posé par initPageTransitions() juste avant chaque navigation interne.
        F5 / ouverture directe / nouvel onglet ne posent jamais ce flag → loader visible. */
     if (sessionStorage.getItem('internalNav')) {
@@ -31,9 +35,17 @@
       document.documentElement.classList.add('loader-skip');
     }
 
+    /* Bloque le scroll pendant le loader (sauf si loader ignoré) */
+    if (!document.documentElement.classList.contains('loader-skip')) {
+      document.documentElement.style.overflow = 'hidden';
+    }
+
     window.addEventListener('load', function () {
       var l = document.getElementById('loader');
-      if (l) setTimeout(function () { l.remove(); }, 5100);
+      if (l) setTimeout(function () {
+        l.remove();
+        document.documentElement.style.overflow = '';
+      }, 5100);
     });
 
     document.addEventListener('DOMContentLoaded', function () {
@@ -314,7 +326,7 @@
 
   <div id="scrollBar" class="scroll-bar"></div>
   <script src="js/data.js?v=3"></script>
-  <script src="js/app.js?v=20"></script>
+  <script src="js/app.js?v=21"></script>
   <script src="js/boids.js?v=4"></script>
 </body>
 </html>

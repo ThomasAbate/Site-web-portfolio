@@ -1233,19 +1233,35 @@ function initScrollBar() {
   const bar = document.getElementById('scrollBar');
   if (!bar) return;
 
-  let ticking = false;
-  window.addEventListener('scroll', () => {
-    if (ticking) return;
-    requestAnimationFrame(() => {
-      const scrolled  = window.scrollY;
-      const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
-      bar.style.width  = maxScroll > 0 ? `${(scrolled / maxScroll) * 100}%` : '0%';
-      bar.style.opacity = scrolled > 80 ? '0.7' : '0'; /* invisible tout en haut */
-      ticking = false;
-    });
-    ticking = true;
-  }, { passive: true });
+  function enableBar() {
+    let ticking = false;
+    window.addEventListener('scroll', () => {
+      if (ticking) return;
+      requestAnimationFrame(() => {
+        const scrolled  = window.scrollY;
+        const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+        bar.style.width  = maxScroll > 0 ? `${(scrolled / maxScroll) * 100}%` : '0%';
+        bar.style.opacity = scrolled > 80 ? '0.7' : '0';
+        ticking = false;
+      });
+      ticking = true;
+    }, { passive: true });
+  }
 
+  const loader = document.getElementById('loader');
+  if (!loader) { enableBar(); return; }
+
+  /* Loader présent : cacher la barre et attendre sa suppression du DOM */
+  bar.style.opacity = '0';
+  bar.style.width = '0%';
+  const obs = new MutationObserver(() => {
+    if (!document.getElementById('loader')) {
+      obs.disconnect();
+      bar.style.opacity = '';
+      enableBar();
+    }
+  });
+  obs.observe(document.body, { childList: true });
 }
 
 /* ─────────────────────────────────────────────────────────────────────────────
