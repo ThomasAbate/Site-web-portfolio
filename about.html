@@ -12,7 +12,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=9">
+  <link rel="stylesheet" href="style.css?v=22">
 </head>
 <body>
 
@@ -91,55 +91,86 @@
         </p>
     </div>
 
-    <!-- ── Colonne droite : Compétences, Formation, Langues ──────────────── -->
+    <!-- ── Colonne droite : onglets Skills / Education / Languages ──────── -->
     <aside class="about-side">
 
-      <!-- Bloc Compétences techniques
-           POUR AJOUTER UNE COMPÉTENCE : ajouter un <span class="skill-pill">Texte</span>
-           ← MODIFIABLE -->
-      <div class="side-block">
-        <div class="side-label">Technical Skills</div>
+      <!-- Barre d'onglets -->
+      <div class="side-tabs">
+        <button class="side-tab active" data-tab="skills">Skills</button>
+        <button class="side-tab" data-tab="education">Education</button>
+      </div>
+
+      <!-- Panneaux empilés en grid pour le fondu -->
+      <div class="side-panels-wrap">
+
+      <!-- Panneau Skills -->
+      <div class="side-panel active" id="tab-skills">
+        <div class="skill-cat">Game Design</div>
+        <div class="skills-wrap">
+          <span class="skill-pill">3C Design</span>
+          <span class="skill-pill">Game Feel</span>
+          <span class="skill-pill">Systems Design</span>
+          <span class="skill-pill">Rapid Prototyping</span>
+          <span class="skill-pill">Blueprint</span>
+        </div>
+
+        <div class="skill-cat">Level Design</div>
+        <div class="skills-wrap">
+          <span class="skill-pill">Pacing</span>
+          <span class="skill-pill">Metrics</span>
+          <span class="skill-pill">Greyboxing</span>
+        </div>
+
+        <div class="skill-cat">QA</div>
+        <div class="skills-wrap">
+          <span class="skill-pill">Bug Tracking</span>
+          <span class="skill-pill">Collision Testing</span>
+        </div>
+
+        <div class="skill-cat">Software</div>
         <div class="skills-wrap">
           <span class="skill-pill">Unreal Engine 5</span>
-          <span class="skill-pill">Blueprint</span>
-          <span class="skill-pill">3C Design</span>
-          <span class="skill-pill">Level Design</span>
-          <span class="skill-pill">Systems Design</span>
-          <span class="skill-pill">Game Feel</span>
-          <span class="skill-pill">Rapid Prototyping</span>
           <span class="skill-pill">Perforce</span>
           <span class="skill-pill">Git</span>
           <span class="skill-pill">Photoshop</span>
           <span class="skill-pill">Google Suite</span>
         </div>
-      </div>
 
-      <!-- Bloc Formation
-           POUR AJOUTER UNE FORMATION : copier un bloc <div class="edu-item">...</div>
-           ← MODIFIABLE -->
-      <div class="side-block">
-        <div class="side-label">Education</div>
-        <div class="edu-item">
-          <div class="edu-school">ARTFX</div><!-- Nom de l'école ← MODIFIABLE -->
-          <div class="edu-degree">Master's Degree in Game Design</div><!-- Diplôme ← MODIFIABLE -->
-        </div>
-        <div class="edu-item">
-          <div class="edu-school">La Salle</div>
-          <div class="edu-degree">Scientific High School Diploma, STI2D</div>
-        </div>
-      </div>
-
-      <!-- Bloc Langues
-           skill-pill--fr : affiche le drapeau français au survol (défini dans style.css)
-           skill-pill--en : affiche le drapeau britannique au survol
-           ← MODIFIABLE : modifier le texte ou ajouter d'autres langues -->
-      <div class="side-block">
-        <div class="side-label">Languages</div>
+        <div class="skill-cat">Languages</div>
         <div class="skills-wrap">
           <span class="skill-pill skill-pill--fr">French (Native)</span>
           <span class="skill-pill skill-pill--en">English (Professional)</span>
         </div>
+
+        <div class="skill-cat">Other</div>
+        <div class="skills-wrap">
+          <span class="skill-pill">Video Editing</span>
+        </div>
       </div>
+
+      <!-- Panneau Education -->
+      <div class="side-panel" id="tab-education">
+        <div class="edu-item">
+          <div class="edu-school">ARTFX</div>
+          <div class="edu-type">Digital Art School</div>
+          <div class="edu-degree">Master's Degree in Game Design — RNCP Level 7</div>
+          <div class="edu-location">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
+            Montpellier
+          </div>
+        </div>
+        <div class="edu-item">
+          <div class="edu-school">La Salle</div>
+          <div class="edu-type">High School</div>
+          <div class="edu-degree">Scientific High School Diploma, STI2D</div>
+          <div class="edu-location">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
+            Avignon
+          </div>
+        </div>
+      </div>
+
+      </div><!-- /.side-panels-wrap -->
 
     </aside>
   </div>
@@ -241,7 +272,7 @@
 
   <div id="scrollBar" class="scroll-bar"></div>
   <script src="js/data.js?v=3"></script>
-  <script src="js/app.js?v=12"></script>
+  <script src="js/app.js?v=16"></script>
   <!-- boids.js = champ de particules reliées (fond animé) — uniquement sur cette page -->
   <script src="js/boids.js?v=4"></script>
 </body>

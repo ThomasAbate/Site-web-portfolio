@@ -1166,7 +1166,8 @@ function initScrollFade() {
     !el.closest('nav') &&
     !el.closest('#loader') &&
     !el.closest('.card') &&
-    !el.closest('.card-img')
+    !el.closest('.card-img') &&
+    !el.closest('.about-side')
   );
 
   if (!sectionEls.length && !textEls.length) return;
@@ -1204,6 +1205,42 @@ function initScrollFade() {
   requestAnimationFrame(loop);
 }
 
+/* ─────────────────────────────────────────────────────────────────────────────
+   SIDE TABS — Onglets Skills / Education / Languages (about.html)
+   ───────────────────────────────────────────────────────────────────────────── */
+function initSideTabs() {
+  const tabs   = document.querySelectorAll('.side-tab');
+  const panels = document.querySelectorAll('.side-panel');
+  if (!tabs.length) return;
+
+  let lockedTab = tabs[0]; /* Skills verrouillé par défaut */
+
+  function showTab(tab) {
+    tabs.forEach(t => t.classList.remove('active'));
+    panels.forEach(p => p.classList.remove('active'));
+    tab.classList.add('active');
+    const target = document.getElementById('tab-' + tab.dataset.tab);
+    if (target) target.classList.add('active');
+  }
+
+  /* Affichage initial */
+  showTab(lockedTab);
+
+  tabs.forEach(tab => {
+    /* Hover → affiche temporairement */
+    tab.addEventListener('mouseenter', () => showTab(tab));
+
+    /* Mouse leave → revient au tab verrouillé */
+    tab.addEventListener('mouseleave', () => showTab(lockedTab));
+
+    /* Clic → verrouille ce tab */
+    tab.addEventListener('click', () => {
+      lockedTab = tab;
+      showTab(tab);
+    });
+  });
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   initHeroArrow();       /* Chevrons animés à gauche du nom (index.html uniquement) */
   initLoaderFlip();      /* FLIP : nom du loader → position hero (index.html uniquement) */
@@ -1214,6 +1251,7 @@ document.addEventListener('DOMContentLoaded', () => {
   renderProject();       /* Page de détail d'un projet (project.html uniquement) */
   initReel();            /* Demo Reel hover + modal (index.html uniquement) */
   initDownloadBtns();    /* Animation boutons CV (about.html uniquement) */
+  initSideTabs();        /* Onglets sidebar (about.html uniquement) */
   initScrollTopBtn();    /* Bouton retour en haut (toutes les pages) */
   initScrollBar();       /* Barre de progression scroll (toutes les pages) */
   initScrollFade();      /* Fade in/out des éléments selon leur position (toutes les pages) */

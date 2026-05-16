@@ -1,4 +1,4 @@
-/* ============================================================
+﻿/* ============================================================
    style.css — Portfolio de Thomas Abate
    ============================================================
    COMMENT LIRE CE FICHIER :
@@ -163,9 +163,14 @@ nav {
 /* --- Logo "Thomas Abate" dans la nav --- */
 .nav-logo {
   font-size:      13px;
-  font-weight:    700;           /* Gras */
-  letter-spacing: 0.18em;       /* Espacement entre les lettres ← MODIFIABLE */
-  text-transform: uppercase;    /* Tout en majuscules */
+  font-weight:    700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  transition: letter-spacing 0.4s ease, color 0.3s ease;
+}
+.nav-logo:hover {
+  letter-spacing: 0.30em;
+  color: var(--accent);
 }
 
 /* --- Liste des liens de navigation (Home, Work, About, CV) --- */
@@ -1181,6 +1186,76 @@ a[download].dl-anim svg {
   color: var(--muted); margin-bottom: 20px;
 }
 
+/* ── Onglets de la sidebar (Skills / Education / Languages) ── */
+.side-tabs {
+  display: flex;
+  gap: 0;
+  margin-bottom: 28px;
+  border-bottom: 1px solid var(--border);
+}
+.side-tab {
+  background: none;
+  border: none;
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+  padding: 10px 16px;
+  cursor: pointer;
+  position: relative;
+  transition: color 0.2s ease, letter-spacing 0.3s ease, transform 0.2s ease;
+}
+.side-tab::after {
+  content: '';
+  position: absolute;
+  bottom: -1px; left: 0; right: 0;
+  height: 2px;
+  background: var(--accent);
+  transform: scaleX(0);
+  transform-origin: left center;
+  opacity: 0.4;
+  transition: transform 0.25s ease, opacity 0.25s ease;
+}
+.side-tab:hover {
+  color: var(--text);
+  letter-spacing: 0.20em;
+  transform: translateY(-2px);
+}
+.side-tab:hover::after { transform: scaleX(1); }
+.side-tab.active { color: var(--text); }
+.side-tab.active::after { transform: scaleX(1); opacity: 1; }
+
+/* Conteneur empilé — les panneaux se superposent pour le fondu */
+.side-panels-wrap {
+  display: grid;
+}
+.side-panel {
+  grid-area: 1 / 1;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+.side-panel.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Label de sous-catégorie dans le bloc Skills */
+.skill-cat {
+  font-size: 10px; font-weight: 700;
+  letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--text);
+  margin-top: 24px; margin-bottom: 10px;
+  padding: 4px 10px;
+  border-left: 2px solid var(--accent);
+  background: rgba(255,255,255,0.04);
+  border-radius: 0 4px 4px 0;
+  display: inline-block;
+}
+.skill-cat:first-of-type { margin-top: 0; }
+
 /* Conteneur des "pills" de compétences */
 .skills-wrap { display: flex; flex-wrap: wrap; gap: 8px; }
 
@@ -1199,18 +1274,16 @@ a[download].dl-anim svg {
   border-color: rgba(255,255,255,0.2);
 }
 
-/* Drapeaux en arrière-plan au survol des pills de langue ---
-   ::before crée un pseudo-élément invisible par défaut (opacity 0)
-   qui devient légèrement visible au survol (opacity 0.28). */
+/* Drapeaux en arrière-plan au survol des pills de langue */
 .skill-pill--fr::before, .skill-pill--en::before {
   content: '';
   position: absolute; inset: 0;
   opacity: 0;
   transition: opacity 0.35s ease;
   background-size: cover; background-position: center;
-  z-index: -1; /* Derrière le texte */
+  z-index: -1;
 }
-.skill-pill--fr:hover::before { opacity: 0.28; } /* ← MODIFIABLE (0 = pas de drapeau, 1 = opaque) */
+.skill-pill--fr:hover::before { opacity: 0.28; }
 .skill-pill--en:hover::before { opacity: 0.28; }
 
 /* Drapeau français (tricolore en dégradé CSS) */
@@ -1224,7 +1297,6 @@ a[download].dl-anim svg {
   background-size: cover;
 }
 /* isolation + z-index = garantit que le texte reste lisible par-dessus le drapeau */
-.skill-pill--fr span, .skill-pill--en span,
 .skill-pill--fr, .skill-pill--en { isolation: isolate; }
 .skill-pill--fr > *, .skill-pill--en > * { position: relative; z-index: 1; }
 
@@ -1236,8 +1308,13 @@ a[download].dl-anim svg {
   background: var(--border); margin-top: 14px;
 }
 .edu-item:last-child::after { display: none; } /* Pas de ligne après le dernier */
-.edu-school { font-size: 14px; font-weight: 700; margin-bottom: 3px; }
-.edu-degree { font-size: 12.5px; color: var(--muted); }
+.edu-school  { font-size: 14px; font-weight: 700; margin-bottom: 3px; }
+.edu-type    { font-size: 11.5px; color: var(--muted); opacity: 0.7; margin-bottom: 4px; }
+.edu-degree  { font-size: 12.5px; color: var(--muted); margin-bottom: 4px; }
+.edu-location {
+  font-size: 11.5px; color: var(--muted); opacity: 0.6;
+  display: flex; align-items: center; gap: 4px;
+}
 
 /* Section contact au bas de la page About */
 .contact-section {
@@ -2097,3 +2174,4 @@ footer {
   stroke-linecap: round;
   stroke-linejoin: round;
 }
+
