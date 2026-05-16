@@ -1201,11 +1201,12 @@ a[download].dl-anim svg {
   font-weight: 600;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--muted);
+  color: #fff;
+  opacity: 0.25;
   padding: 10px 16px;
   cursor: pointer;
   position: relative;
-  transition: color 0.2s ease, letter-spacing 0.3s ease, transform 0.2s ease;
+  transition: opacity 0.25s ease, letter-spacing 0.3s ease, transform 0.2s ease;
 }
 .side-tab::after {
   content: '';
@@ -1215,16 +1216,15 @@ a[download].dl-anim svg {
   background: var(--accent);
   transform: scaleX(0);
   transform-origin: left center;
-  opacity: 0.4;
-  transition: transform 0.25s ease, opacity 0.25s ease;
+  transition: transform 0.25s ease;
 }
 .side-tab:hover {
-  color: var(--text);
+  opacity: 1;
   letter-spacing: 0.20em;
   transform: translateY(-2px);
 }
-.side-tab:hover::after { transform: scaleX(1); }
-.side-tab.active { color: var(--text); }
+.side-tab:hover::after { transform: scaleX(1); opacity: 0.5; }
+.side-tab.active { opacity: 1; }
 .side-tab.active::after { transform: scaleX(1); opacity: 1; }
 
 /* Conteneur empilé — les panneaux se superposent pour le fondu */
