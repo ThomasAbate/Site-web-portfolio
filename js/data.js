@@ -293,12 +293,12 @@ const PROJECTS = [
         text:  "I designed the game space to be both <strong>immediately readable and rhythmically efficient</strong>, following the conventions of arena combat.<ul><li><strong>Tension Curve</strong> : I orchestrated enemy spawns and health resource distribution to build a <strong>controlled tension</strong>, alternating between intense pressure and breathing room, keeping the player in a constant state of engagement.</li><li><strong>Spatial Readability</strong> : Every space was designed to <strong>communicate its purpose at a glance</strong> (arena, transition zone, narrative room), ensuring fluid action and intuitive navigation.</li><li><strong>DOOM 2016 Metrics</strong> : The level architecture is built on <strong>precise metrics drawn directly from DOOM 2016 analysis</strong>, ensuring full consistency between player movement and environment dimensions.</li></ul>",
       },
       {
-        title: 'Production & Quality',
-        text:  "Particular attention was given to <strong>polish</strong>, both on a technical and documentary level.<ul><li><strong>In-Game Cinematics</strong> : I designed and integrated all cinematic sequences, ensuring a <strong>seamless transition between gameplay and narrative</strong>.</li><li><strong>Production Tracking & Debug</strong> : I maintained <strong>rigorous debug documentation</strong> throughout development, allowing me to stabilize the experience and refine the details that make the difference in the final build.</li></ul>",
+        title: 'QA & Polish',
+        text:  "Particular attention was given to <strong>polish</strong>, both on a technical and documentary level.<ul><li><strong>In-Game Cinematics</strong> : I designed and integrated all cinematic sequences, ensuring a <strong>seamless transition between gameplay and narrative</strong>.</li><li><strong>QA & Debug</strong> : I maintained <strong>rigorous debug documentation</strong> throughout development, allowing me to stabilize the experience and refine the details that make the difference in the final build.</li></ul>",
       },
     ],
     mainImageSlug: 'picture/fk-this-job/main.png',
-    trailerID:     null, /* ← null = pas de trailer, la section sera cachée */
+    trailerID:     'mSV1teYZh-c',
     gallery: [
       { slug: 'picture/fk-this-job/Gallery-FeedBack For Player.jpg',   title: 'Feedback For Player' },
       { slug: 'picture/fk-this-job/Gallery-Weapon Positioning.jpg',    title: 'Weapon Positioning' },
