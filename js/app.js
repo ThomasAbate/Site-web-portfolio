@@ -665,7 +665,7 @@ function openLightbox(imgs, idx) {
     document.getElementById('lbZoomOut').addEventListener('click', e => {
       e.stopPropagation();
       _lbScale = Math.max(ZOOM_MIN, _lbScale - ZOOM_STEP);
-      if (_lbScale === ZOOM_MIN) { _lbTransX = 0; _lbTransY = 0; }
+      if (_lbScale <= 1) { _lbTransX = 0; _lbTransY = 0; }
       _lbApplyZoom();
     });
 
