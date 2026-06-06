@@ -906,10 +906,11 @@ a[download].dl-anim svg {
 
 /* Boutons plateforme — même style que .btn-outline du site + couleurs de plateforme */
 .sidebar-links { display: flex; flex-direction: column; gap: 8px; margin-top: 14px; }
+
 .platform-btn {
   display: inline-flex; align-items: center; justify-content: center;
-  gap: 8px;
-  padding: 12px 10px;
+  gap: 10px;
+  padding: 14px 20px;
   width: 100%;
   border: 1px solid rgba(255,255,255,0.2);
   font-size: 11px; font-weight: 600;
