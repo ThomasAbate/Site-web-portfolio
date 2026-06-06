@@ -91,6 +91,7 @@ const PROJECTS = [
     ],
     mainImageSlug: 'picture/mask-snatchers/main.png',
     trailerID:     'hBTu7WFeQU0',
+    ggjURL:        'https://globalgamejam.org/games/2026/mask-snatchers-5',
     gallery: [
       { slug: 'picture/mask-snatchers/gallery-Animation de course du joueur.png', title: 'Animation de course du joueur' },
       { slug: 'picture/mask-snatchers/gallery-Shared player camera.png',          title: 'Shared Player Camera' },
@@ -123,6 +124,7 @@ const PROJECTS = [
     ],
     mainImageSlug: 'picture/siamese-cowboy-cat-saloon/main.png',
     trailerID:     'j9lCIWWBivQ',
+    ggjURL:        'https://globalgamejam.org/games/2024/siamese-siamese-cowboy-cat-saloon-7',
     gallery: [
       { slug: 'picture/siamese-cowboy-cat-saloon/gallery-feedback_liste.png',      title: 'Feedback – Liste' },
       { slug: 'picture/siamese-cowboy-cat-saloon/gallery-animation-blueprint.png', title: 'Player Animation Blueprint' },
@@ -299,6 +301,8 @@ const PROJECTS = [
     ],
     mainImageSlug: 'picture/fk-this-job/main.png',
     trailerID:     'mSV1teYZh-c',
+    itchURL:       'placeholder',
+    steamURL:      'placeholder',
     gallery: [
       /* — Autre — */
       { slug: 'picture/fk-this-job/Gallery-FeedBack For Player.jpg',                      title: 'Feedback For Player' },
@@ -354,6 +358,7 @@ const PROJECTS = [
     ],
     mainImageSlug: 'picture/heart-of-darkness/main.png',
     trailerID:     '-CHgOl1frsc',
+    itchURL:       'https://artfx-school.itch.io/heart-of-darkness-remake',
     gallery: [
       { slug: 'picture/heart-of-darkness/Gallery_Bones_Render.png',          title: 'Bones Render' },
       { slug: 'picture/heart-of-darkness/Gallery_EndTreeOutside_Render.png', title: 'End Tree – Outside' },

@@ -402,6 +402,36 @@ function renderProject() {
   setText('sideCategory', project.categoryLabel);
   setText('sideYear',     project.year);
 
+  /* ── Liens plateforme (itch.io / Steam / GGJ) — icônes carrées ────── */
+  const sidebar = document.querySelector('.project-sidebar');
+  if (sidebar && (project.itchURL || project.steamURL || project.ggjURL)) {
+    const PLATFORM_ICONS = {
+      itch:  `<img src="picture/icons-itch-io.png"  alt="itch.io"          width="16" height="16" aria-hidden="true" style="object-fit:contain">`,
+      steam: `<img src="picture/icons-steam.png"    alt="Steam"            width="16" height="16" aria-hidden="true" style="object-fit:contain">`,
+      ggj:   `<img src="picture/icons-game-jam.png" alt="Global Game Jam"  width="16" height="16" aria-hidden="true" style="object-fit:contain">`,
+    };
+
+    function makePlatformBtn(url, key, label) {
+      const isPlaceholder = url === 'placeholder';
+      const tag   = isPlaceholder ? 'span' : 'a';
+      const text  = label;
+      const attrs = isPlaceholder
+        ? `class="platform-btn platform-btn--${key} platform-btn--placeholder"`
+        : `href="${url}" target="_blank" rel="noopener" class="platform-btn platform-btn--${key}"`;
+      return `<${tag} ${attrs}>${PLATFORM_ICONS[key]} ${text}</${tag}>`;
+    }
+
+    const linksBlock = document.createElement('div');
+    linksBlock.className = 'sidebar-block';
+    let linksHtml = '<div class="sidebar-label">Download</div><div class="sidebar-links">';
+    if (project.itchURL)  linksHtml += makePlatformBtn(project.itchURL,  'itch',  'itch.io');
+    if (project.steamURL) linksHtml += makePlatformBtn(project.steamURL, 'steam', 'Steam');
+    if (project.ggjURL)   linksHtml += makePlatformBtn(project.ggjURL,   'ggj',   'GGJ');
+    linksHtml += '</div>';
+    linksBlock.innerHTML = linksHtml;
+    sidebar.appendChild(linksBlock);
+  }
+
   /* ── Navigation Précédent / Suivant ──────────────────────────────────── */
   const allProjects = getProjectsByCategory('all'); /* Liste complète dans l'ordre de tri */
   const idx = allProjects.findIndex(p => p.id === project.id); /* Position du projet courant */
@@ -1284,7 +1314,8 @@ function initScrollFade() {
     !el.closest('#loader') &&
     !el.closest('.card') &&
     !el.closest('.card-img') &&
-    !el.closest('.about-side')
+    !el.closest('.about-side') &&
+    !el.closest('.project-sidebar')
   );
 
   if (!sectionEls.length && !textEls.length) return;

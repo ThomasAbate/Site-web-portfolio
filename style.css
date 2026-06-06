@@ -904,6 +904,55 @@ a[download].dl-anim svg {
 .sidebar-engine { display: flex; align-items: center; gap: 8px; }
 .ue-logo { width: 18px; height: 18px; flex-shrink: 0; object-fit: contain; position: relative; top: -1px; }
 
+/* Boutons plateforme — même style que .btn-outline du site + couleurs de plateforme */
+.sidebar-links { display: flex; flex-direction: column; gap: 8px; margin-top: 14px; }
+.platform-btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  gap: 8px;
+  padding: 12px 10px;
+  width: 100%;
+  border: 1px solid rgba(255,255,255,0.2);
+  font-size: 11px; font-weight: 600;
+  letter-spacing: 0.18em; text-transform: uppercase;
+  text-decoration: none;
+  background-size: 200% 100%;
+  background-position: right bottom;
+  transition: background-position 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+              border-color var(--ease), color var(--ease),
+              transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+/* Couleurs + gradient glissant par plateforme */
+.platform-btn--itch  { color: #fa5c5c; border-color: rgba(250,92,92,0.4);        background: linear-gradient(to right, #fa5c5c 50%, transparent 50%) right / 200%; }
+.platform-btn--steam { color: #66c0f4; border-color: rgba(102,192,244,0.4);      background: linear-gradient(to right, #66c0f4 50%, transparent 50%) right / 200%; }
+.platform-btn--ggj   { color: var(--text); border-color: rgba(255,255,255,0.2);  background: linear-gradient(to right, var(--text) 50%, transparent 50%) right / 200%; }
+
+.platform-btn--itch:not(.platform-btn--placeholder):hover  { background-position: left; color: var(--bg); border-color: #fa5c5c; transform: scale(1.05); box-shadow: 0 8px 24px rgba(250,92,92,0.3); }
+.platform-btn--steam:not(.platform-btn--placeholder):hover { background-position: left; color: var(--bg); border-color: #66c0f4; transform: scale(1.05); box-shadow: 0 8px 24px rgba(102,192,244,0.3); }
+.platform-btn--ggj:not(.platform-btn--placeholder):hover   { background-position: left; color: var(--bg); border-color: var(--text); transform: scale(1.05); box-shadow: 0 8px 24px rgba(0,0,0,0.35); }
+
+/* Icônes : colorées au repos, foncées au hover (fond coloré) */
+.platform-btn--itch  img { filter: brightness(0) invert(50%) sepia(1) hue-rotate(313deg) saturate(6) brightness(1.05) contrast(1.1); transition: filter 0.25s ease; }
+.platform-btn--steam img { filter: brightness(0) invert(50%) sepia(1) hue-rotate(185deg) saturate(5) brightness(1.9);                transition: filter 0.25s ease; }
+.platform-btn--ggj   img { filter: none;                                                                                             transition: filter 0.25s ease; }
+
+.platform-btn--itch:not(.platform-btn--placeholder):hover  img,
+.platform-btn--steam:not(.platform-btn--placeholder):hover img { filter: brightness(0); }
+.platform-btn--ggj:not(.platform-btn--placeholder):hover   img { filter: drop-shadow(2px 3px 5px rgba(0,0,0,0.45)); }
+
+.platform-btn:not(.platform-btn--placeholder):hover img { animation: btnIconPop 0.3s cubic-bezier(0.34,1.56,0.64,1); }
+@keyframes btnIconPop {
+  0%   { transform: scale(1); }
+  50%  { transform: scale(1.25) rotate(-6deg); }
+  100% { transform: scale(1); }
+}
+
+.platform-btn--placeholder {
+  opacity: 0.25;
+  cursor: default;
+  border-style: dashed;
+}
+
 /* Section trailer (video YouTube) d'un projet */
 .project-trailer-wrap { padding: 64px 56px; text-align: center; background: var(--section-veil); }
 
