@@ -65,22 +65,6 @@
     });
   }
 
-  /* ── Sur about.html : change l'actif entre "About" et "CV" au scroll ──
-     Quand la section #cv atteint 45% du haut de l'écran, le lien "CV" s'active */
-  const cvSection = document.getElementById('cv');
-  if (cvSection && page === 'about') {
-    function updateNavOnScroll() {
-      const cvTop = cvSection.getBoundingClientRect().top;
-      if (cvTop <= window.innerHeight * 0.45) { /* ← MODIFIABLE */
-        setActive('about#cv');
-      } else {
-        setActive('about');
-      }
-    }
-    window.addEventListener('scroll', updateNavOnScroll, { passive: true });
-    updateNavOnScroll();
-  }
-
   /* ── Animation de clic + scroll vers le haut si on clique sur la page en cours ── */
   links.forEach(a => {
     a.addEventListener('click', e => {
