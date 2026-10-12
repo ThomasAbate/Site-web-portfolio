@@ -309,7 +309,7 @@ const PROJECTS = [
       },
     ],
     mainImageSlug: 'picture/fk-this-job/main.png',
-    trailerID:     'mSV1teYZh-c',
+    trailerID:     'l_fxtcFOdt4',
     itchURL:       'https://artfx-school.itch.io/fuck-this-job',
     steamURL:      'https://store.steampowered.com/app/4822520/Fuck_This_Job/',
     gallery: [
@@ -496,6 +496,6 @@ function lightboxImageUrl(slug) { return slug || null; } /* Image en plein écra
    - autoplay=1     : démarre automatiquement (muet par défaut si requis)
    - loop=1         : boucle infinie
    - playlist=id    : nécessaire pour que loop=1 fonctionne sur YouTube */
-function youtubeEmbedUrl(id) {
-  return `https://www.youtube.com/embed/${id}?rel=0&color=white&autoplay=1&mute=1&loop=1&playlist=${id}`;
+function youtubeEmbedUrl(id, start) {
+  return `https://www.youtube.com/embed/${id}?rel=0&color=white&autoplay=1&mute=1&loop=1&playlist=${id}${start ? `&start=${start}` : ''}`;
 }

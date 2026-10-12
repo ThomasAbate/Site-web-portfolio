@@ -471,7 +471,7 @@ function renderProject() {
       const trailerFrame = document.getElementById('trailerFrame');
       const trailerPlaceholder = document.getElementById('trailerPlaceholder');
       if (trailerPlaceholder) trailerPlaceholder.style.display = 'none';
-      initLazyVideo(trailerFrame, youtubeEmbedUrl(project.trailerID), trailerSection);
+      initLazyVideo(trailerFrame, youtubeEmbedUrl(project.trailerID, project.trailerStart),trailerSection);
     } else {
       /* Pas de trailerID → affiche le placeholder */
       const trailerFrame = document.getElementById('trailerFrame');
