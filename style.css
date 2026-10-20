@@ -366,7 +366,7 @@ nav {
   color: #DC7020;
 }
 
-/* --- Sous-titre "Technical Game / Level Designer" --- */
+/* --- Sous-titre "Game / Level Designer" --- */
 .hero-title {
   font-size: clamp(12px, 1.4vw, 16px); /* ← MODIFIABLE */
   font-weight:    500;
@@ -1411,6 +1411,94 @@ a[download].dl-anim svg {
 /* isolation + z-index = garantit que le texte reste lisible par-dessus le drapeau */
 .skill-pill--fr, .skill-pill--en { isolation: isolate; }
 .skill-pill--fr > *, .skill-pill--en > * { position: relative; z-index: 1; }
+
+/* ── Jeux préférés (page About) ─────────────────────────────────────────── */
+/* Section centrée : sert de conclusion à la page About */
+.fav-section { text-align: center; }
+.fav-games {
+  display: flex; flex-wrap: wrap;
+  justify-content: center; /* la dernière ligne reste centrée aussi */
+  gap: 20px;
+}
+.fav-game {
+  position: relative;
+  flex: 0 1 300px;
+  aspect-ratio: 460 / 215;
+  text-align: left;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  background: var(--bg-2);
+  transition: border-color 0.4s ease, transform 0.4s ease, box-shadow 0.4s ease;
+}
+/* Apparition en cascade quand la grille (.reveal) devient visible.
+   fill-mode "backwards" : l'animation ne bloque pas le transform du survol ensuite */
+.fav-games.visible .fav-game {
+  animation: favGameIn 0.7s cubic-bezier(.2,.7,.2,1) backwards;
+  animation-delay: calc(var(--i) * 90ms);
+}
+@keyframes favGameIn {
+  from { opacity: 0; transform: translateY(26px) scale(0.97); }
+}
+.fav-game img {
+  width: 100%; height: 100%;
+  object-fit: cover; display: block;
+  filter: grayscale(0.55) brightness(0.7);
+  transform: scale(1.02);
+  transition: filter 0.5s ease, transform 0.7s cubic-bezier(.2,.7,.2,1);
+}
+/* Dégradé sombre en bas pour garder le texte lisible */
+.fav-game::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(to top, rgba(14,12,8,0.92) 0%, rgba(14,12,8,0.35) 45%, transparent 75%);
+  pointer-events: none;
+}
+.fav-game-info {
+  position: absolute; left: 0; right: 0; bottom: 0;
+  padding: 16px 18px;
+  z-index: 1;
+}
+.fav-game-num {
+  display: block;
+  font-size: 10px; font-weight: 600;
+  letter-spacing: 0.18em;
+  color: var(--muted);
+  margin-bottom: 4px;
+}
+.fav-game-name {
+  font-size: 17px; font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--text);
+  line-height: 1.2;
+}
+.fav-game-name span { color: var(--muted); font-weight: 500; }
+/* Note : cachée par défaut, glisse vers le haut au survol */
+.fav-game-note {
+  font-size: 12px; color: var(--muted);
+  max-height: 0; opacity: 0; overflow: hidden;
+  transform: translateY(6px);
+  transition: max-height 0.4s ease, opacity 0.4s ease, transform 0.4s ease, margin 0.4s ease;
+}
+/* Variante "logo" : jeu sans artwork paysage (ex. Dofus) — logo centré sur fond chaud */
+.fav-game--logo { background: radial-gradient(ellipse at 50% 40%, #4a3a1c 0%, #1c150a 75%); }
+.fav-game--logo img {
+  object-fit: contain;
+  padding: 18px 30% 52px;
+  filter: brightness(0.75) saturate(0.6);
+}
+.fav-game--logo:hover img { filter: none; }
+.fav-game:hover {
+  border-color: rgba(237,229,213,0.3);
+  transform: translateY(-4px);
+  box-shadow: 0 14px 34px rgba(0,0,0,0.5);
+}
+.fav-game:hover img { filter: grayscale(0) brightness(0.9); transform: scale(1.08); }
+.fav-game:hover .fav-game-note { max-height: 40px; opacity: 1; transform: none; margin-top: 6px; }
+/* Écrans tactiles (pas de survol) : note toujours visible */
+@media (hover: none) {
+  .fav-game img { filter: none; }
+  .fav-game-note { max-height: 40px; opacity: 1; transform: none; margin-top: 6px; }
+}
 
 /* Éléments de formation */
 .edu-item { padding: 16px 0; }

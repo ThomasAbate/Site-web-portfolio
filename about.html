@@ -6,13 +6,13 @@
 
   <!-- Titre de l'onglet ← MODIFIABLE -->
   <title>About — Thomas Abate</title>
-  <meta name="description" content="About Thomas Abate — Technical Game & Level Designer. Education, skills, and contact.">
+  <meta name="description" content="About Thomas Abate — Game & Level Designer with a technical background. Education, skills, and contact.">
 
   <link rel="icon" type="image/png" href="picture/Logo%20Web.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=30">
+  <link rel="stylesheet" href="style.css?v=33">
 </head>
 <body>
 
@@ -44,7 +44,7 @@
       <div class="section-tag">About</div>
       <!-- Titre principal de la page ← MODIFIABLE -->
       <h1 class="section-heading" style="max-width:700px">
-        Technical Game &amp; Level Designer<br><span>based in France.</span>
+        Game &amp; Level Designer<br><span>based in France.</span>
       </h1>
     </div>
 
@@ -71,7 +71,7 @@
          ← MODIFIABLE : édite librement le texte -->
     <div class="about-bio">
       <p>
-        Hello, I'm <strong>Thomas Abate</strong>, a Technical Game / Level Designer who discovered his vocation after reading <em>Marc Albinet's</em> <em>"Concevoir un jeu vidéo"</em>, a reading that crystallised a simple belief : <strong>"the heart of our craft lies in the experience lived by the player."</strong>
+        Hello, I'm <strong>Thomas Abate</strong>, a Game / Level Designer with a strong technical background, who discovered his vocation after reading <em>Marc Albinet's</em> <em>"Concevoir un jeu vidéo"</em>, a reading that crystallised a simple belief : <strong>"the heart of our craft lies in the experience lived by the player."</strong>
       </p>
       <p>
         I specialise in <strong>rapid prototyping</strong> inside Unreal Engine 5 : test early, fail fast, and pivot even faster. Every mechanic I design starts as a blueprint meant to be discarded, reworked, and refined until the intended feeling lands for the player.
@@ -194,6 +194,62 @@
       <p class="reveal" style="font-size:17px;line-height:1.85;color:var(--muted);margin-bottom:0">
         I also read about cinematography and visual language to sharpen that eye, including <em>"Grammaire du langage filmé"</em> by <strong style="color:var(--text)">Daniel Arijon</strong>.<!-- ← MODIFIABLE -->
       </p>
+    </div>
+  </section>
+
+  <!-- ════════════════════════════════════════════════════════════════════════
+       SECTION JEUX PRÉFÉRÉS — Pastilles réutilisant le style .skill-pill
+       POUR MODIFIER : ajouter / supprimer / renommer des <span class="skill-pill">
+       ════════════════════════════════════════════════════════════════════════ -->
+  <section class="section-wrap fav-section">
+    <div class="section-tag">Inspirations</div><!-- ← MODIFIABLE -->
+    <h2 class="section-heading reveal">My favorite <span>games</span></h2><!-- ← MODIFIABLE -->
+    <p class="reveal" style="font-size:17px;line-height:1.85;color:var(--muted);max-width:820px;margin:0 auto 40px">
+      The games that shaped the way I think about feel, movement, systems and player experience.<!-- ← MODIFIABLE -->
+    </p>
+    <!-- Une carte = un jeu. Image dans picture/favorite-games/
+         --i = ordre d'apparition (délai en cascade) / .fav-game-note = texte au survol (optionnel) -->
+    <div class="fav-games reveal">
+      <article class="fav-game" style="--i:0">
+        <img src="picture/favorite-games/splinter-cell-chaos-theory.jpg" alt="Splinter Cell: Chaos Theory" loading="lazy">
+        <div class="fav-game-info">
+          <span class="fav-game-num">01</span>
+          <h3 class="fav-game-name">Splinter Cell <span>Chaos Theory</span></h3>
+          <p class="fav-game-note">Light &amp; sound-driven stealth</p>
+        </div>
+      </article>
+      <article class="fav-game" style="--i:1">
+        <img src="picture/favorite-games/halo-combat-evolved.jpg" alt="Halo: Combat Evolved" loading="lazy">
+        <div class="fav-game-info">
+          <span class="fav-game-num">02</span>
+          <h3 class="fav-game-name">Halo <span>1</span></h3>
+          <p class="fav-game-note">Combat sandbox &amp; level pacing</p>
+        </div>
+      </article>
+      <article class="fav-game" style="--i:2">
+        <img src="picture/favorite-games/halo-2.jpg" alt="Halo 2" loading="lazy">
+        <div class="fav-game-info">
+          <span class="fav-game-num">03</span>
+          <h3 class="fav-game-name">Halo <span>2</span></h3>
+          <p class="fav-game-note">Encounter variety &amp; multiplayer</p>
+        </div>
+      </article>
+      <article class="fav-game fav-game--logo" style="--i:3">
+        <img src="picture/favorite-games/dofus.png" alt="Dofus" loading="lazy">
+        <div class="fav-game-info">
+          <span class="fav-game-num">04</span>
+          <h3 class="fav-game-name">Dofus</h3>
+          <p class="fav-game-note">Tactical turn-based combat</p>
+        </div>
+      </article>
+      <article class="fav-game" style="--i:4">
+        <img src="picture/favorite-games/balatro.jpg" alt="Balatro" loading="lazy">
+        <div class="fav-game-info">
+          <span class="fav-game-num">05</span>
+          <h3 class="fav-game-name">Balatro</h3>
+          <p class="fav-game-note">Systemic loop &amp; emergent builds</p>
+        </div>
+      </article>
     </div>
   </section>
 
