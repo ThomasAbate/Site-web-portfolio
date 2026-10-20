@@ -1479,14 +1479,6 @@ a[download].dl-anim svg {
   transform: translateY(6px);
   transition: max-height 0.4s ease, opacity 0.4s ease, transform 0.4s ease, margin 0.4s ease;
 }
-/* Variante "logo" : jeu sans artwork paysage (ex. Dofus) — logo centré sur fond chaud */
-.fav-game--logo { background: radial-gradient(ellipse at 50% 40%, #4a3a1c 0%, #1c150a 75%); }
-.fav-game--logo img {
-  object-fit: contain;
-  padding: 18px 30% 52px;
-  filter: brightness(0.75) saturate(0.6);
-}
-.fav-game--logo:hover img { filter: none; }
 .fav-game:hover {
   border-color: rgba(237,229,213,0.3);
   transform: translateY(-4px);
