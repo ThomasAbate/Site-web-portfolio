@@ -1458,13 +1458,6 @@ a[download].dl-anim svg {
   padding: 16px 18px;
   z-index: 1;
 }
-.fav-game-num {
-  display: block;
-  font-size: 10px; font-weight: 600;
-  letter-spacing: 0.18em;
-  color: var(--muted);
-  margin-bottom: 4px;
-}
 .fav-game-name {
   font-size: 17px; font-weight: 700;
   letter-spacing: -0.01em;
