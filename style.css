@@ -1234,9 +1234,16 @@ a[download].dl-anim svg {
   border-left: 1px solid rgba(255,255,255,0.15);
   position: relative; z-index: 1; /* Reste au-dessus de l'image zoomée */
   cursor: default;
-  transition: opacity 0.2s ease;
+  border-radius: 0 8px 8px 0;
+  transition: opacity 0.2s ease, background 0.25s ease;
 }
 .lightbox.has-info .lightbox-info { display: block; }
+
+/* Image zoomée : fond opaque derrière le texte pour qu'il ne se mélange pas à l'image */
+.lightbox.is-zoomed .lightbox-info {
+  background: rgba(10, 9, 7, 0.94);
+  box-shadow: 0 0 0 16px rgba(10, 9, 7, 0.94); /* Déborde un peu sans décaler le texte */
+}
 
 /* Quand le panneau est là, l'image laisse la place (panneau + espace) */
 .lightbox.has-info img { max-width: calc(90vw - 400px); }

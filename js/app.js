@@ -626,6 +626,9 @@ function _lbApplyZoom(animate = true) {
       : '';
     img.style.cursor = _lbScale > 1 ? 'grab' : 'default';
   }
+  /* .is-zoomed : l'image zoomée peut passer sous le panneau de description,
+     on lui donne alors un fond opaque pour que le texte reste lisible */
+  document.getElementById('lightbox')?.classList.toggle('is-zoomed', _lbScale > 1);
   if (zoomIn)  zoomIn.disabled  = _lbScale >= ZOOM_MAX;
   if (zoomOut) zoomOut.disabled = _lbScale <= ZOOM_MIN;
   if (zoomLvl) zoomLvl.textContent = Math.round(_lbScale * 100) + '%';
