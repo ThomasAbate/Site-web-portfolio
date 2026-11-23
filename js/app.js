@@ -647,7 +647,14 @@ function openLightbox(imgs, idx) {
     lb.innerHTML = `
       <button class="lightbox-close" id="lbClose">&times;</button>
       <button class="lightbox-arrow lb-prev" id="lbPrev">&#8592;</button>
-      <img id="lbImg" src="" alt="">
+      <!-- Zone centrale : l'image + le panneau de description (affiché seulement si 'desc' existe) -->
+      <div class="lightbox-stage" id="lbStage">
+        <img id="lbImg" src="" alt="">
+        <aside class="lightbox-info" id="lbInfo">
+          <h3 class="lightbox-info-title" id="lbInfoTitle"></h3>
+          <p class="lightbox-info-desc" id="lbInfoDesc"></p>
+        </aside>
+      </div>
       <button class="lightbox-arrow lb-next" id="lbNext">&#8594;</button>
       <div class="lightbox-caption" id="lbCaption"></div>
       <div class="lightbox-zoom-btns">
@@ -667,8 +674,10 @@ function openLightbox(imgs, idx) {
       </div>`;
     document.body.appendChild(lb);
 
-    /* Ferme en cliquant sur le fond (pas sur l'image) */
-    lb.addEventListener('click', e => { if (e.target === lb) closeLightbox(); });
+    /* Ferme en cliquant sur le fond (pas sur l'image ni sur le panneau de description) */
+    lb.addEventListener('click', e => {
+      if (e.target === lb || e.target.id === 'lbStage') closeLightbox();
+    });
     document.getElementById('lbClose').addEventListener('click', closeLightbox);
 
     /* Navigation entre images */
@@ -760,20 +769,31 @@ function _lbRender() {
   document.getElementById('lbPrev').style.display = show ? '' : 'none';
   document.getElementById('lbNext').style.display = show ? '' : 'none';
 
-  if (isOpen) {
-    /* Transition fondu : efface puis charge la nouvelle image */
-    img.style.opacity = '0';
-    setTimeout(() => {
-      img.src = lightboxImageUrl(item.slug);
-      img.alt = item.title || '';
-      if (caption) caption.textContent = item.title || '';
-      img.style.opacity = '1';
-    }, 200); /* 200ms = durée du fondu ← MODIFIABLE */
-  } else {
-    /* Lors du premier rendu (avant que .open soit ajouté) : pas de fondu */
+  const info = document.getElementById('lbInfo');
+
+  /* Remplit l'image, la légende et le panneau de description */
+  const apply = () => {
     img.src = lightboxImageUrl(item.slug);
     img.alt = item.title || '';
     if (caption) caption.textContent = item.title || '';
+    document.getElementById('lbInfoTitle').textContent = item.title || '';
+    document.getElementById('lbInfoDesc').textContent  = item.desc  || '';
+    /* .has-info affiche le panneau latéral ; sans 'desc', l'image reste centrée comme avant */
+    lb.classList.toggle('has-info', !!item.desc);
+  };
+
+  if (isOpen) {
+    /* Transition fondu : efface puis charge la nouvelle image */
+    img.style.opacity = '0';
+    if (info) info.style.opacity = '0';
+    setTimeout(() => {
+      apply();
+      img.style.opacity = '1';
+      if (info) info.style.opacity = '1';
+    }, 200); /* 200ms = durée du fondu ← MODIFIABLE */
+  } else {
+    /* Lors du premier rendu (avant que .open soit ajouté) : pas de fondu */
+    apply();
   }
 }
 
