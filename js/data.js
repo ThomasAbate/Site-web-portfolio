@@ -423,7 +423,7 @@ const PROJECTS = [
         alt: "In-game view of a warm-lit open-plan office: cubicles on the left, an open lane on the right with a yellow line painted on the carpet." },
 
       { slug: 'picture/fk-this-job/Gallery-Fuck_This_Job_LD_Dark_Office.jpg', title: 'Dark Office – Top View',
-        intent: "The employees are no longer people but work tools: Megazon's slaves.",
+        intent: "Employees reduced to work tools: the space tells Megazon's story before any dialogue.",
         desc: "Playtests showed some players getting lost; coloured guide lines on the floor, like those in hospitals, point them the way. Short on time to dress every room, I ranked the rooms by priority and cut the least essential ones.",
         alt: "Top-down map of the Dark Office level: dim rooms crowded with desks and paper, a red golden path, blue and green floor guide lines and white loops.",
         legend: [
