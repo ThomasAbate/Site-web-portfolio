@@ -466,7 +466,14 @@ function renderProject() {
   /* ── Trailer YouTube ──────────────────────────────────────────────────── */
   const trailerSection = document.getElementById('trailerSection');
   if (trailerSection) {
-    if (project.trailerID) {
+    if (project.trailerHls) {
+      /* Bande-annonce hébergée en HLS (ex. Steam) : balise <video> à la place de l'iframe YouTube */
+      const trailerFrame = document.getElementById('trailerFrame');
+      const trailerPlaceholder = document.getElementById('trailerPlaceholder');
+      if (trailerFrame) trailerFrame.style.display = 'none';
+      if (trailerPlaceholder) trailerPlaceholder.style.display = 'none';
+      initHlsTrailer(trailerSection, project.trailerHls, project.trailerPoster);
+    } else if (project.trailerID) {
       /* Lance le chargement "lazy" de l'iframe YouTube (voir initLazyVideo) */
       const trailerFrame = document.getElementById('trailerFrame');
       const trailerPlaceholder = document.getElementById('trailerPlaceholder');
@@ -494,86 +501,28 @@ function renderProject() {
   const galleryGrid    = document.getElementById('galleryGrid');
   if (gallerySection && galleryGrid) {
     if (project.gallery && project.gallery.length) {
-      const imgs = project.gallery; /* Tableau d'images du projet */
-      const GAP     = 12; /* Espace en pixels entre les slides ← MODIFIABLE */
-      const VISIBLE = 3;  /* Nombre de slides visibles à la fois (desktop) ← MODIFIABLE */
-      let offset = 0;     /* Index du premier slide visible (0 = début) */
+      /* Images principales d'un côté, images "Voir plus" (more: true) de l'autre */
+      const mainImgs = project.gallery.filter(img => !img.more);
+      const moreImgs = project.gallery.filter(img => img.more);
 
-      /* Crée le conteneur du filmstrip */
-      const strip = document.createElement('div');
-      strip.className = 'gallery-filmstrip';
-      const track = document.createElement('div');
-      track.className = 'gallery-track'; /* Se déplace par transform: translateX */
+      /* Galerie principale : chargée tout de suite, flèches clavier actives */
+      galleryGrid.appendChild(buildGalleryStrip(mainImgs, project, { eager: true, keyboard: true }));
 
-      /* Crée un slide <div> pour chaque image */
-      imgs.forEach((img, i) => {
-        const slide = document.createElement('div');
-        slide.className = 'gallery-slide';
-        slide.innerHTML = `
-          <img src="${galleryImageUrl(img.slug)}" alt="${img.title}"
-               loading="${i < VISIBLE ? 'eager' : 'lazy'}">
-          <!-- Légende en bas de l'image (visible au survol via CSS) -->
-          <div class="gallery-slide-caption">${img.title}</div>`;
-
-        /* Au clic sur un slide : ouvre la lightbox à cet index */
-        slide.addEventListener('click', () => openLightbox(imgs, i));
-        track.appendChild(slide);
-      });
-
-      /* ── Boutons de navigation ← → ──────────────────────────────────── */
-      const prevBtn = document.createElement('button');
-      prevBtn.className = 'gallery-arrow prev';
-      prevBtn.setAttribute('aria-label', 'Previous');
-      prevBtn.innerHTML = '<svg width="14" height="10" viewBox="0 0 14 10" fill="none" aria-hidden="true"><path d="M13 5H1M6 1L2 5l4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
-      prevBtn.disabled = true; /* Désactivé au départ (on est au début) */
-
-      const nextBtn = document.createElement('button');
-      nextBtn.className = 'gallery-arrow next';
-      nextBtn.setAttribute('aria-label', 'Next');
-      nextBtn.innerHTML = '<svg width="14" height="10" viewBox="0 0 14 10" fill="none" aria-hidden="true"><path d="M1 5h12M8 1l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
-
-      strip.appendChild(track);
-      strip.appendChild(prevBtn);
-      strip.appendChild(nextBtn);
-
-      /* Compteur "1 — 3 / 8" sous le carrousel */
-      const counter = document.createElement('div');
-      counter.className = 'gallery-counter';
-
-      galleryGrid.appendChild(strip);
-      galleryGrid.appendChild(counter);
-
-      /* Sur mobile (< 640px) : 1 slide visible à la fois, sinon VISIBLE slides */
-      function getVis() { return window.innerWidth < 640 ? 1 : VISIBLE; }
-
-      /* Met à jour la position de la piste et l'état des boutons */
-      function updateStrip() {
-        const vis    = getVis();
-        /* Largeur d'un slide = (largeur totale - somme des gaps) / nb slides visibles */
-        const slideW = (strip.offsetWidth - GAP * (vis - 1)) / vis;
-        /* Déplace la piste de (offset × largeur d'un slide + gap) pixels vers la gauche */
-        track.style.transform = `translateX(-${offset * (slideW + GAP)}px)`;
-        /* Texte du compteur */
-        counter.textContent = `${offset + 1} — ${Math.min(offset + vis, imgs.length)} / ${imgs.length}`;
-        /* Désactive les boutons aux extrémités */
-        prevBtn.disabled = offset === 0;
-        nextBtn.disabled = offset >= imgs.length - vis;
+      /* Bouton "Voir plus" : ouvre une grille plein écran (mosaïque) des images
+         supplémentaires. Un clic sur une image l'ouvre dans la lightbox.
+         La grille n'est construite (et ses images chargées) qu'au premier clic. */
+      if (moreImgs.length) {
+        const moreBtn = document.createElement('button');
+        moreBtn.className = 'gallery-more-btn';
+        moreBtn.innerHTML = `<span>More images (${moreImgs.length})</span>
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true"><rect x="1" y="1" width="4" height="4" rx="0.5" stroke="currentColor" stroke-width="1.4"/><rect x="7" y="1" width="4" height="4" rx="0.5" stroke="currentColor" stroke-width="1.4"/><rect x="1" y="7" width="4" height="4" rx="0.5" stroke="currentColor" stroke-width="1.4"/><rect x="7" y="7" width="4" height="4" rx="0.5" stroke="currentColor" stroke-width="1.4"/></svg>`;
+        let modal = null;
+        moreBtn.addEventListener('click', () => {
+          if (!modal) modal = buildGalleryGridModal(moreImgs, project);
+          openGalleryGrid(modal);
+        });
+        galleryGrid.appendChild(moreBtn);
       }
-
-      /* Clics sur les flèches : change l'offset d'une image à la fois */
-      prevBtn.addEventListener('click', () => { offset = Math.max(0, offset - 1); updateStrip(); });
-      nextBtn.addEventListener('click', () => { offset = Math.min(imgs.length - getVis(), offset + 1); updateStrip(); });
-
-      /* Navigation clavier avec les flèches (uniquement quand la lightbox est fermée) */
-      document.addEventListener('keydown', e => {
-        if (document.getElementById('lightbox')?.classList.contains('open')) return;
-        if (e.key === 'ArrowLeft')  prevBtn.click();
-        if (e.key === 'ArrowRight') nextBtn.click();
-      });
-
-      /* Recalcule les tailles au redimensionnement de la fenêtre */
-      window.addEventListener('resize', updateStrip);
-      updateStrip(); /* Initialisation */
 
     } else {
       /* Pas d'images dans gallery[] → cache la section galerie */
@@ -591,6 +540,194 @@ function renderProject() {
 }
 
 
+/* ── Grille "More images" (mosaïque plein écran) ───────────────────────────────
+   Les images gardent leur format d'origine et se rangent en colonnes.
+   Titre sous l'image ; le texte d'intention apparaît au survol de la souris.
+   ─────────────────────────────────────────────────────────────────────────── */
+function buildGalleryGridModal(imgs, project) {
+  const attr = s => String(s || '').replace(/&/g, '&amp;').replace(/"/g, '&quot;');
+  const modal = document.createElement('div');
+  modal.className = 'gallery-grid-modal';
+  modal.setAttribute('role', 'dialog');
+  modal.setAttribute('aria-modal', 'true');
+  modal.setAttribute('aria-label', 'More images');
+  modal.innerHTML = `
+    <div class="gallery-grid-head">
+      <span class="gallery-grid-title">More images <span class="gallery-grid-count">${imgs.length}</span></span>
+      <button class="gallery-grid-close" aria-label="Close">✕</button>
+    </div>
+    <div class="gallery-grid-scroll">
+      <div class="gallery-masonry">
+        ${imgs.map((img, i) => `
+          <figure class="gallery-tile" data-i="${i}" tabindex="0">
+            <div class="gallery-tile-media">
+              <img src="${galleryThumbUrl(project, img.slug)}" alt="${attr(img.alt || img.title)}" loading="lazy" decoding="async">
+              ${img.intent ? `<span class="gallery-hover-text" aria-hidden="true">${img.intent}</span>` : ''}
+            </div>
+            <figcaption>
+              <span class="gallery-slide-title">${img.title}</span>
+              ${img.intent ? `<span class="gallery-slide-intent">${img.intent}</span>` : ''}
+            </figcaption>
+          </figure>`).join('')}
+      </div>
+    </div>`;
+
+  /* Clic (ou Entrée) sur une image → lightbox, navigation entre les images de la grille */
+  modal.querySelectorAll('.gallery-tile').forEach(tile => {
+    const open = () => openLightbox(imgs, +tile.dataset.i, project);
+    tile.addEventListener('click', open);
+    tile.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(); } });
+  });
+  modal.querySelector('.gallery-grid-close').addEventListener('click', () => closeGalleryGrid(modal));
+  /* Clic dans le vide autour des images → ferme */
+  modal.querySelector('.gallery-grid-scroll').addEventListener('click', e => {
+    if (!e.target.closest('.gallery-tile')) closeGalleryGrid(modal);
+  });
+  /* Échap ferme la grille, sauf si la lightbox est ouverte par-dessus (elle se ferme d'abord).
+     Écouteur en phase de capture : il voit l'état de la lightbox AVANT qu'elle se ferme. */
+  window.addEventListener('keydown', e => {
+    if (e.key !== 'Escape' || !modal.classList.contains('open')) return;
+    if (document.getElementById('lightbox')?.classList.contains('open')) return;
+    closeGalleryGrid(modal);
+  }, true);
+
+  document.body.appendChild(modal);
+  return modal;
+}
+
+function openGalleryGrid(modal) {
+  modal._opener = document.activeElement;
+  modal.classList.add('open');
+  document.body.classList.add('grid-open');
+  document.body.style.overflow = 'hidden';
+  /* Met le trailer en pause pendant la grille, il reprendra à la fermeture */
+  const v = document.getElementById('trailerVideo');
+  if (v) { modal._trailerWasPlaying = !v.paused; v.pause(); }
+  modal.querySelector('.gallery-grid-scroll').scrollTop = 0;
+  modal.querySelector('.gallery-grid-close').focus({ preventScroll: true });
+}
+
+function closeGalleryGrid(modal) {
+  modal.classList.remove('open');
+  document.body.classList.remove('grid-open');
+  document.body.style.overflow = '';
+  const v = document.getElementById('trailerVideo');
+  if (v && modal._trailerWasPlaying) v.play().catch(() => {});
+  modal._opener?.focus?.({ preventScroll: true });
+}
+
+
+/* ── Construit une bande d'images (filmstrip) ─────────────────────────────────
+   imgs    : tableau d'images { slug, title, intent, alt, ... }
+   project : le projet (pour savoir s'il a des vignettes légères)
+   eager   : true = les premières vignettes visibles se chargent tout de suite
+   keyboard: true = les flèches ← → du clavier font défiler cette bande
+   Retourne un élément <div> contenant la bande + le compteur.
+   ─────────────────────────────────────────────────────────────────────────── */
+function buildGalleryStrip(imgs, project, { eager = true, keyboard = false } = {}) {
+  const GAP     = 12; /* Espace en pixels entre les slides ← MODIFIABLE */
+  const VISIBLE = 3;  /* Nombre de slides visibles à la fois (desktop) ← MODIFIABLE */
+  let offset = 0;     /* Index du premier slide visible (0 = début) */
+
+  const wrap = document.createElement('div');
+  wrap.className = 'gallery-block';
+
+  /* Crée le conteneur du filmstrip */
+  const strip = document.createElement('div');
+  strip.className = 'gallery-filmstrip';
+  const track = document.createElement('div');
+  track.className = 'gallery-track'; /* Se déplace par transform: translateX */
+
+  /* Échappe les guillemets pour les attributs HTML (alt) */
+  const attr = s => String(s || '').replace(/&/g, '&amp;').replace(/"/g, '&quot;');
+
+  /* Crée un slide pour chaque image : vignette + titre + ligne d'intention visibles */
+  imgs.forEach((img, i) => {
+    const slide = document.createElement('figure');
+    slide.className = 'gallery-slide';
+    slide.innerHTML = `
+      <div class="gallery-slide-media">
+        <img src="${galleryThumbUrl(project, img.slug)}" alt="${attr(img.alt || img.title)}"
+             loading="${eager && i < VISIBLE ? 'eager' : 'lazy'}" decoding="async"
+             ${eager && i === 0 ? 'fetchpriority="high"' : ''}>
+        ${img.intent ? `<span class="gallery-hover-text" aria-hidden="true">${img.intent}</span>` : ''}
+      </div>
+      <figcaption class="gallery-slide-text">
+        <span class="gallery-slide-title">${img.title}</span>
+        ${img.intent ? `<span class="gallery-slide-intent">${img.intent}</span>` : ''}
+      </figcaption>`;
+
+    /* Au clic sur un slide : ouvre la lightbox à cet index (image d'origine en grand) */
+    slide.addEventListener('click', () => openLightbox(imgs, i, project));
+    track.appendChild(slide);
+  });
+
+  /* ── Boutons de navigation ← → ──────────────────────────────────────── */
+  const prevBtn = document.createElement('button');
+  prevBtn.className = 'gallery-arrow prev';
+  prevBtn.setAttribute('aria-label', 'Previous');
+  prevBtn.innerHTML = '<svg width="14" height="10" viewBox="0 0 14 10" fill="none" aria-hidden="true"><path d="M13 5H1M6 1L2 5l4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  prevBtn.disabled = true; /* Désactivé au départ (on est au début) */
+
+  const nextBtn = document.createElement('button');
+  nextBtn.className = 'gallery-arrow next';
+  nextBtn.setAttribute('aria-label', 'Next');
+  nextBtn.innerHTML = '<svg width="14" height="10" viewBox="0 0 14 10" fill="none" aria-hidden="true"><path d="M1 5h12M8 1l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+
+  strip.appendChild(track);
+  strip.appendChild(prevBtn);
+  strip.appendChild(nextBtn);
+
+  /* Compteur "1 — 3 / 8" sous le carrousel */
+  const counter = document.createElement('div');
+  counter.className = 'gallery-counter';
+
+  wrap.appendChild(strip);
+  wrap.appendChild(counter);
+
+  /* Sur mobile (< 640px) : 1 slide visible à la fois, sinon VISIBLE slides */
+  function getVis() { return window.innerWidth < 640 ? 1 : VISIBLE; }
+
+  /* Met à jour la position de la piste et l'état des boutons */
+  function updateStrip() {
+    if (!strip.offsetWidth) return; /* Bande cachée (bloc "Voir plus" replié) */
+    const vis    = getVis();
+    offset = Math.min(offset, Math.max(0, imgs.length - vis));
+    /* Largeur d'un slide = (largeur totale - somme des gaps) / nb slides visibles */
+    const slideW = (strip.offsetWidth - GAP * (vis - 1)) / vis;
+    /* Hauteur de la vignette (format 4:3) : sert à centrer les flèches sur l'image,
+       pas sur l'image + le texte en dessous */
+    strip.style.setProperty('--media-h', `${slideW * 0.75}px`);
+    /* Déplace la piste de (offset × largeur d'un slide + gap) pixels vers la gauche */
+    track.style.transform = `translateX(-${offset * (slideW + GAP)}px)`;
+    /* Texte du compteur */
+    counter.textContent = `${offset + 1} — ${Math.min(offset + vis, imgs.length)} / ${imgs.length}`;
+    /* Désactive les boutons aux extrémités */
+    prevBtn.disabled = offset === 0;
+    nextBtn.disabled = offset >= imgs.length - vis;
+  }
+
+  /* Clics sur les flèches : change l'offset d'une image à la fois */
+  prevBtn.addEventListener('click', () => { offset = Math.max(0, offset - 1); updateStrip(); });
+  nextBtn.addEventListener('click', () => { offset = Math.min(imgs.length - getVis(), offset + 1); updateStrip(); });
+
+  /* Navigation clavier avec les flèches (uniquement quand la lightbox est fermée) */
+  if (keyboard) {
+    document.addEventListener('keydown', e => {
+      if (document.getElementById('lightbox')?.classList.contains('open')) return;
+      if (e.key === 'ArrowLeft')  prevBtn.click();
+      if (e.key === 'ArrowRight') nextBtn.click();
+    });
+  }
+
+  /* Recalcule les tailles au redimensionnement de la fenêtre */
+  window.addEventListener('resize', updateStrip);
+  requestAnimationFrame(updateStrip); /* Initialisation, une fois la bande dans la page */
+
+  return wrap;
+}
+
+
 /* ─────────────────────────────────────────────────────────────────────────────
    8. LIGHTBOX — Visionneuse d'image en plein écran
    ─────────────────────────────────────────────────────────────────────────────
@@ -600,6 +737,8 @@ function renderProject() {
    ───────────────────────────────────────────────────────────────────────────── */
 let _lbImgs       = []; /* Tableau des images de la lightbox en cours */
 let _lbIdx        = 0;  /* Index de l'image actuellement affichée */
+let _lbProject    = null; /* Projet en cours (pour retrouver les vignettes légères) */
+let _lbLoadToken  = 0;  /* Invalide un chargement en cours si on change d'image entre-temps */
 let _lbScale      = 1;  /* Niveau de zoom actuel (1 = taille normale) */
 let _lbTransX     = 0;  /* Décalage horizontal lors du drag (px) */
 let _lbTransY     = 0;  /* Décalage vertical lors du drag (px) */
@@ -635,7 +774,8 @@ function _lbApplyZoom(animate = true) {
 }
 
 /* Ouvre la lightbox sur l'image à l'index 'idx' du tableau 'imgs' */
-function openLightbox(imgs, idx) {
+function openLightbox(imgs, idx, project = null) {
+  _lbProject = project;
   /* Normalise le format : tableau d'objets {slug, title} ou image unique */
   _lbImgs = Array.isArray(imgs) ? imgs : [{ slug: imgs, title: idx || '' }];
   _lbIdx  = Array.isArray(imgs) ? idx : 0;
@@ -655,10 +795,13 @@ function openLightbox(imgs, idx) {
         <img id="lbImg" src="" alt="">
         <aside class="lightbox-info" id="lbInfo">
           <h3 class="lightbox-info-title" id="lbInfoTitle"></h3>
+          <p class="lightbox-info-intent" id="lbInfoIntent"></p>
           <p class="lightbox-info-desc" id="lbInfoDesc"></p>
+          <ul class="lightbox-legend" id="lbLegend" aria-label="Map legend"></ul>
         </aside>
       </div>
       <button class="lightbox-arrow lb-next" id="lbNext">&#8594;</button>
+      <div class="lightbox-counter" id="lbCounter" aria-live="polite"></div>
       <div class="lightbox-caption" id="lbCaption"></div>
       <div class="lightbox-zoom-btns">
         <button class="lightbox-zoom-btn" id="lbZoomOut" aria-label="Zoom out" disabled>
@@ -749,6 +892,12 @@ function openLightbox(imgs, idx) {
   if (trailerFrame?.src) trailerFrame.contentWindow?.postMessage(
     JSON.stringify({ event: 'command', func: 'pauseVideo', args: '' }), '*'
   );
+  /* Pause le trailer vidéo (Steam/HLS) et retient s'il jouait, pour le relancer à la fermeture */
+  const trailerVideo = document.getElementById('trailerVideo');
+  if (trailerVideo) {
+    trailerVideo.dataset.wasPlaying = String(!trailerVideo.paused);
+    trailerVideo.pause();
+  }
 }
 
 /* Déplace l'index de l'image affichée (dir = +1 ou -1, boucle sur lui-même) */
@@ -760,6 +909,42 @@ function _lbMove(dir) {
 }
 
 /* Met à jour l'image et la légende affichées dans la lightbox */
+/* Affiche d'abord la vignette légère (déjà en cache depuis la galerie), à la taille finale
+   et légèrement floutée, puis la remplace par l'image d'origine dès qu'elle est téléchargée. */
+function _lbShowImage(img, item) {
+  const full  = lightboxImageUrl(item.slug);
+  const thumb = _lbProject ? galleryThumbUrl(_lbProject, item.slug) : full;
+  const token = ++_lbLoadToken;
+  const done  = () => {
+    if (token !== _lbLoadToken) return;
+    img.src = full;
+    img.style.width = img.style.height = '';
+    img.classList.remove('is-preview');
+  };
+  img.style.width = img.style.height = '';
+  if (thumb === full) { img.src = full; img.classList.remove('is-preview'); return; }
+
+  const hi = new Image();
+  hi.src = full;
+  if (hi.complete && hi.naturalWidth) { done(); return; } /* Déjà en cache : pas besoin d'aperçu */
+
+  img.classList.add('is-preview');
+  img.src = thumb;
+  /* Donne à l'aperçu la taille que prendra l'image finale (pas de saut à l'arrivée) */
+  const fit = () => {
+    if (token !== _lbLoadToken || !img.naturalWidth) return;
+    const cs = getComputedStyle(img);
+    const maxW = parseFloat(cs.maxWidth)  || innerWidth;
+    const maxH = parseFloat(cs.maxHeight) || innerHeight;
+    const ratio = img.naturalWidth / img.naturalHeight;
+    const w = Math.min(maxW, maxH * ratio);
+    img.style.width  = w + 'px';
+    img.style.height = (w / ratio) + 'px';
+  };
+  if (img.complete) fit(); else img.addEventListener('load', fit, { once: true });
+  (hi.decode ? hi.decode() : Promise.reject()).then(done, () => { hi.onload = done; if (hi.complete) done(); });
+}
+
 function _lbRender() {
   const item    = _lbImgs[_lbIdx];
   const img     = document.getElementById('lbImg');
@@ -769,6 +954,12 @@ function _lbRender() {
 
   /* Affiche/cache les flèches (inutiles si une seule image) */
   const show = _lbImgs.length > 1;
+  /* Compteur "3 / 16" en bas (caché s'il n'y a qu'une image) */
+  const counter = document.getElementById('lbCounter');
+  if (counter) {
+    counter.hidden = !show;
+    counter.textContent = `${_lbIdx + 1} / ${_lbImgs.length}`;
+  }
   document.getElementById('lbPrev').style.display = show ? '' : 'none';
   document.getElementById('lbNext').style.display = show ? '' : 'none';
 
@@ -776,13 +967,29 @@ function _lbRender() {
 
   /* Remplit l'image, la légende et le panneau de description */
   const apply = () => {
-    img.src = lightboxImageUrl(item.slug);
-    img.alt = item.title || '';
+    img.alt = item.alt || item.title || '';
     if (caption) caption.textContent = item.title || '';
-    document.getElementById('lbInfoTitle').textContent = item.title || '';
-    document.getElementById('lbInfoDesc').textContent  = item.desc  || '';
-    /* .has-info affiche le panneau latéral ; sans 'desc', l'image reste centrée comme avant */
-    lb.classList.toggle('has-info', !!item.desc);
+    document.getElementById('lbInfoTitle').textContent  = item.title  || '';
+    document.getElementById('lbInfoIntent').textContent = item.intent || '';
+    document.getElementById('lbInfoDesc').textContent   = item.desc   || '';
+
+    /* Légende des couleurs d'un plan : une pastille (forme + couleur) par entrée */
+    const legend = document.getElementById('lbLegend');
+    legend.innerHTML = '';
+    (item.legend || []).forEach(l => {
+      const li = document.createElement('li');
+      const sw = document.createElement('span');
+      sw.className = `lb-swatch lb-swatch-${l.s || 'dot'}`;
+      sw.style.setProperty('--sw', l.c);
+      li.appendChild(sw);
+      li.appendChild(document.createTextNode(l.t));
+      legend.appendChild(li);
+    });
+    legend.hidden = !legend.childElementCount;
+
+    /* .has-info affiche le panneau latéral ; sans texte ni légende, l'image reste centrée */
+    lb.classList.toggle('has-info', !!(item.intent || item.desc || (item.legend && item.legend.length)));
+    _lbShowImage(img, item); /* Après has-info : la taille max de l'image en dépend */
   };
 
   if (isOpen) {
@@ -804,7 +1011,8 @@ function _lbRender() {
 function closeLightbox() {
   const lb = document.getElementById('lightbox');
   if (lb) lb.classList.remove('open');
-  document.body.style.overflow = '';
+  /* Si la grille "More images" est encore ouverte derrière, la page reste bloquée */
+  document.body.style.overflow = document.querySelector('.gallery-grid-modal.open') ? 'hidden' : '';
 
   /* Restaure les éléments UI cachés pendant la lightbox */
   const scrollTopBtn = document.getElementById('scrollTopBtn');
@@ -817,6 +1025,9 @@ function closeLightbox() {
   if (trailerFrame?.src) trailerFrame.contentWindow?.postMessage(
     JSON.stringify({ event: 'command', func: 'playVideo', args: '' }), '*'
   );
+  /* Reprend le trailer vidéo (Steam/HLS) seulement s'il jouait avant l'ouverture */
+  const trailerVideo = document.getElementById('trailerVideo');
+  if (trailerVideo?.dataset.wasPlaying === 'true') trailerVideo.play().catch(() => {});
 }
 
 
@@ -841,6 +1052,77 @@ function initAnimBg() {
     <div class="bg-orb bg-orb-3"></div>`;
   document.body.prepend(bg); /* Insère avant tous les autres éléments */
 }
+
+/* ── Bande-annonce en HLS (ex. vidéo de la fiche Steam) ──────────────────────
+   Steam ne fournit ses vidéos qu'en streaming HLS (.m3u8) :
+   - Safari / iPhone savent le lire nativement (video.src = url)
+   - Chrome / Firefox / Android ont besoin de la librairie hls.js, chargée
+     seulement à ce moment-là (aucun coût pour les autres pages)
+   Même logique paresseuse que le YouTube : chargement quand la section devient
+   visible, lecture muette quand 35% est visible. muted + playsinline sont
+   obligatoires pour la lecture automatique sur iPhone.
+   ─────────────────────────────────────────────────────────────────────────── */
+const HLS_JS_URL = 'https://cdn.jsdelivr.net/npm/hls.js@1.5.13/dist/hls.min.js';
+
+function initHlsTrailer(section, url, poster) {
+  const box = section.querySelector('.trailer-box');
+  if (!box) return;
+
+  const video = document.createElement('video');
+  video.id = 'trailerVideo';
+  video.className = 'trailer-video';
+  video.muted = true;            /* Muet : condition de l'autoplay sur tous les navigateurs */
+  video.defaultMuted = true;
+  video.loop = true;
+  video.controls = true;         /* Le visiteur peut activer le son / passer en plein écran */
+  video.preload = 'none';        /* Rien n'est téléchargé avant que la section soit visible */
+  video.setAttribute('playsinline', '');      /* iPhone : lecture dans la page */
+  video.setAttribute('webkit-playsinline', '');
+  if (poster) video.poster = poster;
+  box.appendChild(video);
+
+  let loaded = false;
+  let played = false;
+
+  /* Branche le flux HLS sur la balise <video> */
+  const load = () => new Promise(resolve => {
+    if (video.canPlayType('application/vnd.apple.mpegurl')) {
+      video.src = url; resolve(); return;          /* Safari / iPhone : natif */
+    }
+    const attach = () => {
+      if (window.Hls && window.Hls.isSupported()) {
+        const hls = new window.Hls({ capLevelToPlayerSize: true }); /* Qualité adaptée à la taille du lecteur */
+        hls.loadSource(url);
+        hls.attachMedia(video);
+      }
+      resolve();
+    };
+    if (window.Hls) { attach(); return; }
+    const s = document.createElement('script');
+    s.src = HLS_JS_URL;
+    s.onload = attach;
+    s.onerror = () => resolve(); /* Pas de lecteur : l'image d'aperçu reste affichée */
+    document.head.appendChild(s);
+  });
+
+  const observer = new IntersectionObserver(entries => {
+    const ratio = entries[0].intersectionRatio;
+    if (!loaded && ratio > 0) {
+      loaded = true;
+      const ready = load();
+      /* Si 35% était déjà visible au moment du chargement, on lance dès que c'est prêt */
+      ready.then(() => { if (played) video.play().catch(() => {}); });
+    }
+    if (!played && ratio >= 0.35) {
+      played = true;
+      observer.disconnect();
+      video.play().catch(() => {}); /* Peut échouer si le flux n'est pas encore branché : rattrapé ci-dessus */
+    }
+  }, { threshold: [0, 0.1, 0.2, 0.35] });
+
+  observer.observe(section);
+}
+
 
 /* ── Chargement paresseux de la vidéo YouTube du trailer ────────────────────
    Phase 1 (dès que visible) : charge l'iframe en muet sans autoplay

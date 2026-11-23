@@ -57,8 +57,18 @@
 
      gallery:       Tableau d'images pour le carrousel de la page projet
                     → Chaque image : { slug: 'chemin/vers/image.png', title: 'Légende', desc: 'Texte' }
-                    → desc (optionnel) : description affichée dans un panneau à droite
-                      de l'image quand on l'ouvre en grand. Sans desc = pas de panneau.
+                    → intent (optionnel) : UNE ligne d'intention, affichée sous la vignette
+                      et en tête du panneau quand l'image est ouverte en grand
+                    → desc (optionnel) : détail affiché dans le panneau, sous l'intention
+                    → alt (optionnel) : description de ce qu'on voit (accessibilité)
+                    → legend (optionnel) : légende des couleurs d'un plan, affichée dans le panneau
+                      [{ c: '#couleur', s: 'line'|'dot'|'square'|'box'|'bar'|'tri'|'pent'|'loop', t: 'Texte' }]
+                    → more: true → image rangée dans le bloc replié "Voir plus"
+                    Sans intent ni desc ni legend = pas de panneau.
+
+     trailerHls:    (optionnel) URL d'une vidéo HLS (.m3u8), ex. bande-annonce Steam.
+                    Prioritaire sur trailerID. trailerPoster = image affichée avant lecture.
+     galleryThumbs: (optionnel) true = vignettes WebP dans picture/<id>/thumbs/
                     → [] = galerie vide (section galerie cachée)
 
      featured:      (boolean) Réservé pour un usage futur (non utilisé actuellement)
@@ -335,74 +345,166 @@ const PROJECTS = [
       },
     ],
     mainImageSlug: 'picture/fk-this-job/main.png',
-    trailerID:     'l_fxtcFOdt4',
+    /* Bande-annonce officielle (fiche Steam, "Launch trailer"), lue en HLS.
+       Ancienne vidéo YouTube (soluce d'une autre chaîne) : 'l_fxtcFOdt4' */
+    trailerHls:    'https://video.akamai.steamstatic.com/store_trailers/4822520/188980123/18ac96b6c341d87bb9336bff31037a8a41ed3010/1782900863/hls_264_master.m3u8',
+    trailerPoster: 'picture/fk-this-job/main.png',
     itchURL:       'https://artfx-school.itch.io/fuck-this-job',
     steamURL:      'https://store.steampowered.com/app/4822520/Fuck_This_Job/',
+    galleryThumbs: true, /* Vignettes WebP légères dans picture/fk-this-job/thumbs/ (false = images d'origine) */
     gallery: [
-      /* — Autre — */
-      { slug: 'picture/fk-this-job/Gallery-FeedBack For Player.jpg',                      title: 'Feedback For Player',
-        desc: "The feedback library for the vacuum gun: one Force Feedback effect per state (light suck, medium/heavy suck, full, empty, shoot) plus a kick camera shake. Every action has its own vibration, so the player feels the weapon's state without looking at the gauge." },
-      { slug: 'picture/fk-this-job/Gallery-Fuck_This_Job_Sequencer_CEO.jpg',              title: 'Sequencer – CEO Death Cinematic',
-        desc: "The CEO's death cinematic in Sequencer: three camera cuts (office, big screen, CEO close-up), the Niagara explosion and the audio event all sit on the same timeline. Image, VFX and sound hit on the exact same frame, and since it plays in-engine, the sequence flows straight out of gameplay." },
-      { slug: 'picture/fk-this-job/Gallery-Weapon Positioning.jpg',                    title: 'Weapon Positioning',
-        desc: "The weapon is placed following the Golden Ratio: it sits in the lower right of the screen, big and readable, while the centre and the crosshair stay clear." },
-      { slug: 'picture/fk-this-job/Gallery-Fuck_This_Job_LD_Overview.png',               title: 'Level Design – Overview',
-        desc: "Top-down maps of every level with the golden path, start and end, turrets, drones, breakers and healing points (vending machines, water dispensers). Healing is placed right after the toughest fights to give the player a breathing moment, keeping the tension curve under control." },
-      { slug: 'picture/fk-this-job/Gallery-Fuck_This_Job_LD_Tuto_Iterations.jpg',         title: 'Level Design – Tutorial Iterations',
-        desc: "Successive iterations of the tutorial layout, side by side. Comparing the versions makes it easy to see what each change brings to the pacing, so the final layout was reached by iteration rather than designed in one go." },
-      { slug: 'picture/fk-this-job/Gallery-Fuck_This_Job_LD_Tuto.png',                   title: 'Level Design – Tutorial Top View',
-        desc: "The tutorial teaches one mechanic per space, in order: the kick (yellow), then suction, vacuum shooting and the objects that react to it (green), and finally the first enemy (pink). Each skill is learned in a safe area before the player has to use it under pressure, so the first fight becomes a test of everything they just learned." },
-      { slug: 'picture/fk-this-job/Gallery-Fuck_This_Job_Gamplay_1.png',                  title: 'Gameplay 1',
-        desc: "Comic-book sound effects, a combo score and screen feedback stack up on every kill, so each action feels loud and rewarding, in the spirit of DOOM 2016." },
-      { slug: 'picture/fk-this-job/Gallery-Fuck_This_Job_Gamplay_2.png',                  title: 'Gameplay 2',
-        desc: "The “EMPTY” gauge sits on the weapon itself, not in the HUD, so the player can read their ammo state without taking their eyes off the action." },
-      /* — Tuto — */
-      { slug: 'picture/fk-this-job/Gallery-Fuck_This_Job_Tuto_Shoot.png',                 title: 'Tutorial – Shoot',
-        desc: "The shoot input is taught by a poster on the wall instead of a pop-up, so the tutorial stays inside the world and in the game's tone of humour." },
-      /* — Open Space — */
-      { slug: 'picture/fk-this-job/Gallery-Fuck_This_Job_LD1_Open_Space.png',             title: 'Level Design – Open Space Top View',
-        desc: "From the very first room (blue, the start), the player can already see the exit but cannot reach it: they get a clear objective and know what it looks like before the loop around the level begins. Turrets (light green) and drones patrolling their white lines (dark green) pace the route, and the cyan zone marks a shift in atmosphere where the player starts to realise the company is hiding something dark." },
-      { slug: 'picture/fk-this-job/Gallery-Fuck_This_Job_Start_Open_Space.png',           title: 'Start – Open Space',
-        desc: "The starting area is warm and calm, and the yellow line on the floor leads the player to the first objective before the chaos begins." },
-      { slug: 'picture/fk-this-job/Gallery-Fuck_This_Job_Start_Office_Open_Space.png',    title: 'Start – Office Open Space',
-        desc: "A quiet side office with cameras on the walls: the first hint that this workplace is watching the player." },
-      { slug: 'picture/fk-this-job/Gallery-Fuck_This_Job_Work_Space_Open_Space.png',      title: 'Work Space – Open Space',
-        desc: "Cubicles on one side, a clear path on the other: the yellow line draws the route, so the player knows where to go before taking a single step." },
-      { slug: 'picture/fk-this-job/Gallery-Fuck_This_Job_Storage_Open_Space.png',         title: 'Storage – Open Space',
-        desc: "Statues of the boss point at the player from both sides of the room: the space tells the story of a company that watches and judges its employees." },
-      /* — Dark Open Space — */
-      { slug: 'picture/fk-this-job/Gallery-Fuck_This_Job_LD_Dark_Office.jpg',             title: 'Level Design – Dark Office',
-        desc: "Final top view of the Dark Open Space. The red line is the golden path and the white loops are the drone patrols, while pools of light pick out the rooms the player crosses and leave the rest in darkness." },
-      { slug: 'picture/fk-this-job/Gallery-Fuck_This_Job_Office_Dark_Open_Space.png',     title: 'Office – Dark Open Space',
-        desc: "The same open space, now dark and overloaded: piles of paper, “Help me please” on a screen and cameras everywhere. The contrast with the start shows the player that things are going wrong." },
-      { slug: 'picture/fk-this-job/Gallery-Fuck_This_Job_Arena_Dark_Open_Space.png',      title: 'Arena – Dark Open Space',
-        desc: "Desks on the left give cover, and the open floor on the right leaves room to move and dodge. The red and blue lines on the floor lead to the exit, so the player never gets lost mid-fight." },
-      { slug: 'picture/fk-this-job/Gallery-Fuck_This_Job_Puzzle_Dark_Open_Space.png',     title: 'Puzzle – Dark Open Space',
-        desc: "A cyan highlight marks the interactive cabinet, so it reads at a glance even in a cluttered room." },
-      /* — Lab — */
-      { slug: 'picture/fk-this-job/Gallery-Fuck_This_Job_LD3_Intention.png',              title: 'Level Design – Lab Intention',
-        desc: "Intention map for the Lab: each room has a clear purpose (reception, research centre, call centre, “Wall Street” trading floor, tank room) and a visual reference. Rooms are designed to read at a glance as either an arena, a transition or a narrative space." },
-      { slug: 'picture/fk-this-job/Gallery-Fuck_This_Job_LD3_Blockout.png',               title: 'Level Design – Lab Blockout v0.1',
-        desc: "First blockout of the Lab, built on DOOM 2016 metrics. Walls and doors set the flow and room sizes before any art goes in, so space and pacing can be tested and iterated early." },
-      { slug: 'picture/fk-this-job/Gallery-Fuck_This_Job_LD_Labo.jpg',                    title: 'Level Design – Lab',
-        desc: "Final version of the Lab, built from the intention map and the blockout. Each room has its own lighting colour (green tank room, warm reception, blue research centre, teal call centre), so the player can tell where they are at a glance." },
-      { slug: 'picture/fk-this-job/Gallery-Fuck_This_Job_Reception_Lab.png',            title: 'Reception – Lab',
-        desc: "The switch to cold blue lighting and the MEGAZON logo tell the player they have entered a new zone with a new tone." },
-      { slug: 'picture/fk-this-job/Gallery-Fuck_This_Job_Arena_Lab.png.png',              title: 'Arena – Lab',
-        desc: "A symmetrical arena with a long central lane and desks on the sides for cover. The logo at the far end acts as a landmark that keeps the player oriented during combat." },
-      { slug: 'picture/fk-this-job/Gallery-Fuck_This_Job_Control_Room_Lab.png.png',       title: 'Control Room – Lab',
-        desc: "The central screen pulls the eye to the end of the room, and the side desks frame a wide path to move through." },
-      { slug: 'picture/fk-this-job/Gallery-Fuck_This_Job_TankRoom_Lab.png.png',           title: 'Tank Room – Lab',
-        desc: "Saturated green and narrow corridors between the tanks signal a more dangerous, oppressive part of the lab." },
-      /* — CEO — */
-      { slug: 'picture/fk-this-job/Gallery-Fuck_This_Job_LD_Boss.png',                   title: 'Level Design – CEO Top View',
-        desc: "A rising tension in a straight line: no detours, no choices, a single red carpet leading to the CEO. Each room is wider than the last and the statues lining the path all point towards the throne, so the space itself grows more imposing and builds pressure with every step before the confrontation." },
-      { slug: 'picture/fk-this-job/Gallery-Fuck_This_Job_Hallway_CEO.png',                title: 'Hallway – CEO',
-        desc: "Everything turns red and the statues point towards the door at the end, building anticipation before the final encounter." },
-      { slug: 'picture/fk-this-job/Gallery-Fuck_This_Job_Office_CEO.png',                 title: 'Office – CEO',
-        desc: "Symmetrical stairs and statues frame the throne under the screens, making it the clear focal point of the room." },
-      { slug: 'picture/fk-this-job/Gallery-Fuck_This_Job_Serveur_Room_CEO.png',           title: 'Server Room – CEO',
-        desc: "The final choice: two big buttons that read instantly. “Cheese Emergency” keeps the game's absurd humour going right to the end." },
+      /* ── GALERIE PRINCIPALE ─────────────────────────────────────────── */
+      /* — a. Plan d'ensemble — */
+      { slug: 'picture/fk-this-job/Gallery-Fuck_This_Job_LD_Overview.png', title: 'Level Design – Overview',
+        intent: "Every level on one page: golden path, enemies and resources.",
+        desc: "Top-down maps of the five levels with the golden path, start and end points, turrets, drones, breakers and healing points (vending machines, water dispensers).",
+        alt: "Top-down maps of the five levels of F**K This Job, annotated with the golden path, start and end points, turrets, drones, breakers and healing points.",
+        legend: [
+          { c: '#ff2a2a', s: 'line', t: 'Golden path' },
+          { c: '#2ee62e', s: 'dot',  t: 'Start' },
+          { c: '#1f3dff', s: 'dot',  t: 'End' },
+          { c: '#ff2bff', s: 'pent', t: 'Turret' },
+          { c: '#2ee62e', s: 'pent', t: 'Drone' },
+          { c: '#2ee62e', s: 'bar',  t: 'Vending machine (heal)' },
+          { c: '#19e6ff', s: 'tri',  t: 'Water dispenser (heal)' },
+          { c: '#ffe81a', s: 'dot',  t: 'Breaker' },
+        ] },
+
+      /* — b. Lab : intention → blockout → final → capture — */
+      { slug: 'picture/fk-this-job/Gallery-Fuck_This_Job_LD3_Intention.png', title: 'Lab – Intention Map',
+        intent: "Every room gets a purpose and a reference before the first wall.",
+        desc: "Intention map for the Lab: reception, research centre, call centre, “Wall Street” trading floor, tank room. Each room's role and visual references are set before blockout.",
+        alt: "Top-down intention map of the Lab with labelled rooms (reception, research centre, call centre, Wall Street trading floor, tank room) and reference photos." },
+      { slug: 'picture/fk-this-job/Gallery-Fuck_This_Job_LD3_Blockout.png', title: 'Lab – Blockout v0.1',
+        intent: "Walls and doors only: flow and room sizes tested before any art.",
+        desc: "First blockout of the Lab. Layout, circulation and room sizes are tested in grey-box, so they can change cheaply before art goes in.",
+        alt: "Grey-box blockout of the Lab seen from above: white walls, doors and placeholder desks." },
+      { slug: 'picture/fk-this-job/Gallery-Fuck_This_Job_LD_Labo.jpg', title: 'Lab – Final',
+        intent: "Each zone has its own lighting colour, so the player always knows where they are.",
+        desc: "Final version of the Lab, built from the intention map and the blockout: green tank room, warm reception, blue research centre, teal call centre.",
+        alt: "Top-down view of the finished Lab level, each room lit in a different colour: green, orange, blue and teal." },
+      { slug: 'picture/fk-this-job/Gallery-Fuck_This_Job_Arena_Lab.png', title: 'Lab – Arena',
+        intent: "A central lane, cover on the sides, a landmark at the far end.",
+        desc: "A symmetrical arena: desks on both sides give cover, and the MEGAZON logo at the end keeps the player oriented during combat.",
+        alt: "In-game view of the Lab arena: a long central aisle between rows of desks, stock-market screens on the walls and the MEGAZON logo at the far end." },
+
+      /* — c. Autres niveaux, dans l'ordre du jeu — */
+      { slug: 'picture/fk-this-job/Gallery-Fuck_This_Job_LD_Tuto.png', title: 'Tutorial – Top View',
+        intent: "One mechanic per space: kick, then vacuum, then the first enemy.",
+        desc: "The kick is taught first (yellow), then suction, vacuum shooting and the objects that react to it (green), and finally the first enemy (pink). Each skill is learned in a safe space before it is needed under pressure.",
+        alt: "Top-down map of the tutorial level: a corridor with a red golden path and three framed zones in yellow, green and pink.",
+        legend: [
+          { c: '#ff2a2a', s: 'line', t: 'Golden path' },
+          { c: '#ffe81a', s: 'box',  t: 'Learn the kick' },
+          { c: '#2ee62e', s: 'box',  t: 'Learn suction, vacuum shot and reactive objects' },
+          { c: '#ff2bff', s: 'box',  t: 'First enemy' },
+        ] },
+      { slug: 'picture/fk-this-job/Gallery-Fuck_This_Job_Tuto_Shoot.png', title: 'Tutorial – Shoot',
+        intent: "The controls are taught by the world itself, not by a pop-up.",
+        desc: "A poster on the wall explains the shoot input, keeping the tutorial inside the world and in the game's tone of humour.",
+        alt: "Small office room with a comic-style poster explaining the shoot button, next to a door, a plant and cleaning supplies." },
+
+      { slug: 'picture/fk-this-job/Gallery-Fuck_This_Job_LD1_Open_Space.png', title: 'Open Space – Top View',
+        intent: "The exit is visible from the first room but out of reach: the goal is set.",
+        desc: "From the start, the player already sees the exit and what it looks like, then loops around the level to reach it. Turrets and patrolling drones pace the route, and the cyan zone marks a shift in atmosphere where the player starts to realise the company is hiding something dark.",
+        alt: "Top-down map of the Open Space level: a red golden path loops from a blue start square to a yellow exit square, with green dots for enemies and a cyan frame on one room.",
+        legend: [
+          { c: '#ff2a2a', s: 'line',   t: 'Golden path' },
+          { c: '#1f3dff', s: 'square', t: 'Start' },
+          { c: '#ffe81a', s: 'square', t: 'Exit' },
+          { c: '#33e633', s: 'dot',    t: 'Turret' },
+          { c: '#16805a', s: 'dot',    t: 'Drone' },
+          { c: '#f2f2f2', s: 'line',   t: 'Drone patrol' },
+          { c: '#19e6ff', s: 'box',    t: 'Atmosphere shift' },
+        ] },
+      { slug: 'picture/fk-this-job/Gallery-Fuck_This_Job_Work_Space_Open_Space.png', title: 'Open Space – Work Space',
+        intent: "The yellow floor line draws the route before the first step.",
+        desc: "Cubicles on one side, a clear path on the other: the player reads where to go at a glance.",
+        alt: "In-game view of a warm-lit open-plan office: cubicles on the left, an open lane on the right with a yellow line painted on the carpet." },
+
+      { slug: 'picture/fk-this-job/Gallery-Fuck_This_Job_LD_Dark_Office.jpg', title: 'Dark Office – Top View',
+        intent: "The employees are no longer people but work tools: Megazon's slaves.",
+        desc: "Playtests showed some players getting lost; coloured guide lines on the floor, like those in hospitals, point them the way. Short on time to dress every room, I ranked the rooms by priority and cut the least essential ones.",
+        alt: "Top-down map of the Dark Office level: dim rooms crowded with desks and paper, a red golden path, blue and green floor guide lines and white loops.",
+        legend: [
+          { c: '#ff2a2a', s: 'line', t: 'Golden path' },
+          { c: '#2f6bff', s: 'line', t: 'Floor guide line' },
+          { c: '#2ee62e', s: 'line', t: 'Floor guide line' },
+          { c: '#f2f2f2', s: 'loop', t: 'Drone patrol' },
+        ] },
+      { slug: 'picture/fk-this-job/Gallery-Fuck_This_Job_Arena_Dark_Open_Space.png', title: 'Dark Office – Arena',
+        intent: "Cover on one side, open floor on the other, guide lines to the exit.",
+        desc: "Desks piled with paper give cover on the left, the open floor on the right leaves room to dodge, and the red and blue floor lines lead to the exit mid-fight.",
+        alt: "In-game view of a dark open-plan office arena: desks buried in paper and coffee cups on the left, an open floor with red and blue lines and a statue of the boss on the right." },
+
+      { slug: 'picture/fk-this-job/Gallery-Fuck_This_Job_LD_Boss.png', title: 'CEO – Top View',
+        intent: "A rising tension in a straight line, all the way to the CEO.",
+        desc: "No detours, no choices: a single red carpet leads to the throne. Each room is wider than the last and the statues lining the path all point forward, so the space grows more imposing with every step.",
+        alt: "Top-down map of the CEO level: three rooms of increasing size along a straight red carpet, lined with statues, ending at the CEO's desk.",
+        legend: [
+          { c: '#ff2a2a', s: 'line', t: 'Golden path (red carpet)' },
+        ] },
+      { slug: 'picture/fk-this-job/Gallery-Fuck_This_Job_Hallway_CEO.png', title: 'CEO – Hallway',
+        intent: "Every statue points to the door: anticipation builds before the boss.",
+        desc: "Everything turns red and the perspective converges on the door at the end of the hall.",
+        alt: "In-game view of a long red hallway lined with bookshelves and muscular statues pointing towards a door at the far end." },
+
+      /* — d. Preuves 3C et Game Feel — */
+      { slug: 'picture/fk-this-job/Gallery-Fuck_This_Job_Weapon_Positioning.jpg', title: '3C – Weapon Positioning',
+        intent: "A strong weapon presence that never blocks the player's view.",
+        desc: "Placement based on a Techland (Dying Light) GDC talk and the Golden Ratio: the weapon sits in the lower right of the screen, big and readable, while the centre and the crosshair stay clear.",
+        alt: "First-person view of a corridor with the blue vacuum-gun weapon in the lower right of the screen and a clear crosshair in the centre." },
+      { slug: 'picture/fk-this-job/Gallery-Fuck_This_Job_Feedback_For_Player.jpg', title: 'Game Feel – Feedback',
+        intent: "One vibration per weapon state, felt without reading the HUD.",
+        desc: "Force Feedback for each state of the vacuum gun (light suck, medium/heavy suck, full, empty, shoot) plus a kick camera shake.",
+        alt: "Unreal Engine content browser showing six Force Feedback effects for the vacuum gun and a kick camera shake asset." },
+
+      /* — e. Cinématique — */
+      { slug: 'picture/fk-this-job/Gallery-Fuck_This_Job_Sequencer_CEO.jpg', title: 'Cinematic – CEO Death',
+        intent: "Camera cuts, VFX and audio locked to the same frame.",
+        desc: "The CEO's death in Sequencer: three camera cuts (office, big screen, close-up), the Niagara explosion and the audio event share one timeline, so image, effect and sound land together.",
+        alt: "Unreal Engine Sequencer timeline with three camera cuts, an audio track and an explosion VFX track, above a frame of the CEO exploding in a comic-style blast." },
+
+      /* ── "VOIR PLUS" (more: true) — repliées sous la galerie principale ── */
+      { more: true, slug: 'picture/fk-this-job/Gallery-Fuck_This_Job_LD_Tuto_Iterations.jpg', title: 'Tutorial – Iterations',
+        intent: "Five versions of the tutorial layout, side by side.",
+        alt: "Five top-down versions of the tutorial layout side by side, each a long corridor with branching rooms." },
+      { more: true, slug: 'picture/fk-this-job/Gallery-Fuck_This_Job_Gameplay_1.png', title: 'Gameplay – Combat',
+        intent: "Comic-book effects and a combo score reward every kill.",
+        alt: "First-person combat in an orange-lit office: a pink BOOM comic effect, a POP effect and a combo score in the top right." },
+      { more: true, slug: 'picture/fk-this-job/Gallery-Fuck_This_Job_Gameplay_2.png', title: 'Gameplay – Empty Gauge',
+        intent: "The ammo state is read on the weapon, not in the HUD.",
+        alt: "First-person view of a green SPLASH effect, with the vacuum gun's gauge showing EMPTY." },
+      { more: true, slug: 'picture/fk-this-job/Gallery-Fuck_This_Job_Start_Open_Space.png', title: 'Open Space – Start',
+        intent: "A warm, calm start before the chaos.",
+        alt: "Warm-lit office entrance with a giant M-shaped doorway, plants and a yellow line on the carpet." },
+      { more: true, slug: 'picture/fk-this-job/Gallery-Fuck_This_Job_Start_Office_Open_Space.png', title: 'Open Space – Side Office',
+        intent: "Cameras on the walls: the workplace is watching.",
+        alt: "Small office with cubicle partitions, old computers, a wall camera and a caution sign." },
+      { more: true, slug: 'picture/fk-this-job/Gallery-Fuck_This_Job_Storage_Open_Space.png', title: 'Open Space – Storage',
+        intent: "Statues of the boss judge the player from both sides.",
+        alt: "Storage room with two large statues of the boss pointing at the player, piles of files and a small drone." },
+      { more: true, slug: 'picture/fk-this-job/Gallery-Fuck_This_Job_Office_Dark_Open_Space.png', title: 'Dark Office – Desks',
+        intent: "“Help me please”: employees buried under their work.",
+        alt: "Rows of desks buried under paper and coffee cups, one screen reading HELP ME PLEASE, cameras on the walls." },
+      { more: true, slug: 'picture/fk-this-job/Gallery-Fuck_This_Job_Puzzle_Dark_Open_Space.png', title: 'Dark Office – Puzzle',
+        intent: "A cyan highlight makes the interactive object read at a glance.",
+        alt: "Cluttered storage room with a filing cabinet highlighted in cyan." },
+      { more: true, slug: 'picture/fk-this-job/Gallery-Fuck_This_Job_Reception_Lab.png', title: 'Lab – Reception',
+        intent: "Cold blue light and the MEGAZON logo: a new zone, a new tone.",
+        alt: "Blue-lit lab reception with a long desk of white machines, shelves of flasks and a glowing MEGAZON logo." },
+      { more: true, slug: 'picture/fk-this-job/Gallery-Fuck_This_Job_Control_Room_Lab.png', title: 'Lab – Control Room',
+        intent: "The central screen pulls the eye to the end of the room.",
+        alt: "Teal control room with world-map screens on both sides and a large MEGAZON screen at the far end." },
+      { more: true, slug: 'picture/fk-this-job/Gallery-Fuck_This_Job_TankRoom_Lab.png', title: 'Lab – Tank Room',
+        intent: "Saturated green and narrow lanes: a more oppressive zone.",
+        alt: "Green-lit room full of glowing tanks and pipes, with narrow lanes between machines and screens at the end." },
+      { more: true, slug: 'picture/fk-this-job/Gallery-Fuck_This_Job_Office_CEO.png', title: 'CEO – Office',
+        intent: "Stairs and statues frame the throne as the focal point.",
+        alt: "Red CEO office with a symmetrical staircase, two giant statues and a throne under a wall of screens." },
+      { more: true, slug: 'picture/fk-this-job/Gallery-Fuck_This_Job_Server_Room_CEO.png', title: 'CEO – Server Room',
+        intent: "The final choice: two big buttons that read instantly.",
+        alt: "Red server room with two large buttons labelled DISABLE AI and CHEESE EMERGENCY, and a hamster wheel between them." },
     ],
     featured: false,
     homeFeatured: true,
@@ -566,6 +668,17 @@ function bannerImageUrl(slug)   { return slug || null; } /* Image de la bannièr
 function galleryImageUrl(slug)  { return slug || null; } /* Image dans le carrousel */
 function lightboxImageUrl(slug) { return slug || null; } /* Image en plein écran (lightbox) */
 
+/* Vignette légère d'une image de galerie.
+   Si le projet a galleryThumbs: true → picture/<projet>/thumbs/<nom>.webp
+   (générées à partir des originaux, l'original reste utilisé en plein écran).
+   Sinon → l'image d'origine. */
+function galleryThumbUrl(project, slug) {
+  if (!project || !project.galleryThumbs || !slug) return galleryImageUrl(slug);
+  const i = slug.lastIndexOf('/');
+  const name = slug.slice(i + 1).replace(/\.[^.]+$/, '');
+  return `${slug.slice(0, i)}/thumbs/${name}.webp`;
+}
+
 /* Construit l'URL d'embed YouTube avec les paramètres appropriés
    - rel=0          : n'affiche pas les vidéos recommandées en fin
    - color=white    : barre de progression blanche
@@ -573,5 +686,6 @@ function lightboxImageUrl(slug) { return slug || null; } /* Image en plein écra
    - loop=1         : boucle infinie
    - playlist=id    : nécessaire pour que loop=1 fonctionne sur YouTube */
 function youtubeEmbedUrl(id, start) {
-  return `https://www.youtube.com/embed/${id}?rel=0&color=white&autoplay=1&mute=1&loop=1&playlist=${id}${start ? `&start=${start}` : ''}`;
+  /* playsinline=1 : sur iPhone, lit la vidéo dans la page au lieu de forcer le plein écran */
+  return `https://www.youtube.com/embed/${id}?rel=0&color=white&autoplay=1&mute=1&loop=1&playsinline=1&playlist=${id}${start ? `&start=${start}` : ''}`;
 }

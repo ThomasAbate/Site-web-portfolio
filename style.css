@@ -1013,11 +1013,13 @@ a[download].dl-anim svg {
     0 0 80px rgba(255,255,255,0.03);     /* Halo très diffus */
 }
 
-.trailer-box iframe {
+.trailer-box iframe,
+.trailer-box video {
   position: absolute; inset: 0;
   width: 100%; height: 100%;
   border: none;
 }
+.trailer-box video { object-fit: contain; background: #000; } /* Bande-annonce Steam (HLS) */
 
 .trailer-placeholder {
   position: absolute; inset: 0;
@@ -1050,38 +1052,150 @@ a[download].dl-anim svg {
      (100% - 2 gaps) / 3 = largeur d'un slide.
      Si tu veux 2 slides visibles : (100% - 1 gap) / 2 */
   flex: 0 0 calc((100% - 24px) / 3); /* ← MODIFIABLE */
-  aspect-ratio: 4 / 3; /* Format des images ← MODIFIABLE */
-  overflow: hidden;
-  position: relative;
+  margin: 0; /* <figure> a une marge par défaut */
   cursor: zoom-in;
-  background: var(--bg-2);
   flex-shrink: 0; /* Empêche les slides de se rétrécir */
 }
 
+/* Vignette (format 4:3) */
+.gallery-slide-media {
+  aspect-ratio: 4 / 3; /* Format des images ← MODIFIABLE */
+  overflow: hidden;
+  background: var(--bg-2);
+}
 .gallery-slide img {
+  display: block;
   width: 100%; height: 100%;
   object-fit: cover;
   transition: transform 0.5s ease;
 }
-/* Légère zoom au survol */
+/* Léger zoom au survol */
 .gallery-slide:hover img { transform: scale(1.04); } /* ← MODIFIABLE */
 
-/* Légende qui apparaît en bas de l'image au survol */
-.gallery-slide-caption {
-  position: absolute; bottom: 10px; left: 10px;
-  padding: 4px 10px;
-  background: rgba(0,0,0,0.68);
-  border-radius: 4px;
-  font-size: 10px; letter-spacing: 0.08em;
-  color: rgba(255,255,255,0.85);
-  opacity: 0; /* Invisible par défaut */
-  transition: opacity 0.2s;
+/* Titre + ligne d'intention, toujours visibles sous la vignette (ordinateur et téléphone) */
+.gallery-slide-text {
+  display: flex; flex-direction: column; gap: 6px;
+  padding: 14px 2px 0;
 }
-.gallery-slide:hover .gallery-slide-caption { opacity: 1; }
+.gallery-slide-title {
+  font-size: 10px; font-weight: 600;
+  letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--text);
+}
+.gallery-slide-intent {
+  font-size: 13px; line-height: 1.5;
+  color: rgba(237, 229, 213, 0.62);
+}
 
-/* Boutons ← et → du carrousel */
+/* Bouton "More images" sous la galerie principale */
+.gallery-more-btn {
+  display: flex; align-items: center; gap: 10px;
+  margin: 28px auto 0;
+  padding: 10px 20px;
+  background: none;
+  border: 1px solid rgba(255,255,255,0.18);
+  border-radius: 999px;
+  color: rgba(237, 229, 213, 0.75);
+  font: inherit; font-size: 10px; font-weight: 600;
+  letter-spacing: 0.14em; text-transform: uppercase;
+  cursor: pointer;
+  transition: border-color 0.2s, color 0.2s;
+}
+.gallery-more-btn:hover { border-color: rgba(255,255,255,0.45); color: var(--text); }
+
+/* Texte d'intention affiché PAR-DESSUS l'image au survol de la souris */
+.gallery-slide-media, .gallery-tile-media { position: relative; }
+.gallery-hover-text {
+  position: absolute; inset: auto 0 0 0;
+  z-index: 1;
+  padding: 40px 15px 13px;
+  color: var(--text);
+  text-shadow: 0 1px 8px rgba(0,0,0,0.6);
+  font-size: 13px; line-height: 1.45;
+  opacity: 0; transform: translateY(6px);
+  transition: opacity 0.25s ease, transform 0.25s ease;
+  pointer-events: none;
+}
+/* L'image elle-même s'assombrit vers le bas (masque) au lieu d'un calque de dégradé posé dessus :
+   un calque laissait un liseré clair d'un pixel sur les écrans zoomés (125 %, 150 %) */
+.gallery-slide-media, .gallery-tile-media { background: #080705; }
+.gallery-slide-media img, .gallery-tile-media img {
+  -webkit-mask-image: linear-gradient(to top, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.35) 14%, #000 30%, #000 100%);
+          mask-image: linear-gradient(to top, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.35) 14%, #000 30%, #000 100%);
+  -webkit-mask-size: 100% 200%; mask-size: 100% 200%;
+  -webkit-mask-position: 0 0; mask-position: 0 0; /* Moitié haute du masque = image intacte */
+  transition: transform 0.5s ease, -webkit-mask-position 0.3s ease, mask-position 0.3s ease;
+}
+@media (hover: hover) {
+  .gallery-slide:hover .gallery-slide-media img:not(:only-child),
+  .gallery-tile:hover .gallery-tile-media img:not(:only-child),
+  .gallery-tile:focus-visible .gallery-tile-media img:not(:only-child) {
+    -webkit-mask-position: 0 100%; mask-position: 0 100%; /* Moitié basse = fondu vers le noir */
+  }
+  .gallery-slide:hover .gallery-hover-text,
+  .gallery-tile:hover .gallery-hover-text,
+  .gallery-tile:focus-visible .gallery-hover-text { opacity: 1; transform: none; }
+  /* Sous l'image il ne reste que le titre */
+  .gallery-slide-intent { display: none; }
+}
+/* Écrans tactiles (pas de survol possible) : le texte reste sous l'image */
+@media (hover: none) {
+  .gallery-hover-text { display: none; }
+}
+
+/* ── Grille "More images" : mosaïque plein écran ── */
+.gallery-grid-modal {
+  display: none;
+  position: fixed; inset: 0;
+  z-index: 10001; /* Couvre toute la page, menu compris (nav = 10000) */
+  background: var(--bg);
+  flex-direction: column;
+}
+/* Pendant la grille : la lightbox s'ouvre par-dessus, la barre de progression et le bouton ↑ se cachent */
+body.grid-open .lightbox { z-index: 10002; }
+body.grid-open .scroll-bar,
+body.grid-open #scrollTopBtn { opacity: 0 !important; pointer-events: none !important; }
+.gallery-grid-modal.open { display: flex; animation: gridIn 0.25s ease; }
+@keyframes gridIn { from { opacity: 0; } to { opacity: 1; } }
+.gallery-grid-head {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 18px 56px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+.gallery-grid-title {
+  font-size: 11px; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase;
+  color: var(--text);
+}
+.gallery-grid-count { color: rgba(237,229,213,0.45); margin-left: 6px; }
+.gallery-grid-close {
+  background: none; border: 1px solid rgba(255,255,255,0.18); border-radius: 50%;
+  width: 40px; height: 40px; color: var(--text); font-size: 15px; cursor: pointer;
+  transition: border-color 0.2s, transform 0.2s;
+}
+.gallery-grid-close:hover { border-color: rgba(255,255,255,0.5); transform: rotate(90deg); }
+.gallery-grid-scroll { flex: 1; overflow-y: auto; padding: 28px 56px 56px; overscroll-behavior: contain; }
+/* Colonnes façon "mosaïque" : chaque image garde son format, rangée en colonnes égales */
+.gallery-masonry { columns: 4 260px; column-gap: 16px; max-width: 1480px; margin: 0 auto; }
+.gallery-tile {
+  break-inside: avoid; margin: 0 0 22px;
+  cursor: zoom-in; outline: none;
+}
+.gallery-tile-media { overflow: hidden; background: var(--bg-2); border-radius: 6px; }
+.gallery-tile img { display: block; width: 100%; height: auto; transition: transform 0.5s ease; }
+.gallery-tile:hover img { transform: scale(1.04); }
+.gallery-tile:focus-visible .gallery-tile-media { box-shadow: 0 0 0 2px var(--text); }
+.gallery-tile figcaption { display: flex; flex-direction: column; gap: 6px; padding: 10px 2px 0; }
+@media (max-width: 768px) {
+  .gallery-grid-head { padding: 12px 16px; }
+  .gallery-grid-scroll { padding: 16px 16px 40px; }
+  .gallery-masonry { columns: 2; column-gap: 10px; }
+  .gallery-tile { margin-bottom: 18px; }
+  .gallery-tile .gallery-slide-intent { font-size: 12px; }
+}
+
+/* Boutons ← et → du carrousel (centrés sur la vignette, pas sur le texte) */
 .gallery-arrow {
-  position: absolute; top: 50%; transform: translateY(-50%);
+  position: absolute; top: calc(var(--media-h, 66%) / 2); transform: translateY(-50%);
   width: 44px; height: 44px;
   background: rgba(0,0,0,0.6);
   border: 1px solid rgba(255,255,255,0.18);
@@ -1146,9 +1260,11 @@ a[download].dl-anim svg {
   max-width: 90vw; max-height: 88vh; /* Ne dépasse pas 90% de l'écran */
   object-fit: contain; /* L'image entière est visible sans être coupée */
   cursor: default;
-  transition: opacity 0.2s ease, transform 0.25s ease;
+  transition: opacity 0.2s ease, transform 0.25s ease, filter 0.3s ease;
   transform-origin: center center;
 }
+/* Aperçu (vignette) pendant le chargement de l'image d'origine */
+.lightbox img.is-preview { filter: blur(2px); }
 
 /* Bouton × pour fermer */
 .lightbox-close {
@@ -1189,6 +1305,22 @@ a[download].dl-anim svg {
   color: rgba(255,255,255,0.55);
   pointer-events: none; white-space: nowrap;
 }
+
+/* Compteur "3 / 16" en bas au centre : même pastille que le zoom, reste lisible quand on zoome */
+.lightbox-counter {
+  position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%);
+  z-index: 2;
+  height: 46px; padding: 0 16px;
+  display: flex; align-items: center;
+  background: rgba(0,0,0,0.55); border-radius: 10px;
+  font-size: 11px; font-weight: 600; letter-spacing: 0.14em;
+  color: rgba(237,229,213,0.8);
+  font-variant-numeric: tabular-nums;
+  pointer-events: none; white-space: nowrap;
+}
+.lightbox-counter[hidden] { display: none; }
+/* Le titre (images sans panneau) remonte au-dessus du compteur */
+.lightbox-counter:not([hidden]) ~ .lightbox-caption { bottom: 82px; }
 
 /* Boutons zoom + / - */
 .lightbox-zoom-btns {
@@ -1262,6 +1394,41 @@ a[download].dl-anim svg {
   color: rgba(237, 229, 213, 0.72);
   margin: 0;
 }
+.lightbox-info-desc:empty { display: none; }
+
+/* Ligne d'intention : la phrase clé, mise en avant sous le titre */
+.lightbox-info-intent {
+  font-size: 16px; line-height: 1.5;
+  color: var(--text);
+  margin: 0 0 14px;
+}
+.lightbox-info-intent:empty { display: none; }
+
+/* Légende des couleurs d'un plan */
+.lightbox-legend {
+  list-style: none;
+  margin: 20px 0 0; padding: 16px 0 0;
+  border-top: 1px solid rgba(255,255,255,0.12);
+  display: grid; gap: 9px;
+  font-size: 12px; color: rgba(237, 229, 213, 0.78);
+}
+.lightbox-legend[hidden] { display: none; }
+.lightbox-legend li { display: flex; align-items: center; gap: 10px; }
+
+/* Pastille de couleur : la forme reprend le symbole utilisé sur le plan */
+.lb-swatch {
+  flex: 0 0 18px; height: 12px;
+  display: inline-block;
+  background: var(--sw);
+}
+.lb-swatch-dot    { flex-basis: 12px; border-radius: 50%; margin: 0 3px; }
+.lb-swatch-square { flex-basis: 12px; margin: 0 3px; }
+.lb-swatch-line   { height: 4px; border-radius: 2px; }
+.lb-swatch-bar    { flex-basis: 7px; height: 14px; margin: 0 5.5px; }
+.lb-swatch-box    { flex-basis: 14px; height: 12px; margin: 0 2px; background: none; border: 2px solid var(--sw); }
+.lb-swatch-loop   { height: 12px; background: none; border: 2px solid var(--sw); border-radius: 50%; }
+.lb-swatch-tri    { flex-basis: 12px; margin: 0 3px; clip-path: polygon(0 0, 100% 50%, 0 100%); }
+.lb-swatch-pent   { flex-basis: 13px; height: 13px; margin: 0 2.5px; clip-path: polygon(50% 0, 100% 38%, 82% 100%, 18% 100%, 0 38%); }
 
 /* Tablette / mobile : le panneau passe sous l'image */
 @media (max-width: 1100px) {
@@ -1273,6 +1440,19 @@ a[download].dl-anim svg {
     padding-left: 0; padding-top: 16px;
     border-left: none; border-top: 1px solid rgba(255,255,255,0.15);
   }
+}
+/* Téléphone : les flèches descendent en bas à gauche (sinon elles masquent le titre du panneau) */
+@media (max-width: 768px) {
+  .lightbox.has-info .lightbox-arrow { top: auto; bottom: 24px; transform: none; }
+  .lightbox.has-info .lightbox-arrow:active { transform: scale(0.88); }
+  .lightbox.has-info .lb-prev { left: 16px; }
+  .lightbox.has-info .lb-next { left: 76px; right: auto; }
+  /* Compteur juste après les flèches, pour ne jamais toucher le zoom (petits écrans) */
+  .lightbox.has-info .lightbox-counter { left: 130px; transform: none; padding: 0 10px; letter-spacing: 0.04em; }
+}
+/* Très petits téléphones : on retire le "100%" du zoom pour laisser la place au compteur */
+@media (max-width: 359px) {
+  .lightbox.has-info .lightbox-zoom-level { display: none; }
 }
 
 
