@@ -68,6 +68,10 @@
 
      trailerHls:    (optionnel) URL d'une vidéo HLS (.m3u8), ex. bande-annonce Steam.
                     Prioritaire sur trailerID. trailerPoster = image affichée avant lecture.
+     noTrailer:     (optionnel) true = pas de vidéo : la section trailer est cachée
+                    (au lieu du message "Gameplay footage coming soon")
+     focus:         (optionnel) domaines travaillés, affichés dans la sidebar
+                    → Exemple : ['Game Design', 'Economy', 'Monetization']
      galleryThumbs: (optionnel) true = vignettes WebP dans picture/<id>/thumbs/
                     → [] = galerie vide (section galerie cachée)
 
@@ -111,6 +115,7 @@ const PROJECTS = [
         text:  "Curated an arcade-style soundscape with a focus on 'intentional chaos.' Every action triggers strong audio feedback to heighten the game's intensity and keep the player's adrenaline pumping.",
       },
     ],
+    focus:         ['3C', 'Camera', 'Technical Animation', 'Sound Design'],
     mainImageSlug: 'picture/mask-snatchers/main.png',
     trailerID:     'hBTu7WFeQU0',
     ggjURL:        'https://globalgamejam.org/games/2026/mask-snatchers-5',
@@ -147,6 +152,7 @@ const PROJECTS = [
         text:  "Engineered a feedback loop featuring tiered camera shakes for soul-snatching phases and haptic Force Feedback for player-vs-player collisions, intensifying the impact of every action.",
       },
     ],
+    focus:         ['Game Feel', 'Technical Animation', 'Feedback Systems'],
     mainImageSlug: 'picture/siamese-cowboy-cat-saloon/main.png',
     trailerID:     'j9lCIWWBivQ',
     ggjURL:        'https://globalgamejam.org/games/2024/siamese-siamese-cowboy-cat-saloon-7',
@@ -187,6 +193,7 @@ const PROJECTS = [
         text:  "Integrated the luminance data with an acoustic movement system. These variables (Light + Sound) are fed into the AI Perception Component, creating a high-stakes stealth loop where player velocity and environmental positioning directly impact NPC detection thresholds.",
       },
     ],
+    focus:         ['Systems Design', 'AI Perception', 'Technical Design'],
     mainImageSlug: 'picture/splinter-cell-prototype/main.png',
     trailerID:     'P28pe9pNZCQ',
     gallery: [
@@ -225,6 +232,7 @@ const PROJECTS = [
         text:  "Developed a robust validation system that enforces strict level-locking logic. Implemented a 'first-time completion' verification check, preventing unauthorised access to locked content and ensuring progression rewards are only triggered upon the initial clear.",
       },
     ],
+    focus:         ['Technical Design', 'Progression', 'Level Tools'],
     mainImageSlug: 'picture/tikivolcano/main.png',
     trailerID:     'gVtPi6dOryk',
     gallery: [
@@ -263,6 +271,7 @@ const PROJECTS = [
         text:  "Implemented a variable jump system where jump height is determined by input duration, alongside a bunny-hopping mechanic. Focused on the mathematical tuning of gravity and air control to ensure the platforming felt rewarding for skilled players.",
       },
     ],
+    focus:         ['3C', 'Game Feel', 'Movement', 'VFX'],
     mainImageSlug: 'picture/night-city/main.png',
     trailerID:     't_TlF8FDUsU',
     gallery: [
@@ -300,6 +309,7 @@ const PROJECTS = [
         text:  "Established an efficient Blueprint workflow using an editor-only 'target object' to define solutions. This system translates standard light shadows into functional gameplay keys, streamlining the design iteration process for various spatial puzzles.",
       },
     ],
+    focus:         ['Puzzle Design', 'Interaction', 'Technical Design'],
     mainImageSlug: 'picture/evil-house/main.png',
     trailerID:     '19qvPKIn0f0',
     gallery: [
@@ -315,6 +325,72 @@ const PROJECTS = [
         desc: "During inspection everything around goes dark and a warm light isolates the object, keeping the player's attention on what they hold." },
       { slug: 'picture/evil-house/gallery-camera-world-wine.png',      title: 'Camera – World Wine',
         desc: "A single pool of light in the dark tells the player what can be picked up, with no UI needed." },
+    ],
+    featured: false,
+    homeFeatured: false,
+  },
+  {
+    id:            'slime-defender',
+    name:          'Slime Defender',
+    category:      'personal',
+    categoryLabel: 'Personal Project',
+    year:          '2025',
+    shortDesc:     'Free-to-play tower defense on Roblox, solo and PvP. Solo project (design and development).',
+    intro:         "Free-to-play tower defense on Roblox with a solo progression loop and a 1v1 PvP mode (ranked and unranked). I designed and developed it alone. Development stopped after the game files were corrupted, but all design work (spreadsheets and tools) is intact.",
+    bullets: [
+      {
+        title: 'Wave design & difficulty',
+        text:  "All waves were defined in Google Sheets, per difficulty mode (Noob, Normal, Expert, Infinite). Each wave is a list of enemy groups (Basic, Fast, Tank, Armored, Cursed, MiniBoss, Boss) with configurable parameters: count, spawn interval, delay, and sequencing options (sequential, after, pause).",
+      },
+      {
+        title: 'Wave Editor (built with AI)',
+        text:  "To produce and test waves faster, I had Claude generate an in-game wave editor. Each enemy group is edited field by field without touching code, a timeline shows when every enemy spawns, and a wave written in the spreadsheet (in Lua table format) can be pasted in and tested right away.",
+      },
+      {
+        title: 'Progression & retention',
+        text:  "XP and gold rewards modeled per wave and per difficulty in Google Sheets to extend player lifetime. Solo loop: farm a currency that unlocks cosmetics. Cosmetics and emotes stay visible in PvP as status markers. Three leaderboards target three player profiles.",
+      },
+      {
+        title: 'Monetization (in progress)',
+        text:  "A first price grid is drafted but not yet in the game: VIP at 400 Robux, x4 player speed at 40 Robux, x4 wave speed at 64 Robux and emotes at 8 Robux. A price benchmark across Roblox games of all genres, tower defense included, is under way. First observations: offers cluster at very low prices (entry items at a few Robux), then jump straight to 10 to 15 euro packs, often time-limited, with almost nothing in between. My rules: in PvP, only cosmetics and emotes are sold, never power. In solo, paid options save time on short sessions, but everything stays reachable for free.",
+      },
+    ],
+    wip:           true,
+    focus:         ['Game Design', 'Economy', 'Monetization', 'Live Ops'],
+    engineName:    'Roblox Studio',
+    engineLogo:    'picture/Roblox_Studio_2025_Logo.png',
+    mainImageSlug: 'picture/slime-defender/main.jpg',
+    trailerID:     null,
+    noTrailer:     true, /* Fichiers du jeu perdus : pas de vidéo, section trailer cachée */
+    gallery: [
+      { slug: 'picture/slime-defender/gallery-wave-table.jpg', title: 'Waves – Spreadsheet',
+        intent: "Every wave of every difficulty in one sheet, readable and tunable at a glance.",
+        desc: "Each cell is one wave: a list of enemy groups with their count, spawn interval and delay. The sequential, after and pause options chain the groups, so a wave can build pressure in steps instead of sending everything at once. Noob ends at wave 10, Normal at wave 20, and Expert keeps going with MiniBoss and Boss waves.",
+        alt: "Google Sheets table with waves 1 to 21 in rows and the Noob, Normal and Expert difficulties in columns. Each cell lists the enemy groups of the wave with their count, interval and delay." },
+      { slug: 'picture/slime-defender/gallery-wave-editor-timeline.jpg', title: 'Wave Editor – Timeline',
+        intent: "See when every enemy spawns before playing the wave.",
+        desc: "Each enemy group is a line in the editor, and the timeline draws one bar per group. Here a Tank group, then Armored after a 5 second delay, then Cursed that only starts once the previous group is done. The last spawn lands at 46 seconds, so the length of a wave is read at a glance. A wave written in the spreadsheet can be pasted in as text and tested right away.",
+        alt: "Wave editor panel with three enemy groups (Tank, Armored, Cursed, 15 each), an import field for a wave written as text, and a timeline with three horizontal bars showing when each group spawns, last spawn at 46 seconds." },
+      { slug: 'picture/slime-defender/gallery-xp-gold-per-wave.png', title: 'Progression – XP & Gold per Wave',
+        intent: "Every wave pays out XP and gold, and the hardest mode pays the most.",
+        desc: "For each wave: its sequence of enemies, the total enemy count, an end-of-wave gold bonus that grows by 10 every wave, then the XP and kill gold earned in each difficulty. The hardest mode (named Giga Chad in this sheet) gives 1.5 times the XP of Normal. After wave 20 it continues with bonus waves that replay waves 1 to 12 scaled up by 0.12 each time, so its rewards keep climbing for players who stay.",
+        alt: "Spreadsheet listing waves 1 to 32 with, for each one, a description of the enemy sequence, the total number of enemies, the end-of-wave gold bonus, and the XP and kill gold earned in the Noob, Normal and Giga Chad difficulties." },
+      { slug: 'picture/slime-defender/gallery-price-grid.png', title: 'Monetization – Price Grid',
+        intent: "A first price grid built on time savers and cosmetics.",
+        desc: "Draft prices, not yet in the game. The two x4 speed options save time in solo sessions, and emotes are cosmetic only, so nothing on sale changes the outcome of a PvP match.",
+        alt: "Spreadsheet table with two columns, Name and Robux / Euro: VIP 400 Robux, x4 Speed Player 40 Robux, x4 Speed Wave 64 Robux, Emote 8 Robux." },
+      { slug: 'picture/slime-defender/gallery-shop-emotes.jpg', title: 'Shop – Emotes',
+        intent: "Emotes sold for premium tickets: status in PvP, never power.",
+        desc: "The Cosmetics tab of the premium shop holds profile backgrounds, borders, backdrops, text styles and emotes. Emotes cost 200 to 350 tickets. They are visible in PvP, so they give status without changing the balance of a match.",
+        alt: "Premium shop window on the Cosmetics tab, Emotes section: a grid of emotes such as T-Pose, Happy, Dizzy, Monkey and BB Dance, each with a price between 200 and 350 tickets." },
+      { more: true, slug: 'picture/slime-defender/gallery-solo-hud.jpg', title: 'Solo – In-Game HUD',
+        intent: "Level, XP and currencies always in view, every menu one click away.",
+        desc: "The XP bar and player level sit at the top centre, next to lives and the currencies, so progress is visible during every wave. Shop, Duel, Levels, daily reward and Profile are grouped on the left, which keeps short sessions fast.",
+        alt: "Roblox avatar standing on a grass map. At the top, lives, currencies and an XP bar showing level 11. On the left, menu buttons such as Shop, Duel and Profile. At the bottom right, a Next Wave button." },
+      { more: true, slug: 'picture/slime-defender/gallery-pvp-ranked.png', title: 'PvP – Ranked Match',
+        intent: "Before a ranked duel, both players face each other with their rank.",
+        desc: "The versus screen shows each player's avatar, name and current rank, here Noob 4 for both. It is the moment where what a player has earned is shown to the opponent.",
+        alt: "Versus screen with two Roblox avatars on either side of a red VS, their usernames below, and the rank Noob 4 under each one." },
     ],
     featured: false,
     homeFeatured: false,
@@ -344,6 +420,7 @@ const PROJECTS = [
         text:  "Particular attention was given to <strong>polish</strong>, both on a technical and documentary level.<ul><li><strong>In-Game Cinematics</strong> : I designed and integrated all cinematic sequences, ensuring a <strong>seamless transition between gameplay and narrative</strong>.</li><li><strong>QA & Debug</strong> : I maintained <strong>rigorous debug documentation</strong> throughout development, allowing me to stabilize the experience and refine the details that make the difference in the final build.</li></ul>",
       },
     ],
+    focus:         ['Level Design', '3C', 'Game Feel', 'Pacing', 'Cinematics'],
     mainImageSlug: 'picture/fk-this-job/main.png',
     /* Bande-annonce officielle (fiche Steam, "Launch trailer"), lue en HLS.
        Ancienne vidéo YouTube (soluce d'une autre chaîne) : 'l_fxtcFOdt4' */
@@ -532,6 +609,7 @@ const PROJECTS = [
         text:  "Directed in-game cinematics that serve as environmental signposting. Each sequence was crafted to clarify player objectives and orient the player within the 3D space, maintaining the seamless immersion of the original game.",
       },
     ],
+    focus:         ['3C', 'Level Design', 'GPE Design', 'Cinematics'],
     mainImageSlug: 'picture/heart-of-darkness/main.png',
     trailerID:     '-CHgOl1frsc',
     itchURL:       'https://artfx-school.itch.io/heart-of-darkness-remake',
@@ -574,6 +652,7 @@ const PROJECTS = [
         text:  "Managed the complete feedback loop, including dynamic VFX and a visual fuel gauge. Ensured that every system change (fuel depletion, thrust activation) was clearly communicated through intuitive visual cues.",
       },
     ],
+    focus:         ['3C', 'Systems Tuning', 'Onboarding', 'UI/UX'],
     mainImageSlug: 'picture/workshop-jetpack/main.png',
     trailerID:     'W9RousB5hsQ',
     gallery: [
@@ -611,6 +690,7 @@ const PROJECTS = [
         text:  "Focused on transforming a derelict space into a threatening narrative tool. By combining authentic architectural layouts with calculated lighting and camera feedback, I created a high-tension atmosphere that bridges the gap between reality and nightmare.",
       },
     ],
+    focus:         ['Level Design', 'Environmental Storytelling', '3C'],
     mainImageSlug: 'picture/workshop-enviro-storytelling/main.png',
     trailerID:     'MKBPMPc3r18',
     gallery: [

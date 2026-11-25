@@ -400,6 +400,17 @@ function renderProject() {
     engineLogoEl.alt = project.engineName || 'Unreal Engine';
   }
 
+  /* ── Focus (optionnel) : domaines travaillés, ex. ['Game Design', 'Economy'] ──
+     Même bloc que Category / Year : aucun nouveau style */
+  const focusSidebar = document.querySelector('.project-sidebar');
+  if (focusSidebar && Array.isArray(project.focus) && project.focus.length) {
+    const focusBlock = document.createElement('div');
+    focusBlock.className = 'sidebar-block';
+    focusBlock.innerHTML = '<div class="sidebar-label">Focus</div><div class="sidebar-value"></div>';
+    focusBlock.querySelector('.sidebar-value').textContent = project.focus.join(', ');
+    focusSidebar.appendChild(focusBlock);
+  }
+
   /* ── Liens plateforme (itch.io / Steam / GGJ) ───────────────────────── */
   const sidebar = document.querySelector('.project-sidebar');
   if (sidebar && (project.itchURL || project.steamURL || project.ggjURL)) {
@@ -466,7 +477,10 @@ function renderProject() {
   /* ── Trailer YouTube ──────────────────────────────────────────────────── */
   const trailerSection = document.getElementById('trailerSection');
   if (trailerSection) {
-    if (project.trailerHls) {
+    if (project.noTrailer) {
+      /* Projet sans vidéo (noTrailer: true dans data.js) : section cachée, pas de "coming soon" */
+      trailerSection.style.display = 'none';
+    } else if (project.trailerHls) {
       /* Bande-annonce hébergée en HLS (ex. Steam) : balise <video> à la place de l'iframe YouTube */
       const trailerFrame = document.getElementById('trailerFrame');
       const trailerPlaceholder = document.getElementById('trailerPlaceholder');
