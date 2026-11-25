@@ -27,3 +27,7 @@ package-lock.json
 # Docs internes / notes de dev non référencées par le site
 README.md
 picture/Naming Convention.txt
+
+# CV en PDF : gardés en local, mais pas publiés (aucun lien sur le site,
+# et des versions anciennes ne doivent pas rester accessibles en ligne)
+CV

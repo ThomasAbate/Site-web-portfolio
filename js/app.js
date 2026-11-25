@@ -363,7 +363,7 @@ function renderProject() {
   }
 
   /* ── Met à jour le titre de l'onglet du navigateur ───────────────────── */
-  document.title = `${project.name} — Thomas Abate`;
+  document.title = `${project.name} | Thomas Abate`;
 
   /* ── Bannière image ───────────────────────────────────────────────────── */
   const bannerEl = document.getElementById('projectBanner');

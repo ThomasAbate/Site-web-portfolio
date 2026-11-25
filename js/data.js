@@ -208,8 +208,7 @@ const PROJECTS = [
         desc: "Every tick, three pixels of the render target are read from different faces of the mesh. Their red values are added together and multiplied by a tuning value. Three samples instead of one keep a single shaded face from distorting the result. The final value goes to the HUD through an interface (BPI Sensor) and becomes the player's current visibility, which the AI uses for detection." },
     ],
     featured: true,
-    homeFeatured: true,
-    homeFeaturedOrder: 2, /* ← 2ème carte sur l'accueil */
+    homeFeatured: false, /* Retiré de l'accueil (reste sur la page Works) */
   },
   {
     id:            'tikivolcano',
@@ -337,11 +336,11 @@ const PROJECTS = [
     categoryLabel: 'Personal Project',
     year:          '2026',
     shortDesc:     'Free-to-play tower defense on Roblox, solo and PvP. Solo project (design and development).',
-    intro:         "Free-to-play tower defense on Roblox with a solo progression loop and a 1v1 PvP mode (ranked and unranked). I designed and developed it alone.",
+    intro:         "Free-to-play tower defense on Roblox with a solo progression loop and a 1v1 PvP mode (ranked and unranked). I design and develop it alone.",
     bullets: [
       {
         title: 'Wave design & difficulty',
-        text:  "All waves were defined in Google Sheets, per difficulty mode (Noob, Normal, Expert, Infinite). Each wave is a list of enemy groups (Basic, Fast, Tank, Armored, Cursed, MiniBoss, Boss) with configurable parameters: count, spawn interval, delay, and sequencing options (sequential, after, pause).",
+        text:  "All waves are defined in Google Sheets, per difficulty mode (Noob, Normal, Expert, Infinite). Each wave is a list of enemy groups (Basic, Fast, Tank, Armored, Cursed, MiniBoss, Boss) with configurable parameters: count, spawn interval, delay, and sequencing options (sequential, after, pause).",
       },
       {
         title: 'Wave Editor (built with AI)',
@@ -349,7 +348,7 @@ const PROJECTS = [
       },
       {
         title: 'Progression & retention',
-        text:  "XP and gold rewards modeled per wave and per difficulty in Google Sheets to extend player lifetime. Solo loop: farm a currency that unlocks cosmetics. Cosmetics and emotes stay visible in PvP as status markers. Three leaderboards target three player profiles.",
+        text:  "XP and gold rewards are modeled per wave and per difficulty in Google Sheets to extend player lifetime. Solo loop: farm a currency that unlocks cosmetics. Cosmetics and emotes stay visible in PvP as status markers. Three leaderboards target three player profiles.",
       },
       {
         title: 'Monetization (in progress)',
@@ -394,7 +393,8 @@ const PROJECTS = [
         alt: "Versus screen with two Roblox avatars on either side of a red VS, their usernames below, and the rank Noob 4 under each one." },
     ],
     featured: false,
-    homeFeatured: false,
+    homeFeatured: true,
+    homeFeaturedOrder: 2, /* ← 2ème carte sur l'accueil */
   },
   /* ════════════════════════════════════════════════
      SCHOOL — Projets scolaires (ARTFX)
@@ -586,7 +586,7 @@ const PROJECTS = [
     ],
     featured: false,
     homeFeatured: true,
-    homeFeaturedOrder: 1, /* ← 1ère carte sur l'accueil (le projet de diplôme en avant) */
+    homeFeaturedOrder: 1, /* ← 1ère carte sur l'accueil (le projet le plus abouti) */
   },
   {
     id:            'heart-of-darkness',
