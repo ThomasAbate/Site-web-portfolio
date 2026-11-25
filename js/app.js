@@ -577,6 +577,7 @@ function buildGalleryGridModal(imgs, project) {
             <div class="gallery-tile-media">
               <img src="${galleryThumbUrl(project, img.slug)}" alt="${attr(img.alt || img.title)}" loading="lazy" decoding="async">
               ${img.intent ? `<span class="gallery-hover-text" aria-hidden="true">${img.intent}</span>` : ''}
+              ${img.wip ? '<span class="wip-badge card-wip-badge">Work in Progress</span>' : ''}
             </div>
             <figcaption>
               <span class="gallery-slide-title">${img.title}</span>
@@ -665,6 +666,7 @@ function buildGalleryStrip(imgs, project, { eager = true, keyboard = false } = {
              loading="${eager && i < VISIBLE ? 'eager' : 'lazy'}" decoding="async"
              ${eager && i === 0 ? 'fetchpriority="high"' : ''}>
         ${img.intent ? `<span class="gallery-hover-text" aria-hidden="true">${img.intent}</span>` : ''}
+        ${img.wip ? '<span class="wip-badge card-wip-badge">Work in Progress</span>' : ''}
       </div>
       <figcaption class="gallery-slide-text">
         <span class="gallery-slide-title">${img.title}</span>
@@ -984,6 +986,12 @@ function _lbRender() {
     img.alt = item.alt || item.title || '';
     if (caption) caption.textContent = item.title || '';
     document.getElementById('lbInfoTitle').textContent  = item.title  || '';
+    if (item.wip) {
+      const badge = document.createElement('span');
+      badge.className = 'wip-badge lb-wip-badge';
+      badge.textContent = 'Work in Progress';
+      document.getElementById('lbInfoTitle').appendChild(badge);
+    }
     document.getElementById('lbInfoIntent').textContent = item.intent || '';
     document.getElementById('lbInfoDesc').textContent   = item.desc   || '';
 

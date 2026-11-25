@@ -864,6 +864,8 @@ a[download].dl-anim svg {
   top: 12px; left: 12px;
   z-index: 2;
 }
+/* Dans le panneau de la lightbox : à côté du titre de l'image */
+.lb-wip-badge { display: flex; width: max-content; margin-top: 8px; padding: 3px 8px; font-size: 9px; }
 
 .project-title {
   font-size: clamp(30px, 5vw, 64px); /* ← MODIFIABLE */

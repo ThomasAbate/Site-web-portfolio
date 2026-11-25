@@ -64,6 +64,7 @@
                     → legend (optionnel) : légende des couleurs d'un plan, affichée dans le panneau
                       [{ c: '#couleur', s: 'line'|'dot'|'square'|'box'|'bar'|'tri'|'pent'|'loop', t: 'Texte' }]
                     → more: true → image rangée dans le bloc replié "Voir plus"
+                    → wip: true → badge "Work in Progress" sur la vignette et dans le panneau
                     Sans intent ni desc ni legend = pas de panneau.
 
      trailerHls:    (optionnel) URL d'une vidéo HLS (.m3u8), ex. bande-annonce Steam.
@@ -334,9 +335,9 @@ const PROJECTS = [
     name:          'Slime Defender',
     category:      'personal',
     categoryLabel: 'Personal Project',
-    year:          '2025',
+    year:          '2026',
     shortDesc:     'Free-to-play tower defense on Roblox, solo and PvP. Solo project (design and development).',
-    intro:         "Free-to-play tower defense on Roblox with a solo progression loop and a 1v1 PvP mode (ranked and unranked). I designed and developed it alone. Development stopped after the game files were corrupted, but all design work (spreadsheets and tools) is intact.",
+    intro:         "Free-to-play tower defense on Roblox with a solo progression loop and a 1v1 PvP mode (ranked and unranked). I designed and developed it alone.",
     bullets: [
       {
         title: 'Wave design & difficulty',
@@ -356,7 +357,7 @@ const PROJECTS = [
       },
     ],
     wip:           true,
-    focus:         ['Game Design', 'Economy', 'Monetization', 'Live Ops'],
+    focus:         ['Game Design', 'Economy', 'Monetization'],
     engineName:    'Roblox Studio',
     engineLogo:    'picture/Roblox_Studio_2025_Logo.png',
     mainImageSlug: 'picture/slime-defender/main.jpg',
@@ -375,7 +376,7 @@ const PROJECTS = [
         intent: "Every wave pays out XP and gold, and the hardest mode pays the most.",
         desc: "For each wave: its sequence of enemies, the total enemy count, an end-of-wave gold bonus that grows by 10 every wave, then the XP and kill gold earned in each difficulty. The hardest mode (named Giga Chad in this sheet) gives 1.5 times the XP of Normal. After wave 20 it continues with bonus waves that replay waves 1 to 12 scaled up by 0.12 each time, so its rewards keep climbing for players who stay.",
         alt: "Spreadsheet listing waves 1 to 32 with, for each one, a description of the enemy sequence, the total number of enemies, the end-of-wave gold bonus, and the XP and kill gold earned in the Noob, Normal and Giga Chad difficulties." },
-      { slug: 'picture/slime-defender/gallery-price-grid.png', title: 'Monetization – Price Grid',
+      { slug: 'picture/slime-defender/gallery-price-grid.png', title: 'Monetization – Price Grid', wip: true,
         intent: "A first price grid built on time savers and cosmetics.",
         desc: "Draft prices, not yet in the game. The two x4 speed options save time in solo sessions, and emotes are cosmetic only, so nothing on sale changes the outcome of a PvP match.",
         alt: "Spreadsheet table with two columns, Name and Robux / Euro: VIP 400 Robux, x4 Speed Player 40 Robux, x4 Speed Wave 64 Robux, Emote 8 Robux." },
